@@ -39,7 +39,8 @@ jobs:
 
       - name: Run PHP CS Fixer
         run: |
-          ./vendor/bin/php-cs-fixer fix --dry-run --diff
+          ./vendor/bin/php-cs-fixer fix app/ routes/ tests/ --dry-run --diff
+
 
       - name: Run Larastan (PHPStan)
         run: |
