@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loket Antrian Puskesmas</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    {{-- <script src="https://cdn.jsdelivr.net/npm/tailwindcss@4.1.0/lib/index.min.js"></script> --}}
     <style>
         body {
             overflow: hidden;
@@ -24,48 +23,96 @@
     </style>
 </head>
 
-<body class="bg-gray-100 h-screen flex flex-col">
+<body class="bg-gray-100 min-h-screen flex flex-col">
 
     <!-- Header -->
-    <header class="bg-green-600 text-white py-4 flex flex-col items-center shadow-lg">
+    <header class="bg-green-600 text-white py-5 flex flex-col items-center shadow-lg">
         <img src="https://via.placeholder.com/100x100?text=Logo" alt="Logo Puskesmas"
-            class="w-24 h-24 rounded-full border-4 border-white shadow-lg mb-2">
-        <h1 class="text-2xl font-bold tracking-wide">PUSKESMAS SEHAT BERSAMA</h1>
+            class="w-24 h-24 rounded-full border-4 border-white shadow-lg mb-3">
+        <h1 class="text-3xl font-extrabold tracking-wide text-center">PUSKESMAS SEHAT BERSAMA</h1>
+        <h2 class="text-lg font-light">Panel Panggilan Antrian Staff Loket</h2>
     </header>
 
     <!-- Main Content -->
-    <main class="flex flex-grow">
-        <!-- Sidebar kiri (iklan) -->
-        <div class="w-4/5 bg-white p-4 flex items-center justify-center">
-            <img src="https://via.placeholder.com/900x600?text=Iklan+Puskesmas" alt="Iklan Puskesmas"
-                class="max-h-full max-w-full object-contain rounded-lg shadow-lg">
-        </div>
+    <main class="flex flex-col flex-grow items-center p-6">
 
-        <!-- Sidebar kanan (tombol) -->
-        <div class="w-1/5 bg-gray-100 p-4 flex flex-col gap-8 justify-center items-center">
-            <button
-                class="btn-touch w-full py-8 rounded-2xl shadow-xl text-white text-3xl font-extrabold tracking-wide
-                           bg-gradient-to-r from-yellow-400 to-yellow-500
-                           hover:from-yellow-500 hover:to-yellow-400">
+        <!-- Tombol Panggilan -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl mb-10">
+            <button onclick="panggilAntrian('P', 'Pendaftaran')"
+                class="btn-touch w-full py-8 rounded-2xl shadow-xl text-white text-2xl font-extrabold tracking-wide
+                       bg-gradient-to-r from-yellow-400 to-yellow-500
+                       hover:from-yellow-500 hover:to-yellow-400">
                 📝 Pendaftaran
             </button>
 
-            <button
-                class="btn-touch w-full py-8 rounded-2xl shadow-xl text-white text-3xl font-extrabold tracking-wide
-                           bg-gradient-to-r from-blue-400 to-blue-500
-                           hover:from-blue-500 hover:to-blue-400">
+            <button onclick="panggilAntrian('L', 'Laborate')"
+                class="btn-touch w-full py-8 rounded-2xl shadow-xl text-white text-2xl font-extrabold tracking-wide
+                       bg-gradient-to-r from-blue-400 to-blue-500
+                       hover:from-blue-500 hover:to-blue-400">
                 🔬 Laborate
             </button>
 
-            <button
-                class="btn-touch w-full py-8 rounded-2xl shadow-xl text-white text-3xl font-extrabold tracking-wide
-                           bg-gradient-to-r from-pink-400 to-pink-500
-                           hover:from-pink-500 hover:to-pink-400">
+            <button onclick="panggilAntrian('LA', 'Lansia')"
+                class="btn-touch w-full py-8 rounded-2xl shadow-xl text-white text-2xl font-extrabold tracking-wide
+                       bg-gradient-to-r from-pink-400 to-pink-500
+                       hover:from-pink-500 hover:to-pink-400">
                 👵 Lansia
             </button>
         </div>
+
+        <!-- Riwayat Panggilan -->
+        <div class="w-full max-w-3xl bg-white shadow-lg rounded-xl p-6">
+            <h3 class="text-xl font-semibold mb-4">Riwayat Panggilan</h3>
+            <ul id="riwayat" class="space-y-2 text-lg text-gray-800">
+                <li class="text-gray-500">Belum ada panggilan</li>
+            </ul>
         </div>
+
     </main>
+
+    <script>
+        // Load nomor terakhir dari localStorage
+        let counter = {
+            P: parseInt(localStorage.getItem("P") || 0),
+            L: parseInt(localStorage.getItem("L") || 0),
+            LA: parseInt(localStorage.getItem("LA") || 0)
+        };
+
+        const riwayatEl = document.getElementById("riwayat");
+
+        function panggilAntrian(prefix, poli) {
+            counter[prefix]++;
+            localStorage.setItem(prefix, counter[prefix]);
+
+            let nomor = prefix + String(counter[prefix]).padStart(3, "0");
+
+            // Update riwayat
+            let item = document.createElement("li");
+            item.textContent = `${nomor} - Poli ${poli}`;
+            riwayatEl.prepend(item);
+
+            // Hapus teks default jika masih ada
+            if (riwayatEl.children.length > 5) {
+                riwayatEl.removeChild(riwayatEl.lastChild);
+            }
+            if (riwayatEl.firstElementChild.textContent.includes("Belum ada")) {
+                riwayatEl.firstElementChild.remove();
+            }
+
+            // Panggilan suara
+            let teksPanggilan = `Nomor antrian ${ejaanNomor(nomor)}, silakan menuju loket ${poli}`;
+            speechSynthesis.cancel();
+            let utter = new SpeechSynthesisUtterance(teksPanggilan);
+            utter.lang = "id-ID";
+            utter.rate = 0.9;
+            speechSynthesis.speak(utter);
+        }
+
+        function ejaanNomor(nomor) {
+            return nomor.split("").join(" ");
+        }
+    </script>
+
 </body>
 
 </html>
