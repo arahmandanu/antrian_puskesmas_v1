@@ -33,9 +33,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex flex-grow">
-        @yield('content')
-    </main>
+    @yield('content')
 </body>
 
 </html>
