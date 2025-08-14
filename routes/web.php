@@ -28,3 +28,9 @@ Route::get('/staff', function () {
 Route::get('/poli', function () {
     return view('loket_staff.poli');
 });
+
+
+
+Route::get('/poli_call', function () {
+    return view('loket_staff.call');
+});

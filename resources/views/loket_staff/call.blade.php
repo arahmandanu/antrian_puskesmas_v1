@@ -1,36 +1,6 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('shared.main')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pemanggilan Antrian - Poli Umum</title>
-    <script src="https://cdn.tailwindcss.com/3.4.0"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        .btn-touch {
-            transition: transform 0.15s ease-out;
-        }
-
-        .btn-touch:active {
-            transform: scale(1.05);
-        }
-    </style>
-</head>
-
-<body class="min-h-screen flex flex-col bg-gray-50">
-
-    <!-- Header -->
-    <header class="py-6 text-center bg-green-700 text-white shadow-md">
-        <img src="https://via.placeholder.com/100x100?text=Logo" alt="Logo Puskesmas"
-            class="w-20 h-20 rounded-full border-4 border-white mb-3 mx-auto">
-        <h1 class="text-3xl font-bold tracking-wide">PUSKESMAS SEHAT BERSAMA</h1>
-        <h2 class="text-base mt-1 text-green-100">Panel Pemanggilan Antrian - Poli Umum</h2>
-    </header>
-
+@section('content')
     <!-- Konten -->
     <main class="flex-grow flex flex-col items-center justify-center p-6">
         <!-- Nomor terakhir -->
@@ -51,11 +21,6 @@
             </div>
         </div>
     </main>
-
-    <!-- Footer -->
-    <footer class="py-4 text-center text-sm bg-white text-gray-500 border-t">
-        &copy; 2025 PT Karya Wiguna. All rights reserved.
-    </footer>
 
     <script>
         let waitingList = [1, 2, 3, 4, 5]; // Contoh antrian awal
@@ -87,7 +52,4 @@
         // Tampilkan awal
         renderWaitingList();
     </script>
-
-</body>
-
-</html>
+@endsection
