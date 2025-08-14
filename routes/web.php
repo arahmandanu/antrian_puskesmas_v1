@@ -14,11 +14,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('loket_antrian.index');
-    // return view('welcome');
+    // return view('loket_antrian.index');
+    return view('welcome');
 });
 
 
 Route::get('/staff', function () {
     return view('loket_staff.index');
+});
+
+
+
+Route::get('/poli', function () {
+    return view('loket_staff.poli');
 });
