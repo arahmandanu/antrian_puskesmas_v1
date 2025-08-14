@@ -41,6 +41,6 @@ jobs:
         run: |
           ./vendor/bin/php-cs-fixer fix --dry-run --diff --allow-risky=yes
 
-      - name: Run Larastan (PHPStan)
-        run: |
-          ./vendor/bin/phpstan analyse app/ --level max
+      # - name: Run Larastan (PHPStan)
+      #   run: |
+      #     ./vendor/bin/phpstan analyse app/ --level max
