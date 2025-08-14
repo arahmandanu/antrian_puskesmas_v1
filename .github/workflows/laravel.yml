@@ -39,7 +39,7 @@ jobs:
 
       - name: Run PHP CS Fixer
         run: |
-          ./vendor/bin/php-cs-fixer fix --dry-run --diff
+          ./vendor/bin/php-cs-fixer fix --dry-run --diff --allow-risky=yes
 
       - name: Run Larastan (PHPStan)
         run: |
