@@ -4,19 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pemanggilan Antrian - Poli Umum</title>
-    <script src="https://cdn.tailwindcss.com/3.4.0"></script>
+    <title>Layar Panggilan Antrian Poli Umum</title>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <!-- Tailwind CSS v4.1 CDN -->
+    {{-- <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script> --}}
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {},
+            }
+        }
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
-        }
-
-        .btn-touch {
-            transition: transform 0.15s ease-out;
-        }
-
-        .btn-touch:active {
-            transform: scale(1.05);
         }
     </style>
 </head>
@@ -28,27 +29,21 @@
         <img src="https://via.placeholder.com/100x100?text=Logo" alt="Logo Puskesmas"
             class="w-20 h-20 rounded-full border-4 border-white mb-3 mx-auto">
         <h1 class="text-3xl font-bold tracking-wide">PUSKESMAS SEHAT BERSAMA</h1>
-        <h2 class="text-base mt-1 text-green-100">Panel Pemanggilan Antrian - Poli Umum</h2>
+        <h2 class="text-lg mt-1 text-green-100">Antrian Poli Umum</h2>
     </header>
 
     <!-- Konten -->
     <main class="flex-grow flex flex-col items-center justify-center p-6">
-        <!-- Nomor terakhir -->
-        <h2 class="text-2xl font-bold text-green-700 mb-6">Poli Umum</h2>
-        <div id="nomor-antrian" class="text-[150px] font-bold text-gray-900 mb-10">-</div>
+        <!-- Nomor Terpanggil -->
+        <div class="text-center mb-12">
+            <p class="text-gray-500 text-xl">Sedang Dipanggil</p>
+            <div class="text-[140px] font-extrabold text-green-700 drop-shadow-lg" id="nomor-sekarang">A12</div>
+        </div>
 
-        <!-- Tombol panggil -->
-        <button id="btn-panggil"
-            class="btn-touch bg-green-600 text-white text-3xl px-12 py-6 rounded-xl shadow-lg hover:bg-green-700 transition">
-            Panggil
-        </button>
-
-        <!-- Daftar antrian belum dipanggil -->
-        <div class="mt-12 w-full max-w-xl">
-            <h3 class="text-lg font-semibold text-gray-700 mb-3">Antrian Menunggu:</h3>
-            <div id="daftar-antrian" class="flex flex-wrap gap-3">
-                <!-- Nomor antrian menunggu akan muncul di sini -->
-            </div>
+        <!-- Nomor Selanjutnya -->
+        <div class="text-center">
+            <p class="text-gray-500 text-xl">Nomor Berikutnya</p>
+            <div class="text-[90px] font-bold text-gray-800" id="nomor-selanjutnya">A13</div>
         </div>
     </main>
 
@@ -58,34 +53,27 @@
     </footer>
 
     <script>
-        let waitingList = [1, 2, 3, 4, 5]; // Contoh antrian awal
-        const nomorEl = document.getElementById("nomor-antrian");
-        const daftarEl = document.getElementById("daftar-antrian");
-        const btn = document.getElementById("btn-panggil");
+        // Contoh data sementara, bisa diambil dari backend Laravel
+        let nomorSekarang = 'A12';
+        let nomorSelanjutnya = 'A13';
 
-        function renderWaitingList() {
-            daftarEl.innerHTML = "";
-            waitingList.forEach(num => {
-                const badge = document.createElement("div");
-                badge.className = "px-5 py-3 bg-green-100 text-green-800 font-bold rounded-lg shadow";
-                badge.textContent = num;
-                daftarEl.appendChild(badge);
-            });
+        const nomorSekarangEl = document.getElementById("nomor-sekarang");
+        const nomorSelanjutnyaEl = document.getElementById("nomor-selanjutnya");
+
+        // Fungsi update nomor (simulasi)
+        function updateNomor(nomorNow, nomorNext) {
+            nomorSekarangEl.textContent = nomorNow;
+            nomorSelanjutnyaEl.textContent = nomorNext;
         }
 
-        btn.addEventListener("click", () => {
-            if (waitingList.length > 0) {
-                let next = waitingList.shift();
-                nomorEl.textContent = next;
-                renderWaitingList();
-            } else {
-                nomorEl.textContent = "-";
-                alert("Tidak ada antrian menunggu");
-            }
-        });
-
-        // Tampilkan awal
-        renderWaitingList();
+        // Contoh simulasi update setiap 5 detik
+        // setInterval(() => {
+        //     let nowNum = parseInt(nomorSekarang.slice(1)) + 1;
+        //     let nextNum = nowNum + 1;
+        //     nomorSekarang = 'A' + nowNum;
+        //     nomorSelanjutnya = 'A' + nextNum;
+        //     updateNomor(nomorSekarang, nomorSelanjutnya);
+        // }, 5000);
     </script>
 
 </body>

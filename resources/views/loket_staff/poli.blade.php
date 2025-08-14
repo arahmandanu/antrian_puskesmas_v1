@@ -3,6 +3,10 @@
 @section('content')
     <!-- Konten -->
     <main class="flex-grow p-6">
+        <div>
+            <h1 class="text-2xl font-bold text-center mb-6">Daftar Poli</h1>
+            <p class="text-center text-gray-600 mb-10">Pilih poli untuk membuat nomor antrian baru</p>
+        </div>
         <div id="poli-container"
             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 max-w-7xl mx-auto">
             <!-- Button poli akan di-generate oleh JS -->
