@@ -9,7 +9,6 @@
         </div>
     </main>
 
-
     <script>
         const poliList = [{
                 nama: "Poli Umum",
