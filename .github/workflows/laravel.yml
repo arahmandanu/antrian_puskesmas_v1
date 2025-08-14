@@ -24,7 +24,7 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1' # sesuaikan versi PHP Laravel 9 Anda
+          php-version: '8.1'
           tools: composer
 
       - name: Install dependencies
