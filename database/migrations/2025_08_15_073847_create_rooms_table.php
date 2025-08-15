@@ -15,14 +15,15 @@ return new class extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
-            $table->text('name')->nullable();
+            $table->string('code')->unique()->nullable(false);
+            $table->text('name')->nullable(false);
             $table->text('current_queue')->nullable();
-            $table->integer('number_display')->default(0)->nullable(false);
+            $table->integer('number_display')->default(0)->nullable(false)->unique();
             $table->boolean('show')->default(true);
             $table->integer('lantai')->default(0)->nullable(false);
             $table->text('staff_name')->nullable();
             $table->text('last_call_queue')->nullable();
+            $table->dateTime('last_call_time')->nullable();
             $table->timestamps();
         });
     }

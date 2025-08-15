@@ -2,11 +2,11 @@
 
 namespace App\Enum;
 
-enum CodeServiceEnum: string
+enum LocketList: string
 {
-    case TELLER = 'A';
-    case CS = 'B';
-    case PEGADAIAN = 'C';
+    case PENDAFTARAN = 'A';
+    case LANSIA = 'B';
+    case LABORATE = 'C';
 
     public static function toArray()
     {
