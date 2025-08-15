@@ -14,8 +14,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/admin/login', function () {
-    return view('admin.auth.login');
+Route::group(['prefix' => '/admin', 'middleware' => ['AlreadyLogin']], function () {
+    Route::get('login', [App\Http\Controllers\AuthenticationController::class, 'index'])->name('admin.login');
+    Route::post('login', [App\Http\Controllers\AuthenticationController::class, 'login'])->name('admin.login.submit');
+});
+
+
+Route::group(['prefix' => '/admin_dashboard', 'middleware' => ['auth:web']], function () {
+    route::get('/', function () {
+        return view('admin.index');
+    })->name('admin.dashboard');
+
+    route::get('/logout', [App\Http\Controllers\AuthenticationController::class, 'logout'])->name('admin.logout');
 });
 
 Route::get('/', function () {
