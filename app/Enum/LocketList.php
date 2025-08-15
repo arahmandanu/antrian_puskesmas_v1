@@ -19,7 +19,7 @@ enum LocketList: string
         return $values;
     }
 
-    public static function getString()
+    public static function allIntoString()
     {
         return implode(', ', self::toArray());
     }

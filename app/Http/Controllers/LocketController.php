@@ -18,7 +18,7 @@ class LocketController extends Controller
 
     public function createQueue(Request $request)
     {
-        $list = LocketList::getString();
+        $list = LocketList::allIntoString();
         $validated = $request->validate([
             'code' => ['required', "in:$list"],
         ]);
