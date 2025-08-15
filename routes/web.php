@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+Route::get('/admin/login', function () {
+    return view('admin.auth.login');
+});
+
 Route::get('/', function () {
     return view('loket_antrian.index');
     return view('welcome');
@@ -38,4 +43,8 @@ Route::get('/poli_call', function () {
 
 Route::get('/poli_terpanggil', function () {
     return view('pasien.poli_terpanggil');
+});
+
+Route::get('/admin', function () {
+    return view('admin.index');
 });
