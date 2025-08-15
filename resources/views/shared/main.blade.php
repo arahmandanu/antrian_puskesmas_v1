@@ -21,9 +21,12 @@
             /* Membesar saat klik/touch */
         }
     </style>
+
+    <!-- jQuery -->
+    <script src="{{ asset('js/startmin/js/jquery.min.js') }}"></script>
 </head>
 
-<body class="bg-gray-100 h-screen flex flex-col">
+<body class="bg-gray-100 min-h-screen flex flex-col">
 
     @include('shared.header')
 
@@ -31,6 +34,7 @@
     @yield('content')
 
     @include('shared.footer')
+    <script src="{{ asset('js/app.js') }}"></script>
 </body>
 
 </html>

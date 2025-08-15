@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/locket_antrian', [App\Http\Controllers\LocketController::class, 'index'])->name('loket_antrian.index');
+Route::group(['prefix' => '/locket'], function () {
+    Route::post('/create-queue', [App\Http\Controllers\LocketController::class, 'createQueue'])->name('loket_antrian.createQueue');
+});
 
 Route::group(['prefix' => '/admin', 'middleware' => ['AlreadyLogin']], function () {
     Route::get('login', [App\Http\Controllers\AuthenticationController::class, 'index'])->name('admin.login');
@@ -42,12 +46,6 @@ Route::group(['prefix' => '/admin_dashboard', 'middleware' => ['auth:web']], fun
 
 
 
-
-
-Route::get('/', function () {
-    return view('loket_antrian.index');
-    return view('welcome');
-});
 
 
 Route::get('/staff', function () {
