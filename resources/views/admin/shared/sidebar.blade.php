@@ -1,9 +1,12 @@
 <aside class="sidebar navbar-default" role="navigation">
     <div class="sidebar-nav navbar-collapse">
-        <ul class="nav" id="side-menu">
+        <ul class="nav in" id="side-menu">
+
             <li>
-                <a href="index.html" class="active"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                <a href="{{ route('admin.dashboard') }}" class="{{ request()->is('admin_dashboard') ? 'active' : '' }}"><i
+                        class="fa fa-dashboard fa-fw"></i> Dashboard</a>
             </li>
+
             <li>
                 <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
@@ -16,9 +19,13 @@
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
+
             <li>
-                <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
+                <a href="{{ route('admin.users.index') }}"
+                    class="{{ request()->is('admin_dashboard/users*') ? 'active' : '' }}"><i
+                        class="fa fa-user fa-fw"></i> Users</a>
             </li>
+
             <li>
                 <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
             </li>

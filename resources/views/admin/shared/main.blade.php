@@ -25,8 +25,15 @@
     <!-- Morris Charts CSS -->
     <link href="{{ asset('css/startmin/css/morris.css') }}" rel="stylesheet">
 
+    <!-- Custom CSS for DataTables -->
+    <link href="{{ asset('css/startmin/css/dataTables/dataTables.bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/startmin/css/dataTables/dataTables.responsive.css') }}" rel="stylesheet">
+
     <!-- Custom Fonts -->
     <link href="{{ asset('css/startmin/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+
+    <!-- jQuery -->
+    <script src="{{ asset('js/startmin/js/jquery.min.js') }}"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -74,8 +81,9 @@
     </div>
     <!-- /#wrapper -->
 
-    <!-- jQuery -->
-    <script src="{{ asset('js/startmin/js/jquery.min.js') }}"></script>
+    <!-- Bootstrap datatable -->
+    <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables/dataTables.bootstrap.min.js') }}"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="{{ asset('js/startmin/js/bootstrap.min.js') }}"></script>
@@ -85,8 +93,8 @@
 
     <!-- Morris Charts JavaScript -->
     <script src="{{ asset('js/startmin/js/raphael.min.js') }}"></script>
-    <script src="{{ asset('js/startmin/js/morris.min.js') }}"></script>
-    <script src="{{ asset('js/startmin/js/morris-data.js') }}"></script>
+    {{-- <script src="{{ asset('js/startmin/js/morris.min.js') }}"></script>
+    <script src="{{ asset('js/startmin/js/morris-data.js') }}"></script> --}}
 
     <!-- Custom Theme JavaScript -->
     <script src="{{ asset('js/startmin/js/startmin.js') }}"></script>

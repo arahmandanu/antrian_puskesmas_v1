@@ -21,12 +21,28 @@ Route::group(['prefix' => '/admin', 'middleware' => ['AlreadyLogin']], function 
 
 
 Route::group(['prefix' => '/admin_dashboard', 'middleware' => ['auth:web']], function () {
-    route::get('/', function () {
-        return view('admin.index');
-    })->name('admin.dashboard');
+    route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
 
     route::get('/logout', [App\Http\Controllers\AuthenticationController::class, 'logout'])->name('admin.logout');
+    Route::group(['prefix' => 'users'], function () {
+        Route::get('/', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.users.index');
+        Route::get('/create', [App\Http\Controllers\Admin\UserController::class, 'create'])->name('admin.users.create');
+        Route::post('/store', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('admin.users.store');
+        Route::get('/{user}/edit', [App\Http\Controllers\Admin\UserController::class, 'edit'])->name('admin.users.edit');
+        Route::put('/{user}', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('admin.users.update');
+        Route::delete('/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('admin.users.destroy');
+    });
 });
+
+
+
+
+
+
+
+
+
+
 
 Route::get('/', function () {
     return view('loket_antrian.index');
