@@ -1,0 +1,48 @@
+    html,
+    body {
+        height: 100%;
+        overflow: auto;
+    }
+
+    body {
+        overflow: hidden;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .btn-touch {
+        transition: transform 0.15s ease-out;
+    }
+
+    .btn-touch:active {
+        transform: scale(1.2);
+        /* Membesar saat klik/touch */
+    }
+
+    /* Chrome, Edge, Safari */
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        /* slate-100 */
+        border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #16a34a;
+        /* green-600 */
+        border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #15803d;
+        /* green-700 */
+    }
+
+    /* Firefox */
+    .custom-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: #16a34a #f1f5f9;
+    }
