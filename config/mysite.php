@@ -7,4 +7,6 @@ return [
     'total_locket_queue' => '5',
     // Total Lantai yang ada
     'total_lantai' => '3',
+    // total loket yang ada
+    'total_loket' => '5',
 ];

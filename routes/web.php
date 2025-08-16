@@ -52,6 +52,15 @@ Route::group(['prefix' => '/admin_dashboard', 'middleware' => ['auth:web']], fun
         Route::put('/{poli}', [App\Http\Controllers\Admin\RoomController::class, 'update'])->name('admin.poli.update');
         Route::delete('/{poli}', [App\Http\Controllers\Admin\RoomController::class, 'destroy'])->name('admin.poli.destroy');
     });
+
+    Route::group(['prefix' => 'loket'], function () {
+        Route::get('/', [App\Http\Controllers\Admin\LocketController::class, 'index'])->name('admin.loket.index');
+        Route::get('/create', [App\Http\Controllers\Admin\LocketController::class, 'create'])->name('admin.loket.create');
+        Route::post('/store', [App\Http\Controllers\Admin\LocketController::class, 'store'])->name('admin.loket.store');
+        Route::get('/{loket}/edit', [App\Http\Controllers\Admin\LocketController::class, 'edit'])->name('admin.loket.edit');
+        Route::put('/{loket}', [App\Http\Controllers\Admin\LocketController::class, 'update'])->name('admin.loket.update');
+        Route::delete('/{loket}', [App\Http\Controllers\Admin\LocketController::class, 'destroy'])->name('admin.loket.destroy');
+    });
 });
 
 
