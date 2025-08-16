@@ -7,6 +7,35 @@ use Illuminate\Database\Eloquent\Model;
 
 class Room extends Model
 {
+    public const CODE = [
+        'A',
+        'B',
+        'C',
+        'D',
+        'E',
+        'F',
+        'G',
+        'H',
+        'I',
+        'J',
+        'K',
+        'L',
+        'M',
+        'N',
+        'O',
+        'P',
+        'Q',
+        'R',
+        'S',
+        'T',
+        'U',
+        'V',
+        'W',
+        'X',
+        'Y',
+        'Z'
+    ];
+
     use HasFactory;
 
     protected $table = 'rooms';
@@ -15,11 +44,29 @@ class Room extends Model
         'code',
         'name',
         'current_queue',
-        'number_display',
         'show',
         'lantai',
-        'staff_name',
         'last_call_queue',
         'last_call_time',
     ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'show' => 'boolean',
+    ];
+
+    public function availableCodes($except = null)
+    {
+        if ($except) {
+            $usedCode = self::where('code', '!=', $except)->pluck('code')->toArray();
+        } else {
+            $usedCode = self::all()->pluck('code')->toArray();
+        }
+
+        return array_diff(self::CODE, $usedCode);
+    }
 }

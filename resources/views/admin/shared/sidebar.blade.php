@@ -27,6 +27,12 @@
             </li>
 
             <li>
+                <a href="{{ route('admin.poli.index') }}"
+                    class="{{ request()->is('admin_dashboard/poli*') ? 'active' : '' }}"><i class="fa fa-bed fa-fw"></i>
+                    Poli</a>
+            </li>
+
+            <li>
                 <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
             </li>
             <li>

@@ -64,7 +64,7 @@
     </style>
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     <div id="wrapper">
 
         @include('admin.shared.header')
@@ -75,7 +75,7 @@
             @yield('content')
         </div>
         <!-- /#page-wrapper -->
-        <footer>
+        <footer class="bg-black text-white mt-auto">
             &copy; 2025 by PT Karya Wiguna. Semua hak cipta dilindungi.
         </footer>
     </div>

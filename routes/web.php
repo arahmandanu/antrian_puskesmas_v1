@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/locket_antrian', [App\Http\Controllers\LocketController::class, 'index'])->name('loket_antrian.index');
+Route::get('/', [App\Http\Controllers\LocketController::class, 'index'])->name('loket_antrian.index');
 Route::group(['prefix' => '/locket'], function () {
     Route::get('/list', [App\Http\Controllers\LocketController::class, 'locketList'])->name('loket_antrian.list');
     Route::post('/create-queue', [App\Http\Controllers\LocketController::class, 'createQueue'])->name('loket_antrian.createQueue');
@@ -33,8 +33,8 @@ Route::group(['prefix' => '/admin', 'middleware' => ['AlreadyLogin']], function 
 
 Route::group(['prefix' => '/admin_dashboard', 'middleware' => ['auth:web']], function () {
     route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
-
     route::get('/logout', [App\Http\Controllers\AuthenticationController::class, 'logout'])->name('admin.logout');
+
     Route::group(['prefix' => 'users'], function () {
         Route::get('/', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.users.index');
         Route::get('/create', [App\Http\Controllers\Admin\UserController::class, 'create'])->name('admin.users.create');
@@ -42,6 +42,15 @@ Route::group(['prefix' => '/admin_dashboard', 'middleware' => ['auth:web']], fun
         Route::get('/{user}/edit', [App\Http\Controllers\Admin\UserController::class, 'edit'])->name('admin.users.edit');
         Route::put('/{user}', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('admin.users.update');
         Route::delete('/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('admin.users.destroy');
+    });
+
+    Route::group(['prefix' => 'poli'], function () {
+        Route::get('/', [App\Http\Controllers\Admin\RoomController::class, 'index'])->name('admin.poli.index');
+        Route::get('/create', [App\Http\Controllers\Admin\RoomController::class, 'create'])->name('admin.poli.create');
+        Route::post('/store', [App\Http\Controllers\Admin\RoomController::class, 'store'])->name('admin.poli.store');
+        Route::get('/{poli}/edit', [App\Http\Controllers\Admin\RoomController::class, 'edit'])->name('admin.poli.edit');
+        Route::put('/{poli}', [App\Http\Controllers\Admin\RoomController::class, 'update'])->name('admin.poli.update');
+        Route::delete('/{poli}', [App\Http\Controllers\Admin\RoomController::class, 'destroy'])->name('admin.poli.destroy');
     });
 });
 

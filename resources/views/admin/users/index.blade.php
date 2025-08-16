@@ -29,7 +29,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($users as $user)
+                                    @foreach ($users as $user)
                                         <tr class="odd gradeX">
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
@@ -44,11 +44,7 @@
                                                 @endif
                                             </td>
                                         </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="4" class="text-center">No users found</td>
-                                        </tr>
-                                    @endforelse
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
