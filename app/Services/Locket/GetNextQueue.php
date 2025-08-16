@@ -25,6 +25,7 @@ class GetNextQueue extends \App\Services\AbstractService
         }
 
         $next->called = true;
+        $next->locket_number = $this->locket_number;
         $next->save();
 
         return [

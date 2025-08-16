@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Enum\LocketList;
 use App\Models\LocketQueue;
 use App\Models\LocketStaff;
+use App\Services\Locket\GetRecallQueue;
 use Illuminate\Support\Arr;
 
 class LocketController extends Controller
@@ -74,6 +75,17 @@ class LocketController extends Controller
             $result = $allTotal->pluck('total', 'locket_code')->toArray();
 
             return $this->successResponse($result);
+        } else {
+            return $this->errorResponse('Invalid request format. Please use JSON.', 400);
+        }
+    }
+
+    public function getRecallQueue(Request $request, $locket_code, $locket_number)
+    {
+        if ($request->wantsJson()) {
+            $lastQueue = (new GetRecallQueue($locket_code, $locket_number))->handle();
+
+            return $this->successResponse($lastQueue);
         } else {
             return $this->errorResponse('Invalid request format. Please use JSON.', 400);
         }

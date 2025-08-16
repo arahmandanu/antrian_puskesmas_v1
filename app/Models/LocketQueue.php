@@ -14,6 +14,7 @@ class LocketQueue extends Model
 
     protected $fillable = [
         'locket_code',
+        'locket_number',
         'number_queue',
         'called',
         'created_at',
@@ -26,6 +27,15 @@ class LocketQueue extends Model
             ->where('called', false)
             ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
             ->orderBy('id', 'asc');
+    }
+
+    public function scopeLastCallByLocketCode($query, $locketCode, $locketNumber)
+    {
+        return $query->where('locket_code', $locketCode)
+            ->where('locket_number', $locketNumber)
+            ->where('called', true)
+            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->orderBy('id', 'desc');
     }
 
     public function locketTotal()

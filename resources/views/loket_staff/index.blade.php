@@ -95,7 +95,10 @@
 
     <script>
         const allButtons = document.querySelectorAll('button');
+        const recallUrlTemplate =
+            "{{ route('loket_antrian.recall', ['locket_code' => ':code', 'locket_number' => ':number']) }}";
         let locketNumber = document.getElementById('loket_number').value;
+
         $(document).ready(function() {
             setInterval(() => {
                 updateSisaAntrian();
@@ -121,10 +124,11 @@
         }
 
         let counter = {
-            P: parseInt(localStorage.getItem("P") || 0),
-            L: parseInt(localStorage.getItem("L") || 0),
-            LA: parseInt(localStorage.getItem("LA") || 0)
+            P: parseInt(localStorage.getItem("A") || 0),
+            L: parseInt(localStorage.getItem("B") || 0),
+            LA: parseInt(localStorage.getItem("C") || 0)
         };
+
         const riwayatEl = document.getElementById("riwayat");
 
         function panggilAntrian(btn, prefix, poli) {
@@ -144,7 +148,6 @@
                 },
                 dataType: "JSON",
                 success: function(response) {
-                    console.log(response);
                     if (response.hasOwnProperty('data')) {
                         if (response.data?.number_queue && response.data?.locket_number && response.data
                             ?.poli) {
@@ -159,29 +162,60 @@
                         allButtons.forEach(btn => btn.disabled = false);
                         btn.textContent = originalText;
                     }
-
+                },
+                statusCode: {
+                    404: function() {
+                        alert("Antrian Kosong");
+                        allButtons.forEach(btn => btn.disabled = false);
+                        btn.textContent = originalText;
+                    }
                 },
                 error: function(xhr, status, error) {
-                    console.error("Error:", error);
-                    alert("Gagal memanggil antrian. Silakan coba lagi.");
-                    allButtons.forEach(btn => btn.disabled = false);
-                    btn.textContent = originalText;
+                    if (xhr.status !== 404) {
+                        alert("Gagal memanggil antrian. Silakan coba lagi.");
+                        allButtons.forEach(btn => btn.disabled = false);
+                        btn.textContent = originalText;
+                    }
                 }
             });
         }
 
         function recallAntrian(btn, prefix, poli) {
-            allButtons.forEach(btn => btn.disabled = true);
+            let localData = localStorage.getItem(`${prefix}`);
+            const originalText = btn.textContent;
 
-            if (counter[prefix] === 0) {
-                alert("Belum ada nomor untuk dipanggil ulang!");
-                container.querySelectorAll('button').forEach(b => b.disabled = false);
-                return;
+            if (localData === null) {
+                let url = recallUrlTemplate
+                    .replace(':code', prefix)
+                    .replace(':number', locketNumber);
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    data: {},
+                    dataType: "json",
+                    success: function(response) {
+                        console.log(response);
+                        if (response.hasOwnProperty('data')) {
+                            if (response.data?.number_queue && response.data?.locket_number && response.data
+                                ?.poli) {
+                                tampilkanNomor(btn, response.data?.locket_code + response.data?.number_queue,
+                                    response.data
+                                    ?.poli, originalText, response.data?.locket_code);
+                            } else {
+                                allButtons.forEach(btn => btn.disabled = false);
+                                btn.textContent = originalText;
+                            }
+                        } else {
+                            allButtons.forEach(btn => btn.disabled = false);
+                            btn.textContent = originalText;
+                        }
+                    }
+                });
+            } else {
+                const originalText = btn.textContent;
+                allButtons.forEach(btn => btn.disabled = true);
+                tampilkanNomor(btn, localData, poli, originalText, prefix);
             }
-
-            tampilkanNomor(prefix, poli);
-
-            allButtons.forEach(btn => btn.disabled = false);
         }
 
         function tampilkanNomor(btn, prefix, poli, originalText, locket_code) {
