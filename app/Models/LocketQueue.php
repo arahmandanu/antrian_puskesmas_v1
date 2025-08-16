@@ -42,7 +42,18 @@ class LocketQueue extends Model
     {
         return $this->select('locket_code', DB::raw('count(*) as total'))
             ->where('called', false)
+            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
             ->groupBy('locket_code')
+            ->get();
+    }
+
+    public function getHistoryBy($locketNumber)
+    {
+        return $this->where('called', true)
+            ->where('locket_number', $locketNumber)
+            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->orderBy('id', 'desc')
+            ->limit(5)
             ->get();
     }
 }

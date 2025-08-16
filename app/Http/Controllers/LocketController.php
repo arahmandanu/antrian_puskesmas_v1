@@ -51,6 +51,7 @@ class LocketController extends Controller
         return view('loket_staff.index', [
             'loket' => $locket_number,
             'locket_totals' => $result,
+            'histories' => (new LocketQueue())->getHistoryBy($locket_number->locket_number)
         ]);
     }
 

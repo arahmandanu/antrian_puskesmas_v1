@@ -93,7 +93,12 @@
         <div class="w-full max-w-3xl bg-white shadow-lg rounded-xl p-6">
             <h3 class="text-xl font-semibold mb-4">Riwayat Panggilan</h3>
             <ul id="riwayat" class="space-y-2 text-lg text-gray-800">
-                <li class="text-gray-500">Belum ada panggilan</li>
+                @forelse ($histories as $history)
+                    <li>{{ $history->locket_code . $history->number_queue }} -
+                        {{ LocketList::from($history->locket_code)->name }}</li>
+                @empty
+                    <li class="text-gray-500">Belum ada panggilan</li>
+                @endforelse
             </ul>
         </div>
 
