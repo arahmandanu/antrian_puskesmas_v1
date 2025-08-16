@@ -69,4 +69,9 @@ class Room extends Model
 
         return array_diff(self::CODE, $usedCode);
     }
+
+    public function scopeShow($query)
+    {
+        return $query->where('show', '=', true);
+    }
 }

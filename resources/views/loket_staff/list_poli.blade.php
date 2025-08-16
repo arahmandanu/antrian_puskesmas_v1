@@ -11,183 +11,32 @@
             <!-- Grid 15 Poli dengan 4 kolom -->
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-                <!-- Contoh Poli -->
-                <div onclick="pilihPoli('Poli Umum')"
-                    class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
+                @forelse ($polis as $poli)
+                    <!-- Contoh Poli -->
+                    <div onclick="pilihPoli('{{ $poli->name }}')"
+                        class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
                  hover:shadow-xl hover:scale-105 transform transition-all duration-300
                  flex flex-col items-center justify-center p-6">
-                    <span class="text-4xl mb-2">🩺</span>
-                    <h3 class="text-lg font-bold text-green-700">Poli Umum</h3>
-                    <p class="text-gray-600 text-sm">Dokter: dr. Andi</p>
-                    <p class="text-sm text-gray-800 mt-2">No terakhir: <span class="font-semibold">A023</span></p>
-                </div>
+                        <span class="text-4xl mb-2">🩺</span>
+                        <h3 class="text-lg font-bold text-green-700">{{ Str::upper($poli->name) }}</h3>
+                        <p class="text-sm text-gray-800 mt-2">No terakhir: <span
+                                class="font-semibold">{{ $poli->last_call_queue ?? '-' }}</span></p>
 
-                <!-- Contoh Poli -->
-                <div onclick="pilihPoli('Poli Umum')"
-                    class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
-                 hover:shadow-xl hover:scale-105 transform transition-all duration-300
+                        <p class="text-sm text-gray-800 mt-2">lantai: <span class="font-semibold">{{ $poli->lantai }}</span>
+                        </p>
+                    </div>
+                @empty
+                    <!-- Jika tidak ada poli -->
+                    <div
+                        class="bg-white border-2 border-red-600 rounded-xl shadow-md
                  flex flex-col items-center justify-center p-6">
-                    <span class="text-4xl mb-2">🩺</span>
-                    <h3 class="text-lg font-bold text-green-700">Poli Umum</h3>
-                    <p class="text-gray-600 text-sm">Dokter: dr. Andi</p>
-                    <p class="text-sm text-gray-800 mt-2">No terakhir: <span class="font-semibold">A023</span></p>
-                </div>
-
-                <!-- Contoh Poli -->
-                <div onclick="pilihPoli('Poli Umum')"
-                    class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
-                 hover:shadow-xl hover:scale-105 transform transition-all duration-300
-                 flex flex-col items-center justify-center p-6">
-                    <span class="text-4xl mb-2">🩺</span>
-                    <h3 class="text-lg font-bold text-green-700">Poli Umum</h3>
-                    <p class="text-gray-600 text-sm">Dokter: dr. Andi</p>
-                    <p class="text-sm text-gray-800 mt-2">No terakhir: <span class="font-semibold">A023</span></p>
-                </div>
-
-                <!-- Contoh Poli -->
-                <div onclick="pilihPoli('Poli Umum')"
-                    class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
-                 hover:shadow-xl hover:scale-105 transform transition-all duration-300
-                 flex flex-col items-center justify-center p-6">
-                    <span class="text-4xl mb-2">🩺</span>
-                    <h3 class="text-lg font-bold text-green-700">Poli Umum</h3>
-                    <p class="text-gray-600 text-sm">Dokter: dr. Andi</p>
-                    <p class="text-sm text-gray-800 mt-2">No terakhir: <span class="font-semibold">A023</span></p>
-                </div>
-
-                <!-- Contoh Poli -->
-                <div onclick="pilihPoli('Poli Umum')"
-                    class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
-                 hover:shadow-xl hover:scale-105 transform transition-all duration-300
-                 flex flex-col items-center justify-center p-6">
-                    <span class="text-4xl mb-2">🩺</span>
-                    <h3 class="text-lg font-bold text-green-700">Poli Umum</h3>
-                    <p class="text-gray-600 text-sm">Dokter: dr. Andi</p>
-                    <p class="text-sm text-gray-800 mt-2">No terakhir: <span class="font-semibold">A023</span></p>
-                </div>
-
-                <!-- Contoh Poli -->
-                <div onclick="pilihPoli('Poli Umum')"
-                    class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
-                 hover:shadow-xl hover:scale-105 transform transition-all duration-300
-                 flex flex-col items-center justify-center p-6">
-                    <span class="text-4xl mb-2">🩺</span>
-                    <h3 class="text-lg font-bold text-green-700">Poli Umum</h3>
-                    <p class="text-gray-600 text-sm">Dokter: dr. Andi</p>
-                    <p class="text-sm text-gray-800 mt-2">No terakhir: <span class="font-semibold">A023</span></p>
-                </div>
-
-                <!-- Contoh Poli -->
-                <div onclick="pilihPoli('Poli Umum')"
-                    class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
-                 hover:shadow-xl hover:scale-105 transform transition-all duration-300
-                 flex flex-col items-center justify-center p-6">
-                    <span class="text-4xl mb-2">🩺</span>
-                    <h3 class="text-lg font-bold text-green-700">Poli Umum</h3>
-                    <p class="text-gray-600 text-sm">Dokter: dr. Andi</p>
-                    <p class="text-sm text-gray-800 mt-2">No terakhir: <span class="font-semibold">A023</span></p>
-                </div>
-                <!-- Contoh Poli -->
-                <div onclick="pilihPoli('Poli Umum')"
-                    class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
-                 hover:shadow-xl hover:scale-105 transform transition-all duration-300
-                 flex flex-col items-center justify-center p-6">
-                    <span class="text-4xl mb-2">🩺</span>
-                    <h3 class="text-lg font-bold text-green-700">Poli Umum</h3>
-                    <p class="text-gray-600 text-sm">Dokter: dr. Andi</p>
-                    <p class="text-sm text-gray-800 mt-2">No terakhir: <span class="font-semibold">A023</span></p>
-                </div>
-                <!-- Contoh Poli -->
-                <div onclick="pilihPoli('Poli Umum')"
-                    class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
-                 hover:shadow-xl hover:scale-105 transform transition-all duration-300
-                 flex flex-col items-center justify-center p-6">
-                    <span class="text-4xl mb-2">🩺</span>
-                    <h3 class="text-lg font-bold text-green-700">Poli Umum</h3>
-                    <p class="text-gray-600 text-sm">Dokter: dr. Andi</p>
-                    <p class="text-sm text-gray-800 mt-2">No terakhir: <span class="font-semibold">A023</span></p>
-                </div>
-                <!-- Contoh Poli -->
-                <div onclick="pilihPoli('Poli Umum')"
-                    class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
-                 hover:shadow-xl hover:scale-105 transform transition-all duration-300
-                 flex flex-col items-center justify-center p-6">
-                    <span class="text-4xl mb-2">🩺</span>
-                    <h3 class="text-lg font-bold text-green-700">Poli Umum</h3>
-                    <p class="text-gray-600 text-sm">Dokter: dr. Andi</p>
-                    <p class="text-sm text-gray-800 mt-2">No terakhir: <span class="font-semibold">A023</span></p>
-                </div>
-                <!-- Contoh Poli -->
-                <div onclick="pilihPoli('Poli Umum')"
-                    class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
-                 hover:shadow-xl hover:scale-105 transform transition-all duration-300
-                 flex flex-col items-center justify-center p-6">
-                    <span class="text-4xl mb-2">🩺</span>
-                    <h3 class="text-lg font-bold text-green-700">Poli Umum</h3>
-                    <p class="text-gray-600 text-sm">Dokter: dr. Andi</p>
-                    <p class="text-sm text-gray-800 mt-2">No terakhir: <span class="font-semibold">A023</span></p>
-                </div>
-                <!-- Contoh Poli -->
-                <div onclick="pilihPoli('Poli Umum')"
-                    class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
-                 hover:shadow-xl hover:scale-105 transform transition-all duration-300
-                 flex flex-col items-center justify-center p-6">
-                    <span class="text-4xl mb-2">🩺</span>
-                    <h3 class="text-lg font-bold text-green-700">Poli Umum</h3>
-                    <p class="text-gray-600 text-sm">Dokter: dr. Andi</p>
-                    <p class="text-sm text-gray-800 mt-2">No terakhir: <span class="font-semibold">A023</span></p>
-                </div>
-                <!-- Contoh Poli -->
-                <div onclick="pilihPoli('Poli Umum')"
-                    class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
-                 hover:shadow-xl hover:scale-105 transform transition-all duration-300
-                 flex flex-col items-center justify-center p-6">
-                    <span class="text-4xl mb-2">🩺</span>
-                    <h3 class="text-lg font-bold text-green-700">Poli Umum</h3>
-                    <p class="text-gray-600 text-sm">Dokter: dr. Andi</p>
-                    <p class="text-sm text-gray-800 mt-2">No terakhir: <span class="font-semibold">A023</span></p>
-                </div>
-                <!-- Contoh Poli -->
-                <div onclick="pilihPoli('Poli Umum')"
-                    class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
-                 hover:shadow-xl hover:scale-105 transform transition-all duration-300
-                 flex flex-col items-center justify-center p-6">
-                    <span class="text-4xl mb-2">🩺</span>
-                    <h3 class="text-lg font-bold text-green-700">Poli Umum</h3>
-                    <p class="text-gray-600 text-sm">Dokter: dr. Andi</p>
-                    <p class="text-sm text-gray-800 mt-2">No terakhir: <span class="font-semibold">A023</span></p>
-                </div>
-                <!-- Contoh Poli -->
-                <div onclick="pilihPoli('Poli Umum')"
-                    class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
-                 hover:shadow-xl hover:scale-105 transform transition-all duration-300
-                 flex flex-col items-center justify-center p-6">
-                    <span class="text-4xl mb-2">🩺</span>
-                    <h3 class="text-lg font-bold text-green-700">Poli Umum</h3>
-                    <p class="text-gray-600 text-sm">Dokter: dr. Andi</p>
-                    <p class="text-sm text-gray-800 mt-2">No terakhir: <span class="font-semibold">A023</span></p>
-                </div>
-                <!-- Contoh Poli -->
-                <div onclick="pilihPoli('Poli Umum')"
-                    class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
-                 hover:shadow-xl hover:scale-105 transform transition-all duration-300
-                 flex flex-col items-center justify-center p-6">
-                    <span class="text-4xl mb-2">🩺</span>
-                    <h3 class="text-lg font-bold text-green-700">Poli Umum</h3>
-                    <p class="text-gray-600 text-sm">Dokter: dr. Andi</p>
-                    <p class="text-sm text-gray-800 mt-2">No terakhir: <span class="font-semibold">A023</span></p>
-                </div>
+                        <span class="text-4xl mb-2">❌</span>
+                        <h3 class="text-lg font-bold text-red-700">Tidak ada Poli yang tersedia</h3>
+                        <p class="text-gray-600 text-sm">Silahkan hubungi admin untuk menambahkan poli baru.</p>
+                    </div>
+                @endforelse
 
 
-                <div
-                    class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md flex flex-col items-center justify-center p-6">
-                    <span class="text-4xl mb-2">🦷</span>
-                    <h3 class="text-lg font-bold text-green-700">Poli Gigi</h3>
-                    <p class="text-gray-600 text-sm">Dokter: drg. Sinta</p>
-                    <p class="text-sm text-gray-800 mt-2">No terakhir: <span class="font-semibold">B011</span></p>
-                </div>
-
-                <!-- Tambahkan sampai total 15 poli -->
             </div>
         </div>
     </main>

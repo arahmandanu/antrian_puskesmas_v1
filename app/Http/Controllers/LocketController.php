@@ -34,6 +34,8 @@ class LocketController extends Controller
 
     public function locketList()
     {
-        return view('loket_antrian.list_locket');
+        return view('loket_antrian.list_locket', [
+            'lokets' => \App\Models\LocketStaff::orderBy('locket_number', 'asc')->get(),
+        ]);
     }
 }

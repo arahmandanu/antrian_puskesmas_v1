@@ -14,15 +14,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [App\Http\Controllers\LocketController::class, 'index'])->name('loket_antrian.index');
-Route::group(['prefix' => '/locket'], function () {
+Route::group(['prefix' => '/loket'], function () {
     Route::get('/list', [App\Http\Controllers\LocketController::class, 'locketList'])->name('loket_antrian.list');
     Route::post('/create-queue', [App\Http\Controllers\LocketController::class, 'createQueue'])->name('loket_antrian.createQueue');
 });
 
 Route::group(['prefix' => '/poli'], function () {
-    Route::get('/list', function () {
-        return view('loket_staff.list_poli');
-    })->name('loket_antrian.list');
+    Route::get('/list', [App\Http\Controllers\PoliController::class, 'index'])->name('loket_antrian.list');
 });
 
 Route::group(['prefix' => '/admin', 'middleware' => ['AlreadyLogin']], function () {
