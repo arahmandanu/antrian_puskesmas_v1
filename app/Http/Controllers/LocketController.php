@@ -53,6 +53,20 @@ class LocketController extends Controller
         ]);
     }
 
+    public function getNextQeueue(Request $request)
+    {
+        if ($request->wantsJson()) {
+            $next = (new \App\Services\Locket\GetNextQueue($request->input('locket_code'), $request->input('locket_number')))->handle();
+            if ($next === null) {
+                return $this->errorResponse('No more queues available for this locket.', 404);
+            }
+
+            return $this->successResponse($next);
+        } else {
+            return $this->errorResponse('Invalid request format. Please use JSON.', 400);
+        }
+    }
+
     public function getSisaAntrian(Request $request)
     {
         if ($request->wantsJson()) {

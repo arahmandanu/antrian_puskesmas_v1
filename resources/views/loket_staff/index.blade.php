@@ -25,16 +25,16 @@
             <div class="bg-yellow-400 rounded-2xl shadow-xl p-4 flex flex-col items-center gap-2">
                 <span class="text-3xl">📝</span>
                 <h2 class="text-xl font-bold">Pendaftaran</h2>
-                <span class="text-sm font-medium" id="sisa-{{ LocketList::PENDAFTARAN->value }}">Sisa antrian:
+                <span class="text-sm font-medium" id="sisa-{{ LocketList::PENDAFTARAN }}">Sisa antrian:
                     {{ $locket_totals[LocketList::PENDAFTARAN->value] ?? 0 }}</span>
                 </span>
 
                 <div class="flex gap-4 mt-2 w-full">
-                    <button onclick="panggilAntrian('P', 'Pendaftaran')"
+                    <button onclick="panggilAntrian(this,'{{ LocketList::PENDAFTARAN }}', 'PENDAFTARAN')"
                         class="flex-1 py-2 rounded-xl bg-yellow-600 text-white font-bold hover:bg-yellow-700">
                         Panggil
                     </button>
-                    <button onclick="recallAntrian('P', 'Pendaftaran')"
+                    <button onclick="recallAntrian(this, '{{ LocketList::PENDAFTARAN }}', 'PENDAFTARAN')"
                         class="flex-1 py-2 rounded-xl bg-yellow-200 text-yellow-800 font-bold hover:bg-yellow-300">
                         Recall
                     </button>
@@ -45,16 +45,16 @@
             <div class="bg-blue-400 rounded-2xl shadow-xl p-4 flex flex-col items-center gap-2">
                 <span class="text-3xl">🔬</span>
                 <h2 class="text-xl font-bold">Laborate</h2>
-                <span class="text-sm font-medium" id="sisa-{{ LocketList::LABORATE->value }}">Sisa antrian:
+                <span class="text-sm font-medium" id="sisa-{{ LocketList::LABORATE }}">Sisa antrian:
                     {{ $locket_totals[LocketList::LABORATE->value] ?? 0 }}</span>
                 </span>
 
                 <div class="flex gap-4 mt-2 w-full">
-                    <button onclick="panggilAntrian('L', 'Laborate')"
+                    <button onclick="panggilAntrian(this,'{{ LocketList::LABORATE }}', 'Laborate')"
                         class="flex-1 py-2 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700">
                         Panggil
                     </button>
-                    <button onclick="recallAntrian('L', 'Laborate')"
+                    <button onclick="recallAntrian(this, '{{ LocketList::LABORATE }}', 'Laborate')"
                         class="flex-1 py-2 rounded-xl bg-blue-200 text-blue-800 font-bold hover:bg-blue-300">
                         Recall
                     </button>
@@ -65,16 +65,16 @@
             <div class="bg-pink-400 rounded-2xl shadow-xl p-4 flex flex-col items-center gap-2">
                 <span class="text-3xl">👵</span>
                 <h2 class="text-xl font-bold">Lansia</h2>
-                <span class="text-sm font-medium" id="sisa-{{ LocketList::LANSIA->value }}">Sisa antrian:
+                <span class="text-sm font-medium" id="sisa-{{ LocketList::LANSIA }}">Sisa antrian:
                     {{ $locket_totals[LocketList::LANSIA->value] ?? 0 }}</span>
                 </span>
 
                 <div class="flex gap-4 mt-2 w-full">
-                    <button onclick="panggilAntrian('LA', 'Lansia')"
+                    <button onclick="panggilAntrian(this,'{{ LocketList::LANSIA }}', 'Lansia')"
                         class="flex-1 py-2 rounded-xl bg-pink-600 text-white font-bold hover:bg-pink-700">
                         Panggil
                     </button>
-                    <button onclick="recallAntrian('LA', 'Lansia')"
+                    <button onclick="recallAntrian(this, '{{ LocketList::LANSIA }}', 'Lansia')"
                         class="flex-1 py-2 rounded-xl bg-pink-200 text-pink-800 font-bold hover:bg-pink-300">
                         Recall
                     </button>
@@ -94,6 +94,8 @@
     </main>
 
     <script>
+        const allButtons = document.querySelectorAll('button');
+        let locketNumber = document.getElementById('loket_number').value;
         $(document).ready(function() {
             setInterval(() => {
                 updateSisaAntrian();
@@ -126,32 +128,68 @@
         const riwayatEl = document.getElementById("riwayat");
 
         function panggilAntrian(btn, prefix, poli) {
-            btn.disabled = true;
+            // Disable semua tombol di container yang sama
+            allButtons.forEach(btn => btn.disabled = true);
+            const originalText = btn.textContent;
             btn.textContent = "Memanggil...";
-            setTimeout(() => {
-                counter[prefix]++;
-                localStorage.setItem(prefix, counter[prefix]);
-                tampilkanNomor(prefix, poli);
-                btn.disabled = false;
-                btn.textContent = btn.innerHTML; // restore
-            }, 500);
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('loket_antrian.nextQueue') }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    locket_code: prefix,
+                    poli: poli,
+                    locket_number: locketNumber,
+                },
+                dataType: "JSON",
+                success: function(response) {
+                    console.log(response);
+                    if (response.hasOwnProperty('data')) {
+                        if (response.data?.number_queue && response.data?.locket_number && response.data
+                            ?.poli) {
+                            tampilkanNomor(btn, response.data?.locket_code + response.data?.number_queue,
+                                response.data
+                                ?.poli, originalText, response.data?.locket_code);
+                        } else {
+                            allButtons.forEach(btn => btn.disabled = false);
+                            btn.textContent = originalText;
+                        }
+                    } else {
+                        allButtons.forEach(btn => btn.disabled = false);
+                        btn.textContent = originalText;
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                    alert("Gagal memanggil antrian. Silakan coba lagi.");
+                    allButtons.forEach(btn => btn.disabled = false);
+                    btn.textContent = originalText;
+                }
+            });
         }
 
-        function recallAntrian(prefix, poli) {
-            console.log(prefix, poli);
+        function recallAntrian(btn, prefix, poli) {
+            allButtons.forEach(btn => btn.disabled = true);
+
             if (counter[prefix] === 0) {
                 alert("Belum ada nomor untuk dipanggil ulang!");
+                container.querySelectorAll('button').forEach(b => b.disabled = false);
                 return;
             }
+
             tampilkanNomor(prefix, poli);
+
+            allButtons.forEach(btn => btn.disabled = false);
         }
 
-        function tampilkanNomor(prefix, poli) {
-            let nomor = prefix + String(counter[prefix]).padStart(3, "0");
+        function tampilkanNomor(btn, prefix, poli, originalText, locket_code) {
+            let nomor = prefix;
 
             // Update riwayat
             let item = document.createElement("li");
-            item.textContent = `${nomor} - Poli ${poli}`;
+            item.textContent = `${nomor} - ${poli}`;
             riwayatEl.prepend(item);
 
             // Batasi maksimal 5 item
@@ -163,14 +201,20 @@
             if (riwayatEl.firstElementChild.textContent.includes("Belum ada")) {
                 riwayatEl.firstElementChild.remove();
             }
-            console.log(`Panggil ${nomor} untuk Poli ${poli}`);
+
             // Panggilan suara
-            let teksPanggilan = `Nomor antrian ${ejaanNomor(nomor)}, silakan menuju loket ${poli}`;
+            let teksPanggilan = `Nomor antrian ${ejaanNomor(nomor)}, silakan menuju loket ${locketNumber}`;
             speechSynthesis.cancel();
             let utter = new SpeechSynthesisUtterance(teksPanggilan);
             utter.lang = "id-ID";
             utter.rate = 0.9;
             speechSynthesis.speak(utter);
+
+            utter.onend = () => {
+                localStorage.setItem(locket_code, nomor);
+                allButtons.forEach(btn => btn.disabled = false);
+                btn.textContent = originalText;
+            };
         }
 
         function ejaanNomor(nomor) {

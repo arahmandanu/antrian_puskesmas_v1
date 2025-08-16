@@ -19,6 +19,7 @@ Route::group(['prefix' => '/loket'], function () {
     Route::post('/create-queue', [App\Http\Controllers\LocketController::class, 'createQueue'])->name('loket_antrian.createQueue');
     Route::get('/generate_view/{locket_number}', [App\Http\Controllers\LocketController::class, 'generateView'])->name('loket_antrian.generateView');
     Route::get('/sisa-antrian', [App\Http\Controllers\LocketController::class, 'getSisaAntrian'])->name('loket_antrian.sisaAntrian');
+    Route::post('/ambil-antrian-selanjutnya', [App\Http\Controllers\LocketController::class, 'getNextQeueue'])->name('loket_antrian.nextQueue');
 });
 
 Route::group(['prefix' => '/poli'], function () {

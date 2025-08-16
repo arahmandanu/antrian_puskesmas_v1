@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class LocketQueue extends Model
 {
@@ -14,13 +15,23 @@ class LocketQueue extends Model
     protected $fillable = [
         'locket_code',
         'number_queue',
+        'called',
         'created_at',
         'updated_at'
     ];
 
+    public function scopeNextQueue($query, $locketCode)
+    {
+        return $query->where('locket_code', $locketCode)
+            ->where('called', false)
+            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->orderBy('id', 'asc');
+    }
+
     public function locketTotal()
     {
-        return $this->select('locket_code', \DB::raw('count(*) as total'))
+        return $this->select('locket_code', DB::raw('count(*) as total'))
+            ->where('called', false)
             ->groupBy('locket_code')
             ->get();
     }
