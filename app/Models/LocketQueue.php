@@ -52,8 +52,8 @@ class LocketQueue extends Model
         return $this->where('called', true)
             ->where('locket_number', $locketNumber)
             ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
-            ->orderBy('id', 'desc')
             ->limit(5)
+            ->orderBy('updated_at', 'desc')
             ->get();
     }
 }
