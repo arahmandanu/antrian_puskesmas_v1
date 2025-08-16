@@ -30,11 +30,13 @@
                 </span>
 
                 <div class="flex gap-4 mt-2 w-full">
-                    <button onclick="panggilAntrian(this,'{{ LocketList::PENDAFTARAN }}', 'PENDAFTARAN')"
+                    <button
+                        onclick="panggilAntrian(this,'{{ LocketList::PENDAFTARAN }}', '{{ LocketList::from(LocketList::PENDAFTARAN->value)->name }}')"
                         class="flex-1 py-2 rounded-xl bg-yellow-600 text-white font-bold hover:bg-yellow-700">
                         Panggil
                     </button>
-                    <button onclick="recallAntrian(this, '{{ LocketList::PENDAFTARAN }}', 'PENDAFTARAN')"
+                    <button
+                        onclick="recallAntrian(this, '{{ LocketList::PENDAFTARAN }}', '{{ LocketList::from(LocketList::PENDAFTARAN->value)->name }}')"
                         class="flex-1 py-2 rounded-xl bg-yellow-200 text-yellow-800 font-bold hover:bg-yellow-300">
                         Recall
                     </button>
@@ -50,11 +52,13 @@
                 </span>
 
                 <div class="flex gap-4 mt-2 w-full">
-                    <button onclick="panggilAntrian(this,'{{ LocketList::LABORATE }}', 'Laborate')"
+                    <button
+                        onclick="panggilAntrian(this,'{{ LocketList::LABORATE }}', '{{ LocketList::from(LocketList::LABORATE->value)->name }}')"
                         class="flex-1 py-2 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700">
                         Panggil
                     </button>
-                    <button onclick="recallAntrian(this, '{{ LocketList::LABORATE }}', 'Laborate')"
+                    <button
+                        onclick="recallAntrian(this, '{{ LocketList::LABORATE }}', '{{ LocketList::from(LocketList::LABORATE->value)->name }}')"
                         class="flex-1 py-2 rounded-xl bg-blue-200 text-blue-800 font-bold hover:bg-blue-300">
                         Recall
                     </button>
@@ -70,11 +74,13 @@
                 </span>
 
                 <div class="flex gap-4 mt-2 w-full">
-                    <button onclick="panggilAntrian(this,'{{ LocketList::LANSIA }}', 'Lansia')"
+                    <button
+                        onclick="panggilAntrian(this,'{{ LocketList::LANSIA }}', '{{ LocketList::from(LocketList::LANSIA->value)->name }}')"
                         class="flex-1 py-2 rounded-xl bg-pink-600 text-white font-bold hover:bg-pink-700">
                         Panggil
                     </button>
-                    <button onclick="recallAntrian(this, '{{ LocketList::LANSIA }}', 'Lansia')"
+                    <button
+                        onclick="recallAntrian(this, '{{ LocketList::LANSIA }}', '{{ LocketList::from(LocketList::LANSIA->value)->name }}')"
                         class="flex-1 py-2 rounded-xl bg-pink-200 text-pink-800 font-bold hover:bg-pink-300">
                         Recall
                     </button>
@@ -98,6 +104,7 @@
         const recallUrlTemplate =
             "{{ route('loket_antrian.recall', ['locket_code' => ':code', 'locket_number' => ':number']) }}";
         let locketNumber = document.getElementById('loket_number').value;
+        const riwayatEl = document.getElementById("riwayat");
 
         $(document).ready(function() {
             setInterval(() => {
@@ -122,14 +129,6 @@
                 }
             });
         }
-
-        let counter = {
-            P: parseInt(localStorage.getItem("A") || 0),
-            L: parseInt(localStorage.getItem("B") || 0),
-            LA: parseInt(localStorage.getItem("C") || 0)
-        };
-
-        const riwayatEl = document.getElementById("riwayat");
 
         function panggilAntrian(btn, prefix, poli) {
             // Disable semua tombol di container yang sama
@@ -194,7 +193,6 @@
                     data: {},
                     dataType: "json",
                     success: function(response) {
-                        console.log(response);
                         if (response.hasOwnProperty('data')) {
                             if (response.data?.number_queue && response.data?.locket_number && response.data
                                 ?.poli) {
@@ -202,6 +200,7 @@
                                     response.data
                                     ?.poli, originalText, response.data?.locket_code);
                             } else {
+                                alert('Data Antrian Kosong!');
                                 allButtons.forEach(btn => btn.disabled = false);
                                 btn.textContent = originalText;
                             }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('room_code')->nullable(false);
             $table->text('number_queue')->nullable();
-            $table->dateTime('process_time_queue_room')->nullable();
+            $table->integer('process_time_queue_room')->nullable();
             $table->timestamps();
         });
     }
