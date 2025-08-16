@@ -17,4 +17,11 @@ class LocketQueue extends Model
         'created_at',
         'updated_at'
     ];
+
+    public function locketTotal()
+    {
+        return $this->select('locket_code', \DB::raw('count(*) as total'))
+            ->groupBy('locket_code')
+            ->get();
+    }
 }

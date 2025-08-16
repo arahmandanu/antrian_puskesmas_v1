@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Enum\LocketList;
+use App\Models\LocketQueue;
+use App\Models\LocketStaff;
+use Illuminate\Support\Arr;
 
 class LocketController extends Controller
 {
@@ -37,5 +40,28 @@ class LocketController extends Controller
         return view('loket_antrian.list_locket', [
             'lokets' => \App\Models\LocketStaff::orderBy('locket_number', 'asc')->get(),
         ]);
+    }
+
+    public function generateView(Request $request, LocketStaff $locket_number)
+    {
+        $allTotal = (new LocketQueue())->locketTotal();
+        $result = $allTotal->pluck('total', 'locket_code')->toArray();
+
+        return view('loket_staff.index', [
+            'loket' => $locket_number,
+            'locket_totals' => $result,
+        ]);
+    }
+
+    public function getSisaAntrian(Request $request)
+    {
+        if ($request->wantsJson()) {
+            $allTotal = (new LocketQueue())->locketTotal();
+            $result = $allTotal->pluck('total', 'locket_code')->toArray();
+
+            return $this->successResponse($result);
+        } else {
+            return $this->errorResponse('Invalid request format. Please use JSON.', 400);
+        }
     }
 }

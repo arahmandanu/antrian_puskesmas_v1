@@ -13,17 +13,17 @@
 
                 @forelse ($lokets as $loket)
                     <!-- Loket 1 -->
-                    <div onclick="pilihLoket('Loket 1')" loket_number="{{ $loket->locket_number }}"
+                    <a href="{{ route('loket_antrian.generateView', $loket->locket_number) }}" onclick="pilihLoket('Loket 1')"
                         class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-lg
                  hover:shadow-2xl hover:scale-105 transform transition-all duration-300
                  flex flex-col items-center justify-center p-6">
                         <span class="text-5xl mb-3">🏢</span>
                         <h3 class="text-xl font-bold text-green-700">{{ $loket->locket_number }}</h3>
                         <p class="text-gray-600 text-sm mt-1">Staff: {{ $loket->staff_name }}</p>
-                    </div>
+                    </a>
                 @empty
                     <!-- Loket 1 -->
-                    <div onclick="pilihLoket('Loket 1')"
+                    <div
                         class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-lg
                  hover:shadow-2xl hover:scale-105 transform transition-all duration-300
                  flex flex-col items-center justify-center p-6">
@@ -36,12 +36,4 @@
             </div>
         </div>
     </main>
-
-    <script>
-        function pilihLoket(loket) {
-            alert("Anda memilih " + loket);
-            // Bisa diarahkan ke halaman pemanggilan antrian
-            // window.location.href = "/loket/" + loket.toLowerCase().replace(" ", "-");
-        }
-    </script>
 @endsection
