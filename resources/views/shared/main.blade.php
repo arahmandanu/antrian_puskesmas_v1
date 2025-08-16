@@ -12,7 +12,7 @@
     <script src="{{ asset('js/startmin/js/jquery.min.js') }}"></script>
 </head>
 
-<body class="bg-gray-100 min-h-screen flex flex-col">
+<body class="bg-gray-100 flex flex-col min-h-screen">
 
     @include('shared.header')
 

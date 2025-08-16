@@ -42,7 +42,6 @@
             </div>
         </div>
     </main>
-
     <script>
         function panggilAntrian(poli, code) {
             const overlay = document.getElementById('loading-overlay');

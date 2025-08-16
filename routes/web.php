@@ -21,6 +21,10 @@ Route::group(['prefix' => '/loket'], function () {
     Route::get('/sisa-antrian', [App\Http\Controllers\LocketController::class, 'getSisaAntrian'])->name('loket_antrian.sisaAntrian');
     Route::post('/ambil-antrian-selanjutnya', [App\Http\Controllers\LocketController::class, 'getNextQeueue'])->name('loket_antrian.nextQueue');
     Route::get('/queue-recall/{locket_code}/{locket_number}', [App\Http\Controllers\LocketController::class, 'getRecallQueue'])->name('loket_antrian.recall');
+
+    Route::get('/show_poli', function () {
+        return view('loket_staff.poli');
+    })->name('loket_antrian.showPoli');
 });
 
 Route::group(['prefix' => '/poli'], function () {
@@ -64,28 +68,6 @@ Route::group(['prefix' => '/admin_dashboard', 'middleware' => ['auth:web']], fun
         Route::delete('/{loket}', [App\Http\Controllers\Admin\LocketController::class, 'destroy'])->name('admin.loket.destroy');
     });
 });
-
-
-
-
-
-
-
-
-
-
-
-Route::get('/staff', function () {
-    return view('loket_staff.index');
-});
-
-
-
-Route::get('/poli', function () {
-    return view('loket_staff.poli');
-});
-
-
 
 Route::get('/poli_call', function () {
     return view('loket_staff.call');

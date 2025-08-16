@@ -6,7 +6,7 @@
     @endphp
 
     <!-- Main Content -->
-    <main class="flex flex-col flex-grow items-center p-6">
+    <main class="flex flex-col flex-grow items-center">
         <input type="hidden" value="{{ $loket->locket_number }}" id="loket_number">
         <input type="hidden" value="{{ $loket->id }}" id="id">
 
@@ -19,7 +19,7 @@
         </div>
 
         <!-- Tombol Panggilan -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl mb-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl mb-5">
 
             <!-- Pendaftaran -->
             <div class="bg-yellow-400 rounded-2xl shadow-xl p-4 flex flex-col items-center gap-2">
@@ -87,6 +87,14 @@
                 </div>
             </div>
 
+        </div>
+
+        <!-- Tombol Pilih Poli -->
+        <div class="col-span-full flex justify-center mb-10">
+            <a href="{{ route('loket_antrian.showPoli') }}"
+                class="mt-2 px-6 py-3 rounded-xl bg-green-600 text-white font-bold hover:bg-green-700 shadow-lg">
+                Pilih Poli
+            </a>
         </div>
 
         <!-- Riwayat Panggilan -->

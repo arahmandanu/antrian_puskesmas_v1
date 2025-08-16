@@ -2,7 +2,7 @@
 
 @section('content')
     <!-- Konten -->
-    <main class="flex-grow p-6">
+    <main class="flex-grow overflow-y-auto h-screen custom-scrollbar">
         <div>
             <h1 class="text-2xl font-bold text-center mb-6">Daftar Poli</h1>
             <p class="text-center text-gray-600 mb-10">Pilih poli untuk membuat nomor antrian baru</p>
@@ -68,6 +68,26 @@
                 nama: "Poli Paru",
                 nomor: 2,
                 warna: "bg-lime-500"
+            },
+            {
+                nama: "Poli Saraf",
+                nomor: 13,
+                warna: "bg-cyan-500"
+            },
+            {
+                nama: "Poli Ortopedi",
+                nomor: 1,
+                warna: "bg-amber-500"
+            },
+            {
+                nama: "Laboratorium",
+                nomor: 15,
+                warna: "bg-sky-500"
+            },
+            {
+                nama: "Poli Gizi",
+                nomor: 14,
+                warna: "bg-emerald-500"
             },
             {
                 nama: "Poli Saraf",

@@ -2,7 +2,7 @@
 
 @section('content')
     <!-- Main scrollable -->
-    <main class="flex justify-center flex-grow custom-scrollbar overflow-y-auto h-screen custom-scrollbar">
+    <main class="flex justify-center flex-grow overflow-y-auto h-screen custom-scrollbar">
         <div class="max-w-7xl w-full mx-auto p-6">
             <h2 class="text-2xl font-semibold mb-6 text-center text-gray-700">
                 Silakan Pilih Poli Antrian
