@@ -18,13 +18,22 @@ class LocketController extends Controller
 
     public function createQueue(Request $request)
     {
-        $list = LocketList::allIntoString();
-        $validated = $request->validate([
-            'code' => ['required', "in:$list"],
-        ]);
+        if ($request->wantsJson()) {
+            $list = LocketList::allIntoString();
 
-        return response()->json([
-            'message' => "Antrian untuk {$poli} dengan kode {$code} berhasil dibuat.",
-        ]);
+            $request->validate([
+                'code' => ['required', "in:$list"],
+            ]);
+
+            $queue = (new \App\Services\Locket\CreateQueue($request->input('poli'), $request->input('code')))->handle();
+            return $this->successResponse($queue, "Antrian untuk {$request->input('poli')} dengan kode {$request->input('code')} berhasil dibuat.");
+        } else {
+            return $this->errorResponse('Invalid request format. Please use JSON.', 400);
+        }
+    }
+
+    public function locketList()
+    {
+        return view('loket_antrian.list_locket');
     }
 }

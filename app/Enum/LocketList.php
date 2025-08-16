@@ -21,6 +21,6 @@ enum LocketList: string
 
     public static function allIntoString()
     {
-        return implode(', ', self::toArray());
+        return implode(',', self::toArray());
     }
 }

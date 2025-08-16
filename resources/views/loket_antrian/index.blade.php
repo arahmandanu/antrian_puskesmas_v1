@@ -11,21 +11,21 @@
         <!-- Sidebar kanan (tombol) -->
         <div class="relative w-1/5 bg-gray-100 p-4 flex flex-col gap-8 justify-center items-center">
             <!-- Tombol -->
-            <button onclick="panggilAntrian('Pendaftaran', '{{ $pendaftaran }}')"
+            <button onclick="panggilAntrian('PENDAFTARAN', '{{ $pendaftaran }}')"
                 class="w-full py-8 rounded-2xl shadow-xl text-white text-3xl font-extrabold tracking-wide
                bg-gradient-to-r from-yellow-400 to-yellow-500
                hover:from-yellow-500 hover:to-yellow-400">
                 📝 Pendaftaran
             </button>
 
-            <button onclick="panggilAntrian('Laborate',  '{{ $laborate }}')"
+            <button onclick="panggilAntrian('LABORATE',  '{{ $laborate }}')"
                 class="w-full py-8 rounded-2xl shadow-xl text-white text-3xl font-extrabold tracking-wide
                bg-gradient-to-r from-blue-400 to-blue-500
                hover:from-blue-500 hover:to-blue-400">
                 🔬 Laborate
             </button>
 
-            <button onclick="panggilAntrian('Lansia', '{{ $lansia }}')"
+            <button onclick="panggilAntrian('LANSIA', '{{ $lansia }}')"
                 class="w-full py-8 rounded-2xl shadow-xl text-white text-3xl font-extrabold tracking-wide
                bg-gradient-to-r from-pink-400 to-pink-500
                hover:from-pink-500 hover:to-pink-400">
