@@ -17,6 +17,36 @@
 
     @include('shared.header')
 
+    <!-- Flash Message -->
+    <div class="max-w-4xl mx-auto mt-4 px-4">
+        @if (session('success'))
+            <div class="mb-4 p-4 rounded-lg bg-green-100 border border-green-400 text-green-700 flex items-center">
+                <i class="fa fa-check-circle mr-2"></i>
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="mb-4 p-4 rounded-lg bg-red-100 border border-red-400 text-red-700 flex items-center">
+                <i class="fa fa-exclamation-circle mr-2"></i>
+                <span>{{ session('error') }}</span>
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="mb-4 p-4 rounded-lg bg-red-100 border border-red-400 text-red-700 flex items-center">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>
+                            <i class="fa fa-exclamation-circle mr-2"></i>
+                            <span>{{ $error }}</span>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+    </div>
+
     <!-- Main Content -->
     @yield('content')
 

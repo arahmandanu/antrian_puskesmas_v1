@@ -91,7 +91,7 @@
 
         <!-- Tombol Pilih Poli -->
         <div class="col-span-full flex justify-center mb-10">
-            <a href="{{ route('loket_antrian.showPoli') }}"
+            <a href="{{ route('loket_antrian.showPoli', '') }}/{{ $loket->locket_number }}"
                 class="mt-2 px-6 py-3 rounded-xl bg-green-600 text-white font-bold hover:bg-green-700 shadow-lg">
                 Pilih Poli
             </a>

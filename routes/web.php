@@ -26,7 +26,8 @@ Route::group(['prefix' => '/loket'], function () {
     Route::post('/ambil-antrian-selanjutnya', [App\Http\Controllers\LocketController::class, 'getNextQeueue'])->name('loket_antrian.nextQueue');
     Route::get('/queue-recall/{locket_code}/{locket_number}', [App\Http\Controllers\LocketController::class, 'getRecallQueue'])->name('loket_antrian.recall');
 
-    Route::get('/show_poli', [App\Http\Controllers\LocketController::class, 'loketGetPoli'])->name('loket_antrian.showPoli');
+    Route::get('/show_poli/{locket_number}', [App\Http\Controllers\LocketController::class, 'loketGetPoli'])->name('loket_antrian.showPoli');
+    Route::post('/create_poli_queue', [App\Http\Controllers\LocketController::class, 'loketCreatePoliQueue'])->name('loket_antrian.createPoliQueue');
 });
 
 Route::group(['prefix' => '/poli'], function () {

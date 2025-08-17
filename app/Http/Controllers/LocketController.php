@@ -8,6 +8,7 @@ use App\Models\LocketQueue;
 use App\Models\LocketStaff;
 use App\Models\Room;
 use App\Services\Locket\GetRecallQueue;
+use App\Services\Room\CreateQueue;
 use Illuminate\Support\Str;
 
 class LocketController extends Controller
@@ -93,18 +94,41 @@ class LocketController extends Controller
         }
     }
 
-    public function loketGetPoli(Request $request)
+    public function loketGetPoli(Request $request, $locket_number)
     {
         $allRoom = Room::show()->get();
         $list = $allRoom->map(function ($room) {
             return [
                 'nama' => Str::upper($room['name']),
-                'nomor' => $room->queues()->count()
+                'nomor' => $room->queues()->count(),
+                'code' => $room->code
             ];
         });
 
-        return view('loket_staff.poli', [
-            'polis' => $list
+        return view('loket_antrian.list_poli', [
+            'polis' => $list,
+            'locket_number' => $locket_number
         ]);
+    }
+
+    public function loketCreatePoliQueue(Request $request)
+    {
+        if ($request->wantsJson()) {
+            $listCode = (new Room)->listRoomCode();
+            $request->validate([
+                'room_code' => 'required|in:' . join(",", $listCode->toArray()),
+            ]);
+
+            $result = (new CreateQueue(Room::where('code', '=', $request->input('room_code'))->first()))->handle();
+            if ($result['error']) {
+                flash()->error($result['message']);
+                return $this->errorResponse($result['message'], 422);
+            }
+
+            flash()->success($result['message']);
+            return $this->successResponse($result['data']);
+        } else {
+            return $this->errorResponse('Invalid request format. Please use JSON.', 400);
+        }
     }
 }
