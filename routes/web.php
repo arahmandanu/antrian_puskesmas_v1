@@ -32,6 +32,8 @@ Route::group(['prefix' => '/loket'], function () {
 
 Route::group(['prefix' => '/poli'], function () {
     Route::get('/list', [App\Http\Controllers\PoliController::class, 'index'])->name('loket_antrian.poli_list');
+    Route::get('/generate_view/{room}', [App\Http\Controllers\PoliController::class, 'generateView'])->name('poli.generateView');
+    Route::get('/get-queue/{room}', [App\Http\Controllers\PoliController::class, 'getQueueByRoom'])->name('poli.getQueueByRoom');
 });
 
 Route::group(['prefix' => '/admin', 'middleware' => ['AlreadyLogin']], function () {

@@ -2,7 +2,7 @@
 
 @section('content')
     <!-- Main -->
-    <main class="flex justify-center flex-grow custom-scrollbar overflow-y-auto h-screen custom-scrollbar ">
+    <main class="flex justify-center flex-grow overflow-y-auto h-screen custom-scrollbar ">
         <div class="max-w-6xl w-full p-6">
             <h2 class="text-2xl font-semibold mb-10 text-center text-gray-700">
                 Silakan Pilih Loket Antrian anda

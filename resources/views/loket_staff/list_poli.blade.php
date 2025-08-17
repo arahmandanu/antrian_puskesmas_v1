@@ -5,7 +5,7 @@
     <main class="flex justify-center flex-grow overflow-y-auto h-screen custom-scrollbar">
         <div class="max-w-7xl w-full mx-auto p-6">
             <h2 class="text-2xl font-semibold mb-6 text-center text-gray-700">
-                Silakan Pilih Poli Antrian
+                Silakan Pilih Poli Panggilan Antrian
             </h2>
 
             <!-- Grid 15 Poli dengan 4 kolom -->
@@ -13,7 +13,7 @@
 
                 @forelse ($polis as $poli)
                     <!-- Contoh Poli -->
-                    <div onclick="pilihPoli('{{ $poli->name }}')"
+                    <a href="{{ route('poli.generateView', $poli->id) }}"
                         class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-md
                  hover:shadow-xl hover:scale-105 transform transition-all duration-300
                  flex flex-col items-center justify-center p-6">
@@ -24,7 +24,7 @@
 
                         <p class="text-sm text-gray-800 mt-2">lantai: <span class="font-semibold">{{ $poli->lantai }}</span>
                         </p>
-                    </div>
+                    </a>
                 @empty
                     <!-- Jika tidak ada poli -->
                     <div
@@ -35,15 +35,7 @@
                         <p class="text-gray-600 text-sm">Silahkan hubungi admin untuk menambahkan poli baru.</p>
                     </div>
                 @endforelse
-
-
             </div>
         </div>
     </main>
-
-    <script>
-        function pilihPoli(poli) {
-            alert("Anda memilih " + poli);
-        }
-    </script>
 @endsection

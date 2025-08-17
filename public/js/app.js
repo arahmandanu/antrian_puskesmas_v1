@@ -24229,6 +24229,10 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Swal = (sweetalert2__WEBPACK_IMPORTED_MODULE_0___default());
+function ejaanNomor(nomor) {
+  return nomor.split("").join(" ");
+}
+window.ejaanNomor = ejaanNomor;
 
 /***/ }),
 

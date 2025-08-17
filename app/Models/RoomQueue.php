@@ -14,6 +14,7 @@ class RoomQueue extends Model
     protected $fillable = [
         'room_code',
         'number_queue',
+        'called',
         'created_at',
         'updated_at'
     ];

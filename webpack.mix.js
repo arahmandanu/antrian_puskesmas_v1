@@ -12,11 +12,22 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
+    // Compile Tailwind (dengan autoprefixer otomatis)
     .postCss('resources/css/app.css', 'public/css', [
         require("@tailwindcss/postcss")
     ])
+    // CSS tambahan tanpa Tailwind
     .postCss('resources/css/locket.css', 'public/css', [
     ]);
 
 
-mix.webpackConfig({ watchOptions: { ignored: /node_modules|dist|mix-manifest.json/, }, });
+mix.webpackConfig({
+    watchOptions: {
+        ignored: /node_modules|dist|mix-manifest.json|public|storage|vendor/,
+        aggregateTimeout: 200, // delay sebelum recompile (ms)
+        poll: 1000 // cek perubahan tiap 1 detik
+    }
+});
+
+// Hilangkan notifikasi build (lebih clean)
+mix.disableNotifications();

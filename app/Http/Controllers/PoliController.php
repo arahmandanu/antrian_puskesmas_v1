@@ -19,6 +19,41 @@ class PoliController extends Controller
         ]);
     }
 
+    public function generateView(Request $request, Room $room)
+    {
+        $queueCalled = $room->queuesCalled()->take(5)->get()->map(function ($queue) {
+            return $queue->room_code . $queue->number_queue;
+        });
+        $resultsNotCalled =  $room->queuesNotCalled()->take(5)->get()->map(function ($queue) {
+            return $queue->room_code . $queue->number_queue;
+        });
+        $lastDataCall = null;
+        if ($lastCalled = $room->queuesCalled()->take(1)->first()) {
+            $lastDataCall = $lastCalled->room_code . $lastCalled->number_queue;
+        }
+
+        return view('loket_staff.call', [
+            'poli' => $room,
+            'queuesCalled' => $queueCalled,
+            'queueNotCalled' => $resultsNotCalled,
+            'totalQueueNotCalled' => $room->queuesNotCalled()->count(),
+            'lastCalled' => $lastDataCall
+        ]);
+    }
+
+    public function getQueueByRoom(Request $request, Room $room)
+    {
+        if ($request->wantsJson()) {
+            $resultsNotCalled =  $room->queuesNotCalled()->take(5)->get()->map(function ($queue) {
+                return $queue->room_code . $queue->number_queue;
+            });
+        } else {
+            return $this->errorResponse('Invalid request format. Please use JSON.', 400);
+        }
+
+        return $this->successResponse($resultsNotCalled, 'Data Retrieved!');
+    }
+
     /**
      * Show the form for creating a new resource.
      *

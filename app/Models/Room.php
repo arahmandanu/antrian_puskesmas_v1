@@ -80,6 +80,16 @@ class Room extends Model
         return self::show()->get()->pluck("code");
     }
 
+    public function queuesCalled()
+    {
+        return $this->hasMany(RoomQueue::class, 'room_code', 'code')->where('called', true)->orderBy('id', 'desc');
+    }
+
+    public function queuesNotCalled()
+    {
+        return $this->hasMany(RoomQueue::class, 'room_code', 'code')->where('called', false);
+    }
+
     public function scopeShow($query)
     {
         return $query->where('show', '=', true);
