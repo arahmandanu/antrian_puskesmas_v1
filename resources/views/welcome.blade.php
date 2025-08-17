@@ -1,81 +1,36 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('shared.main')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layar Panggilan Antrian Poli Umum</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <!-- Tailwind CSS v4.1 CDN -->
-    {{-- <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script> --}}
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {},
-            }
-        }
-    </script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-    </style>
-</head>
+@section('content')
+    <div class="flex-grow flex items-center justify-center p-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl w-full">
 
-<body class="min-h-screen flex flex-col bg-gray-50">
+            <!-- Loket List -->
+            <a href="{{ route('loket_antrian.list') }}"
+                class="flex flex-col items-center justify-center w-48 aspect-square bg-blue-500 text-white rounded-lg shadow-md hover:opacity-90 transition">
+                <i class="fa fa-list fa-fw fa-4x mb-2"></i>
+                <span class="text-xl font-semibold text-center">Loket List</span>
+            </a>
 
-    <!-- Header -->
-    <header class="py-6 text-center bg-green-700 text-white shadow-md">
-        <img src="https://via.placeholder.com/100x100?text=Logo" alt="Logo Puskesmas"
-            class="w-20 h-20 rounded-full border-4 border-white mb-3 mx-auto">
-        <h1 class="text-3xl font-bold tracking-wide">PUSKESMAS SEHAT BERSAMA</h1>
-        <h2 class="text-lg mt-1 text-green-100">Antrian Poli Umum</h2>
-    </header>
+            <!-- Poli List -->
+            <a href="{{ route('loket_antrian.poli_list') }}"
+                class="flex flex-col items-center justify-center w-48 aspect-square bg-yellow-500 text-white rounded-lg shadow-md hover:opacity-90 transition">
+                <i class="fa fa-hospital-o fa-4x mb-2"></i>
+                <span class="text-xl font-semibold">Poli List</span>
+            </a>
 
-    <!-- Konten -->
-    <main class="flex-grow flex flex-col items-center justify-center p-6">
-        <!-- Nomor Terpanggil -->
-        <div class="text-center mb-12">
-            <p class="text-gray-500 text-xl">Sedang Dipanggil</p>
-            <div class="text-[140px] font-extrabold text-green-700 drop-shadow-lg" id="nomor-sekarang">A12</div>
+            <!-- Loket Antrian -->
+            <a href="{{ route('loket_antrian.index') }}"
+                class="flex flex-col items-center justify-center w-48 aspect-square bg-red-500 text-white rounded-lg shadow-md hover:opacity-90 transition">
+                <i class="fa fa-bell fa-4x mb-2"></i>
+                <span class="text-xl font-semibold text-center">Loket Antrian</span>
+            </a>
+
+            <!-- Admin -->
+            <a href="{{ route('admin.dashboard') }}"
+                class="flex flex-col items-center justify-center w-48 aspect-square bg-green-500 text-white rounded-lg shadow-md hover:opacity-90 transition">
+                <i class="fa fa-th fa-fw fa-4x mb-2"></i>
+                <span class="text-xl font-semibold">Admin</span>
+            </a>
         </div>
-
-        <!-- Nomor Selanjutnya -->
-        <div class="text-center">
-            <p class="text-gray-500 text-xl">Nomor Berikutnya</p>
-            <div class="text-[90px] font-bold text-gray-800" id="nomor-selanjutnya">A13</div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="py-4 text-center text-sm bg-white text-gray-500 border-t">
-        &copy; 2025 PT Karya Wiguna. All rights reserved.
-    </footer>
-
-    <script>
-        // Contoh data sementara, bisa diambil dari backend Laravel
-        let nomorSekarang = 'A12';
-        let nomorSelanjutnya = 'A13';
-
-        const nomorSekarangEl = document.getElementById("nomor-sekarang");
-        const nomorSelanjutnyaEl = document.getElementById("nomor-selanjutnya");
-
-        // Fungsi update nomor (simulasi)
-        function updateNomor(nomorNow, nomorNext) {
-            nomorSekarangEl.textContent = nomorNow;
-            nomorSelanjutnyaEl.textContent = nomorNext;
-        }
-
-        // Contoh simulasi update setiap 5 detik
-        // setInterval(() => {
-        //     let nowNum = parseInt(nomorSekarang.slice(1)) + 1;
-        //     let nextNum = nowNum + 1;
-        //     nomorSekarang = 'A' + nowNum;
-        //     nomorSelanjutnya = 'A' + nextNum;
-        //     updateNomor(nomorSekarang, nomorSelanjutnya);
-        // }, 5000);
-    </script>
-
-</body>
-
-</html>
+    </div>
+@endsection

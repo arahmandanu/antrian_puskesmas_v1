@@ -14,6 +14,7 @@ class LocketCall extends Model
     protected $fillable = [
         'number_queue',
         'locket_code',
+        'locket_number',
         'called',
         'created_at',
         'updated_at'

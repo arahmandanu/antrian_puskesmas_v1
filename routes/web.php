@@ -13,7 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [App\Http\Controllers\LocketController::class, 'index'])->name('loket_antrian.index');
+
+Route::get('/', function () {
+    return view('welcome');
+});
+Route::get('/loket', [App\Http\Controllers\LocketController::class, 'index'])->name('loket_antrian.index');
 Route::group(['prefix' => '/loket'], function () {
     Route::get('/list', [App\Http\Controllers\LocketController::class, 'locketList'])->name('loket_antrian.list');
     Route::post('/create-queue', [App\Http\Controllers\LocketController::class, 'createQueue'])->name('loket_antrian.createQueue');
@@ -22,13 +26,11 @@ Route::group(['prefix' => '/loket'], function () {
     Route::post('/ambil-antrian-selanjutnya', [App\Http\Controllers\LocketController::class, 'getNextQeueue'])->name('loket_antrian.nextQueue');
     Route::get('/queue-recall/{locket_code}/{locket_number}', [App\Http\Controllers\LocketController::class, 'getRecallQueue'])->name('loket_antrian.recall');
 
-    Route::get('/show_poli', function () {
-        return view('loket_staff.poli');
-    })->name('loket_antrian.showPoli');
+    Route::get('/show_poli', [App\Http\Controllers\LocketController::class, 'loketGetPoli'])->name('loket_antrian.showPoli');
 });
 
 Route::group(['prefix' => '/poli'], function () {
-    Route::get('/list', [App\Http\Controllers\PoliController::class, 'index'])->name('loket_antrian.list');
+    Route::get('/list', [App\Http\Controllers\PoliController::class, 'index'])->name('loket_antrian.poli_list');
 });
 
 Route::group(['prefix' => '/admin', 'middleware' => ['AlreadyLogin']], function () {

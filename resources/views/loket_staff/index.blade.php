@@ -226,17 +226,19 @@
             } else {
                 const originalText = btn.textContent;
                 allButtons.forEach(btn => btn.disabled = true);
-                tampilkanNomor(btn, localData, poli, originalText, prefix);
+                tampilkanNomor(btn, localData, poli, originalText, prefix, false);
             }
         }
 
-        function tampilkanNomor(btn, prefix, poli, originalText, locket_code) {
+        function tampilkanNomor(btn, prefix, poli, originalText, locket_code, update_riwayat = true) {
             let nomor = prefix;
 
-            // Update riwayat
-            let item = document.createElement("li");
-            item.textContent = `${nomor} - ${poli}`;
-            riwayatEl.prepend(item);
+            if (update_riwayat) {
+                // Update riwayat
+                let item = document.createElement("li");
+                item.textContent = `${nomor} - ${poli}`;
+                riwayatEl.prepend(item);
+            }
 
             // Batasi maksimal 5 item
             while (riwayatEl.children.length > 5) {

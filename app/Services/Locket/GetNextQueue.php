@@ -7,6 +7,7 @@ use App\Models\LocketCall;
 use App\Models\LocketHistoryCall;
 use App\Models\LocketQueue;
 use App\Models\LocketStaff;
+use Illuminate\Support\Arr;
 
 class GetNextQueue extends \App\Services\AbstractService
 {

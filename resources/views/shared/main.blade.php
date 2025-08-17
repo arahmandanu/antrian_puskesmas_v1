@@ -7,7 +7,8 @@
     <title>Loket Antrian Puskesmas</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/locket.css') }}">
-
+    <!-- Custom Fonts -->
+    <link href="{{ asset('css/startmin/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
     <!-- jQuery -->
     <script src="{{ asset('js/startmin/js/jquery.min.js') }}"></script>
 </head>

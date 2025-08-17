@@ -59,6 +59,11 @@ class Room extends Model
         'show' => 'boolean',
     ];
 
+    public function queues()
+    {
+        return $this->hasMany(RoomQueue::class, 'room_code', 'code');
+    }
+
     public function availableCodes($except = null)
     {
         if ($except) {

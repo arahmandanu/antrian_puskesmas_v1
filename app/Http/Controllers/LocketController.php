@@ -6,8 +6,9 @@ use Illuminate\Http\Request;
 use App\Enum\LocketList;
 use App\Models\LocketQueue;
 use App\Models\LocketStaff;
+use App\Models\Room;
 use App\Services\Locket\GetRecallQueue;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class LocketController extends Controller
 {
@@ -90,5 +91,20 @@ class LocketController extends Controller
         } else {
             return $this->errorResponse('Invalid request format. Please use JSON.', 400);
         }
+    }
+
+    public function loketGetPoli(Request $request)
+    {
+        $allRoom = Room::show()->get();
+        $list = $allRoom->map(function ($room) {
+            return [
+                'nama' => Str::upper($room['name']),
+                'nomor' => $room->queues()->count()
+            ];
+        });
+
+        return view('loket_staff.poli', [
+            'polis' => $list
+        ]);
     }
 }
