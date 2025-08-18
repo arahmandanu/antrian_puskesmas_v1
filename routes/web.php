@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -79,11 +78,6 @@ Route::get('/poli_call', function () {
     return view('loket_staff.call');
 });
 
-
 Route::get('/poli_terpanggil', function () {
     return view('pasien.poli_terpanggil');
-});
-
-Route::get('/admin', function () {
-    return view('admin.index');
 });
