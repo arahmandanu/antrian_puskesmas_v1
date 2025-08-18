@@ -20,7 +20,7 @@
                         <span class="text-4xl mb-2">🩺</span>
                         <h3 class="text-lg font-bold text-green-700">{{ Str::upper($poli->name) }}</h3>
                         <p class="text-sm text-gray-800 mt-2">No terakhir: <span
-                                class="font-semibold">{{ $poli->last_call_queue ?? '-' }}</span></p>
+                                class="font-semibold">{{ $poli->current_queue ?? '-' }}</span></p>
 
                         <p class="text-sm text-gray-800 mt-2">lantai: <span class="font-semibold">{{ $poli->lantai }}</span>
                         </p>
