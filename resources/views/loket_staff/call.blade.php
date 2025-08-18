@@ -2,7 +2,7 @@
 
 @section('content')
     <!-- Konten -->
-    <main class="flex-grow flex flex-col items-center overflow-y-auto h-screen custom-scrollbar">
+    <main class="flex-grow flex flex-col items-center overflow-y-auto h-screen custom-scrollbar p-6">
         <input type="hidden" id="poli_id" value="{{ $poli->id }}">
         <input type="hidden" id="poli_code" value="{{ $poli->code }}">
         <input type="hidden" id="poli_name" value="{{ $poli->name }}">
@@ -11,7 +11,7 @@
         <h2 class="text-2xl font-bold text-green-700 mb-6">{{ Str::upper($poli->name) }}</h2>
         <!-- Total antrian menunggu -->
         <div id="total-antrian" class="text-gray-600 mb-6 font-medium">
-            Total belum terpanggil: {{ $totalQueueNotCalled }}
+            Total belum terpanggil: <span id="number-total-antrian">{{ $totalQueueNotCalled }}</span>
         </div>
         <div id="nomor-antrian" class="text-[150px] font-bold text-gray-900 mb-10">
             {{ $lastCalled ?? '-' }}
@@ -65,6 +65,7 @@
         let poliId = document.getElementById("poli_id").value;
         let poliCode = document.getElementById("poli_code").value;
         let poliName = document.getElementById("poli_name").value;
+        let numberTotal = document.getElementById("number-total-antrian");
 
         function renderWaitingList() {
             daftarEl.innerHTML = "";
@@ -77,7 +78,6 @@
                     daftarEl.appendChild(badge);
                 });
             } else {
-                console.log("asd");
                 const badge = document.createElement("div");
                 badge.className =
                     "px-5 py-3 bg-yellow-100 text-black-800 font-bold rounded-lg shadow flex items-center gap-2";
@@ -105,15 +105,43 @@
         btnPanggil.addEventListener("click", () => {
             if (waitingList.length > 0) {
                 let next = waitingList.shift();
-                nomorEl.textContent = next;
-                lastCalled = next;
-                historyList.unshift(next);
-                callQueue(lastCalled)
-                renderWaitingList();
-                renderHistory();
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('poli.callQueueByRoom', '') }}/" + poliId,
+                    data: {
+                        number_queue: next,
+                        _token: "{{ csrf_token() }}",
+                    },
+                    dataType: "JSON",
+                    success: function(response) {
+                        nomorEl.textContent = next;
+                        lastCalled = next;
+                        historyList.unshift(next);
+                        callQueue(lastCalled)
+
+                    },
+                    error: function(response) {
+                        Swal.fire({
+                            title: response.message,
+                            icon: "error"
+                        });
+                    },
+                    complete: function() {
+                        renderWaitingList();
+                        renderHistory();
+                    }
+                });
             } else {
-                nomorEl.textContent = "-";
-                alert("Tidak ada antrian menunggu");
+                if (historyList.length === 0) {
+                    nomorEl.textContent = "-";
+                }
+
+                Swal.fire({
+                    title: "Tidak ada antrian menunggu!",
+                    icon: "error"
+                });
+                allButtons.forEach(btn => btn.disabled = false);
+                btn.textContent = originalText;
             }
         });
 
@@ -121,7 +149,12 @@
             if (lastCalled) {
                 callQueue(lastCalled)
             } else {
-                alert("Belum ada nomor yang dipanggil");
+                Swal.fire({
+                    title: "Tidak ada antrian menunggu!",
+                    icon: "error"
+                });
+                allButtons.forEach(btn => btn.disabled = false);
+                btn.textContent = originalText;
             }
         });
 
@@ -132,14 +165,19 @@
                 data: {},
                 dataType: "JSON",
                 success: function(response) {
-                    if (response.data.length > 0) {
-                        waitingList = response.data;
+                    if (response.hasOwnProperty('data')) {
+                        if (response.data.hasOwnProperty('total')) {
+                            numberTotal.textContent = response?.data?.total;
+                        }
+                        if (response.data.pagination.length > 0) {
+                            waitingList = response?.data?.pagination;
 
-                        renderWaitingList();
+                            renderWaitingList();
+                        }
                     }
                 }
             });
-        }, 10000);
+        }, 1000);
 
         // Tampilkan awal
         renderWaitingList();

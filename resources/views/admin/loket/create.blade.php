@@ -24,6 +24,17 @@
                             </div>
 
                             <div class="form-group">
+                                <label>Letak Poli (lantai)</label>
+                                <select class="form-control" required name="lantai">
+                                    @forelse ($lantaiOptions as $lantai)
+                                        <option value="{{ $lantai }}">{{ $lantai }}</option>
+                                    @empty
+                                        <option value="">Silahkan hubungi developer anda</option>
+                                    @endforelse
+                                </select>
+                            </div>
+
+                            <div class="form-group">
                                 <label>Nomor Loket</label>
                                 <select class="form-control" required name="locket_number">
                                     @forelse ($availableLokets as $code)

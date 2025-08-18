@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use App\Models\RoomQueue;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PoliController extends Controller
 {
@@ -21,14 +23,22 @@ class PoliController extends Controller
 
     public function generateView(Request $request, Room $room)
     {
-        $queueCalled = $room->queuesCalled()->take(5)->get()->map(function ($queue) {
-            return $queue->room_code . $queue->number_queue;
-        });
-        $resultsNotCalled =  $room->queuesNotCalled()->take(5)->get()->map(function ($queue) {
-            return $queue->room_code . $queue->number_queue;
-        });
+        $queueCalled = $room->queuesCalled()
+            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->take(5)->get()->map(function ($queue) {
+                return $queue->room_code . $queue->number_queue;
+            });
+
+        $resultsNotCalled =  $room->queuesNotCalled()
+            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->take(5)->get()->map(function ($queue) {
+                return $queue->room_code . $queue->number_queue;
+            });
+
         $lastDataCall = null;
-        if ($lastCalled = $room->queuesCalled()->take(1)->first()) {
+        if ($lastCalled = $room->queuesCalled()
+            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->take(1)->first()
+        ) {
             $lastDataCall = $lastCalled->room_code . $lastCalled->number_queue;
         }
 
@@ -36,7 +46,8 @@ class PoliController extends Controller
             'poli' => $room,
             'queuesCalled' => $queueCalled,
             'queueNotCalled' => $resultsNotCalled,
-            'totalQueueNotCalled' => $room->queuesNotCalled()->count(),
+            'totalQueueNotCalled' => $room->queuesNotCalled()
+                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->count(),
             'lastCalled' => $lastDataCall
         ]);
     }
@@ -44,14 +55,40 @@ class PoliController extends Controller
     public function getQueueByRoom(Request $request, Room $room)
     {
         if ($request->wantsJson()) {
-            $resultsNotCalled =  $room->queuesNotCalled()->take(5)->get()->map(function ($queue) {
-                return $queue->room_code . $queue->number_queue;
-            });
+            $resultsNotCalled =  $room->queuesNotCalled()
+                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                ->take(5)
+                ->get()->map(function ($queue) {
+                    return $queue->room_code . $queue->number_queue;
+                });
+
+            $totalNotCalled =  $room->queuesNotCalled()
+                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                ->count();
         } else {
             return $this->errorResponse('Invalid request format. Please use JSON.', 400);
         }
 
-        return $this->successResponse($resultsNotCalled, 'Data Retrieved!');
+        return $this->successResponse(['total' => $totalNotCalled, 'pagination' => $resultsNotCalled], 'Data Retrieved!');
+    }
+
+    public function callQueueByRoom(Request $request, Room $room)
+    {
+        if ($request->wantsJson()) {
+            $numberCode = $request->input('number_queue');
+            $roomCode = substr($numberCode, 0, 1);   // "L"
+            $numberCode  = substr($numberCode, 1);
+            if ($isExist = (new RoomQueue)->isExistByCode($roomCode, $numberCode)) {
+                $isExist->called = true;
+                if ($isExist->save()) {
+                    return $this->successResponse('Success call');
+                }
+            }
+
+            return $this->errorResponse('Failed to update record.', 422);
+        } else {
+            return $this->errorResponse('Invalid request format. Please use JSON.', 400);
+        }
     }
 
     /**

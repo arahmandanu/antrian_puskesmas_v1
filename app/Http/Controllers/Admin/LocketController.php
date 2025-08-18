@@ -34,6 +34,7 @@ class LocketController extends Controller
 
         return view('admin.loket.create', [
             'availableLokets' => (new LocketStaff)->availableLocket(),
+            'lantaiOptions' => range(1, config('mysite.total_lantai')),
         ]);
     }
 
@@ -47,6 +48,7 @@ class LocketController extends Controller
     {
         $validatedData = $request->validate([
             'staff_name' => 'required|string|max:255',
+            'lantai' => 'required|integer|in:' . implode(',', range(1, config('mysite.total_lantai'))),
             'locket_number' => 'required|unique:locket_staff,locket_number|integer|in:' . implode(',', (new LocketStaff)->availableLocket()),
         ]);
 
@@ -81,6 +83,7 @@ class LocketController extends Controller
         return view('admin.loket.edit', [
             'loket' => $loket,
             'availableLokets' => (new LocketStaff)->availableLocket($loket->locket_number),
+            'lantaiOptions' => range(1, config('mysite.total_lantai')),
         ]);
     }
 
@@ -95,6 +98,7 @@ class LocketController extends Controller
     {
         $validatedData = $request->validate([
             'staff_name' => 'required|string|max:255',
+            'lantai' => 'required|integer|in:' . implode(',', range(1, config('mysite.total_lantai'))),
             'locket_number' => 'required|integer|in:' . implode(',', (new LocketStaff)->availableLocket($loket->locket_number)),
         ]);
 

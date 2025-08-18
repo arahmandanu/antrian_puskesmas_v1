@@ -6,7 +6,7 @@
     @endphp
 
     <!-- Main Content -->
-    <main class="flex flex-col flex-grow items-center">
+    <main class="flex flex-col flex-grow items-center p-6 overflow-y-auto h-screen custom-scrollbar">
         <input type="hidden" value="{{ $loket->locket_number }}" id="loket_number">
         <input type="hidden" value="{{ $loket->id }}" id="id">
 
@@ -22,7 +22,8 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl mb-5">
 
             <!-- Pendaftaran -->
-            <div class="bg-yellow-400 rounded-2xl shadow-xl p-4 flex flex-col items-center gap-2">
+            <div registeredMenu="{{ LocketList::PENDAFTARAN }}"
+                class="bg-yellow-400 rounded-2xl shadow-xl p-4 flex flex-col items-center gap-2">
                 <span class="text-3xl">📝</span>
                 <h2 class="text-xl font-bold">Pendaftaran</h2>
                 <span class="text-sm font-medium" id="sisa-{{ LocketList::PENDAFTARAN }}">Sisa antrian:
@@ -44,7 +45,8 @@
             </div>
 
             <!-- Laborate -->
-            <div class="bg-blue-400 rounded-2xl shadow-xl p-4 flex flex-col items-center gap-2">
+            <div registeredMenu="{{ LocketList::LABORATE }}"
+                class="bg-blue-400 rounded-2xl shadow-xl p-4 flex flex-col items-center gap-2">
                 <span class="text-3xl">🔬</span>
                 <h2 class="text-xl font-bold">Laborate</h2>
                 <span class="text-sm font-medium" id="sisa-{{ LocketList::LABORATE }}">Sisa antrian:
@@ -66,7 +68,8 @@
             </div>
 
             <!-- Lansia -->
-            <div class="bg-pink-400 rounded-2xl shadow-xl p-4 flex flex-col items-center gap-2">
+            <div registeredMenu="{{ LocketList::LANSIA }}"
+                class="bg-pink-400 rounded-2xl shadow-xl p-4 flex flex-col items-center gap-2">
                 <span class="text-3xl">👵</span>
                 <h2 class="text-xl font-bold">Lansia</h2>
                 <span class="text-sm font-medium" id="sisa-{{ LocketList::LANSIA }}">Sisa antrian:
@@ -109,10 +112,11 @@
                 @endforelse
             </ul>
         </div>
-
     </main>
 
     <script>
+        let historiesData = @json($histories);
+        const locketQueue = "pendaftaran";
         const allButtons = document.querySelectorAll('button');
         const recallUrlTemplate =
             "{{ route('loket_antrian.recall', ['locket_code' => ':code', 'locket_number' => ':number']) }}";
@@ -120,10 +124,20 @@
         const riwayatEl = document.getElementById("riwayat");
 
         $(document).ready(function() {
+            updateCache();
             setInterval(() => {
                 updateSisaAntrian();
             }, 5000);
         });
+
+        function updateCache() {
+            if (historiesData.length === 0) {
+                let element = document.querySelectorAll('[registeredMenu]');
+                $.each(element, function(i, v) {
+                    localStorage.removeItem(`locketQueue-${v.getAttribute('registeredMenu')}`);
+                });
+            }
+        }
 
         function updateSisaAntrian() {
             $.ajax({
@@ -177,7 +191,10 @@
                 },
                 statusCode: {
                     404: function() {
-                        alert("Antrian Kosong");
+                        Swal.fire({
+                            title: "Antrian kosong!",
+                            icon: "error"
+                        });
                         allButtons.forEach(btn => btn.disabled = false);
                         btn.textContent = originalText;
                     }
@@ -193,8 +210,9 @@
         }
 
         function recallAntrian(btn, prefix, poli) {
-            let localData = localStorage.getItem(`${prefix}`);
+            let localData = localStorage.getItem(`locketQueue-${prefix}`);
             const originalText = btn.textContent;
+            btn.textContent = "Memanggil...";
 
             if (localData === null) {
                 let url = recallUrlTemplate
@@ -224,7 +242,6 @@
                     }
                 });
             } else {
-                const originalText = btn.textContent;
                 allButtons.forEach(btn => btn.disabled = true);
                 tampilkanNomor(btn, localData, poli, originalText, prefix, false);
             }
@@ -259,7 +276,7 @@
             speechSynthesis.speak(utter);
 
             utter.onend = () => {
-                localStorage.setItem(locket_code, nomor);
+                localStorage.setItem(`locketQueue-${locket_code}`, nomor);
                 allButtons.forEach(btn => btn.disabled = false);
                 btn.textContent = originalText;
             };

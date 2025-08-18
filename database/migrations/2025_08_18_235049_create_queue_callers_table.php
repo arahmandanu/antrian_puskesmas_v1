@@ -13,15 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('rooms', function (Blueprint $table) {
+        Schema::create('queue_callers', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique()->nullable(false);
-            $table->text('name')->nullable(false);
-            $table->text('current_queue')->nullable();
-            $table->boolean('show')->default(true);
+            $table->string('number_code')->nullable(false);
+            $table->boolean('called')->nullable(false)->default(false);
+            $table->string('type')->nullable(false);
             $table->integer('lantai')->default(1)->nullable(false);
-            $table->text('last_call_queue')->nullable();
-            $table->dateTime('last_call_time')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rooms');
+        Schema::dropIfExists('queue_callers');
     }
 };

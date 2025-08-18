@@ -14,6 +14,7 @@ class LocketStaff extends Model
     protected $fillable = [
         'staff_name',
         'locket_number',
+        'lantai',
         'created_at',
         'updated_at'
     ];

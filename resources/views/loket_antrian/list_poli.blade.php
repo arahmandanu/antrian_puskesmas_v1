@@ -2,7 +2,7 @@
 
 @section('content')
     <!-- Konten -->
-    <main class="flex-grow overflow-y-auto h-screen custom-scrollbar relative">
+    <main class="flex-grow overflow-y-auto h-screen custom-scrollbar relative p-6">
         <input type="hidden" id="locket_number" value="{{ $locket_number }}">
         <div>
             <h1 class="text-2xl font-bold text-center mb-6">Daftar Poli</h1>

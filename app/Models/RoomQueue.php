@@ -18,4 +18,17 @@ class RoomQueue extends Model
         'created_at',
         'updated_at'
     ];
+
+    public function isExistByCode($roomCode, $numberQueue)
+    {
+        return $this
+            ->where('room_code', '=', $roomCode)
+            ->where('number_queue', $numberQueue)
+            ->first();
+    }
+
+    public function room()
+    {
+        return $this->belongsTo(Room::class, 'room_code', 'code');
+    }
 }

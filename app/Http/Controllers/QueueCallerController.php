@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\LocketStaff;
-use App\Models\Room;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Models\QueueCaller;
+use App\Http\Requests\StoreQueueCallerRequest;
+use App\Http\Requests\UpdateQueueCallerRequest;
 
-class DashboardController extends Controller
+class QueueCallerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,13 +15,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('admin.index', [
-            'usersCount' => User::count(),
-            'locketQueuesCount' => \App\Models\LocketQueue::count(),
-            'poliQueueCount' => \App\Models\RoomQueue::count(),
-            'totalPoli' => Room::count(),
-            'totalLoket' => LocketStaff::count()
-        ]);
+        //
     }
 
     /**
@@ -39,10 +31,10 @@ class DashboardController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreQueueCallerRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreQueueCallerRequest $request)
     {
         //
     }
@@ -50,10 +42,10 @@ class DashboardController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\QueueCaller  $queueCaller
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(QueueCaller $queueCaller)
     {
         //
     }
@@ -61,10 +53,10 @@ class DashboardController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\QueueCaller  $queueCaller
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit(QueueCaller $queueCaller)
     {
         //
     }
@@ -72,11 +64,11 @@ class DashboardController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
+     * @param  \App\Http\Requests\UpdateQueueCallerRequest  $request
+     * @param  \App\Models\QueueCaller  $queueCaller
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateQueueCallerRequest $request, QueueCaller $queueCaller)
     {
         //
     }
@@ -84,10 +76,10 @@ class DashboardController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\QueueCaller  $queueCaller
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(QueueCaller $queueCaller)
     {
         //
     }
