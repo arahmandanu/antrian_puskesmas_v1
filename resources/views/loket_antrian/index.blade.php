@@ -7,16 +7,18 @@
         <div class="w-4/5" id="all_iklan">
             <div class="swiper w-full h-full">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <img src="https://picsum.photos/id/1015/1200/800" class="w-full h-full object-cover" alt="iklan 1">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="https://picsum.photos/id/1024/1200/800" class="w-full h-full object-cover" alt="iklan 2">
-                    </div>
                     <div class="swiper-slide flex items-center justify-center bg-grey">
                         <video class="w-full h-full" muted autoplay loop>
                             <source src="public/videos/tes.mp4" type="video/mp4">
                         </video>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <img src="https://picsum.photos/id/1015/1200/800" class="w-full h-full object-cover" alt="iklan 1">
+                    </div>
+
+                    <div class="swiper-slide">
+                        <img src="https://picsum.photos/id/1024/1200/800" class="w-full h-full object-cover" alt="iklan 2">
                     </div>
                 </div>
             </div>
@@ -61,7 +63,7 @@
                 loop: true,
                 autoplay: {
                     delay: 4000, // 4 detik untuk gambar
-                    disableOnInteraction: false,
+                    disableOnInteraction: true,
                 },
                 pagination: {
                     el: ".swiper-pagination",
