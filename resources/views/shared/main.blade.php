@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ asset('css/locket.css') }}">
     <!-- Custom Fonts -->
     <link href="{{ asset('css/startmin/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <!-- jQuery -->
     <script src="{{ asset('js/startmin/js/jquery.min.js') }}"></script>
 </head>
@@ -21,6 +22,9 @@
     @yield('content')
 
     @include('shared.footer')
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
 

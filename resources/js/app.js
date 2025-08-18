@@ -7,3 +7,7 @@ function ejaanNomor(nomor) {
     return nomor.split("").join(" ");
 }
 window.ejaanNomor = ejaanNomor;
+
+
+import Swiper from 'swiper/bundle';
+window.Swiper = Swiper;

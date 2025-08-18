@@ -1,13 +1,26 @@
 @extends('shared.main')
 
 @section('content')
-    <main class="flex flex-grow">
-        <!-- Sidebar kiri (iklan) -->
-        <div class="w-4/5 bg-white p-4 flex items-center justify-center">
-            <img src="https://via.placeholder.com/900x600?text=Iklan+Puskesmas" alt="Iklan Puskesmas"
-                class="max-h-full max-w-full object-contain rounded-lg shadow-lg">
+    <!-- Konten utama -->
+    <main class="flex flex-1 overflow-hidden">
+        <!-- Bagian Kiri (Swiper) -->
+        <div class="w-4/5" id="all_iklan">
+            <div class="swiper w-full h-full">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="https://picsum.photos/id/1015/1200/800" class="w-full h-full object-cover" alt="iklan 1">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://picsum.photos/id/1024/1200/800" class="w-full h-full object-cover" alt="iklan 2">
+                    </div>
+                    <div class="swiper-slide flex items-center justify-center bg-grey">
+                        <video class="w-full h-full" muted autoplay loop>
+                            <source src="public/videos/tes.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
         </div>
-
         <!-- Sidebar kanan (tombol) -->
         <div class="relative w-1/5 bg-gray-100 p-4 flex flex-col gap-8 justify-center items-center">
             <!-- Tombol -->
@@ -43,6 +56,37 @@
         </div>
     </main>
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const swiper = new Swiper(".swiper", {
+                loop: true,
+                autoplay: {
+                    delay: 4000, // 4 detik untuk gambar
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+            });
+
+            swiper.on("slideChangeTransitionEnd", function() {
+                const activeSlide = swiper.slides[swiper.activeIndex];
+                const video = activeSlide.querySelector("video");
+
+                // kalau slide ada video
+                if (video) {
+                    swiper.autoplay.stop(); // hentikan auto scroll
+                    video.currentTime = 0;
+                    video.play();
+
+                    video.onended = () => {
+                        swiper.slideNext(); // pindah slide setelah video selesai
+                        swiper.autoplay.start(); // mulai lagi autoplay
+                    };
+                }
+            });
+        });
+
         function panggilAntrian(poli, code) {
             const overlay = document.getElementById('loading-overlay');
             overlay.classList.remove('hidden');
