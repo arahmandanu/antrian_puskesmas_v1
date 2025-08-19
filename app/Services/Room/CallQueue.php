@@ -32,6 +32,8 @@ class CallQueue extends \App\Services\AbstractService
                     $isExist->called = true;
                     if ($isExist->save()) {
                         $message = 'Success call';
+                        $this->room->last_call_queue = $this->numberCode;
+                        $this->room->save();
                     }
                 }
             }
