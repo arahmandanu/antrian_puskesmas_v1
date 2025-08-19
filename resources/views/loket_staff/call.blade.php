@@ -122,7 +122,7 @@
                     },
                     error: function(response) {
                         Swal.fire({
-                            title: response.message,
+                            title: response.responseJSON.message,
                             icon: "error"
                         });
                     },

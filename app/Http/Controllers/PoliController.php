@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Room;
 use App\Models\RoomQueue;
+use App\Services\Room\CallQueue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -76,19 +77,22 @@ class PoliController extends Controller
     {
         if ($request->wantsJson()) {
             $numberCode = $request->input('number_queue');
-            $roomCode = substr($numberCode, 0, 1);   // "L"
+            $roomCode = substr($numberCode, 0, 1);
             $numberCode  = substr($numberCode, 1);
-            if ($isExist = (new RoomQueue)->isExistByCode($roomCode, $numberCode)) {
-                $isExist->called = true;
-                if ($isExist->save()) {
-                    return $this->successResponse('Success call');
-                }
-            }
 
-            return $this->errorResponse('Failed to update record.', 422);
+            $result = (new CallQueue($room, $roomCode, $numberCode))->handle();
+            return $this->resultResponseData($result, 201);
         } else {
             return $this->errorResponse('Invalid request format. Please use JSON.', 400);
         }
+    }
+
+
+    public function showQueueByRoom(Request $request, Room $room)
+    {
+        return view('pasien.poli_terpanggil', [
+            'poli' => $room
+        ]);
     }
 
     /**

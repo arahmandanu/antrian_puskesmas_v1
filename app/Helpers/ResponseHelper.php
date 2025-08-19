@@ -21,4 +21,14 @@ trait ResponseHelper
             'errors'  => $errors,
         ], $status);
     }
+
+    public static function resultResponseData($data, $default = 200)
+    {
+        return response()->json([
+            'status'  => $data['error'] ? 'error' : 'success',
+            'message' => $data['message'],
+            'errors'  => $data['error'],
+            'data' => array_key_exists('data', $data) ? $data['data'] : null,
+        ], $data['error'] ?  422 : $default);
+    }
 }

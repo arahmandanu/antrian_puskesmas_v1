@@ -22,7 +22,7 @@ Route::group(['prefix' => '/loket'], function () {
     Route::post('/create-queue', [App\Http\Controllers\LocketController::class, 'createQueue'])->name('loket_antrian.createQueue');
     Route::get('/generate_view/{locket_number}', [App\Http\Controllers\LocketController::class, 'generateView'])->name('loket_antrian.generateView');
     Route::get('/sisa-antrian', [App\Http\Controllers\LocketController::class, 'getSisaAntrian'])->name('loket_antrian.sisaAntrian');
-    Route::post('/ambil-antrian-selanjutnya', [App\Http\Controllers\LocketController::class, 'getNextQeueue'])->name('loket_antrian.nextQueue');
+    Route::post('/call-queue', [App\Http\Controllers\LocketController::class, 'getNextQeueue'])->name('loket_antrian.nextQueue');
     Route::get('/queue-recall/{locket_code}/{locket_number}', [App\Http\Controllers\LocketController::class, 'getRecallQueue'])->name('loket_antrian.recall');
 
     Route::get('/show_poli/{locket_number}', [App\Http\Controllers\LocketController::class, 'loketGetPoli'])->name('loket_antrian.showPoli');
@@ -34,6 +34,8 @@ Route::group(['prefix' => '/poli'], function () {
     Route::get('/generate_view/{room}', [App\Http\Controllers\PoliController::class, 'generateView'])->name('poli.generateView');
     Route::get('/get-queue/{room}', [App\Http\Controllers\PoliController::class, 'getQueueByRoom'])->name('poli.getQueueByRoom');
     Route::post('/call-queue/{room}', [App\Http\Controllers\PoliController::class, 'callQueueByRoom'])->name('poli.callQueueByRoom');
+
+    Route::get('/show-current-queue/{room}', [App\Http\Controllers\PoliController::class, 'showQueueByRoom'])->name('poli.showQueueByRoom');
 });
 
 Route::group(['prefix' => '/admin', 'middleware' => ['AlreadyLogin']], function () {
