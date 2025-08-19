@@ -18,8 +18,8 @@
                  hover:shadow-2xl hover:scale-105 transform transition-all duration-300
                  flex flex-col items-center justify-center p-6">
                         <span class="text-5xl mb-3">🏢</span>
-                        <h3 class="text-xl font-bold text-green-700">{{ $loket->locket_number }}</h3>
-                        <p class="text-gray-600 text-sm mt-1">Staff: {{ $loket->staff_name }}</p>
+                        <h3 class="text-xl font-bold text-green-700">{{ $loket->staff_name }}</h3>
+                        <p class="text-gray-600 text-sm mt-1">Lantai: {{ $loket->locket_number }}</p>
                     </a>
                 @empty
                     <!-- Loket 1 -->
