@@ -16,8 +16,18 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/loket', [App\Http\Controllers\LocketController::class, 'index'])->name('loket_antrian.index');
+
+Route::group(['prefix' => '/play_suara'], function () {
+    Route::get('/', function () {
+        return view('play_suara.index');
+    })->name('play_suara');
+
+    Route::get('/choosed_lantai/{lantai}', [App\Http\Controllers\PlaySoundController::class, 'index'])->name('play_suara.choosedLantai');
+    Route::get('/get_next_call/{lantai}', [App\Http\Controllers\PlaySoundController::class, 'getNextCall'])->name('play_suara.getNextCall');
+});
+
 Route::group(['prefix' => '/loket'], function () {
+    Route::get('/', [App\Http\Controllers\LocketController::class, 'index'])->name('loket_antrian.index');
     Route::get('/list', [App\Http\Controllers\LocketController::class, 'locketList'])->name('loket_antrian.list');
     Route::post('/create-queue', [App\Http\Controllers\LocketController::class, 'createQueue'])->name('loket_antrian.createQueue');
     Route::get('/generate_view/{locket_number}', [App\Http\Controllers\LocketController::class, 'generateView'])->name('loket_antrian.generateView');
@@ -74,12 +84,4 @@ Route::group(['prefix' => '/admin_dashboard', 'middleware' => ['auth:web']], fun
         Route::put('/{loket}', [App\Http\Controllers\Admin\LocketController::class, 'update'])->name('admin.loket.update');
         Route::delete('/{loket}', [App\Http\Controllers\Admin\LocketController::class, 'destroy'])->name('admin.loket.destroy');
     });
-});
-
-Route::get('/poli_call', function () {
-    return view('loket_staff.call');
-});
-
-Route::get('/poli_terpanggil', function () {
-    return view('pasien.poli_terpanggil');
 });

@@ -2,6 +2,7 @@
 
 namespace App\Services\Room;
 
+use App\Models\QueueCaller;
 use App\Models\Room;
 use App\Models\RoomQueue;
 use App\Models\RoomQueueHistoryCall;
@@ -53,6 +54,16 @@ class CallQueue extends \App\Services\AbstractService
 
     private function createHistoryRoom($queue)
     {
+        QueueCaller::create([
+            'number_code' =>  $this->roomCode,
+            'called' => false,
+            'type' => 'poli',
+            'lantai' => $this->room->lantai,
+            'number_queue' => $this->numberQueue,
+            'called_to' => $this->room->name
+        ]);
+
+
         RoomQueueHistoryCall::create([
             'room_code' => $this->room->code,
             'number_queue' =>  $this->room->last_call_queue,

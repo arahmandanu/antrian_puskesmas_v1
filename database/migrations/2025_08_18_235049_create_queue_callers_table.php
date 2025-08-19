@@ -16,7 +16,9 @@ return new class extends Migration
         Schema::create('queue_callers', function (Blueprint $table) {
             $table->id();
             $table->string('number_code')->nullable(false);
+            $table->string('number_queue')->nullable(false);
             $table->boolean('called')->nullable(false)->default(false);
+            $table->string('called_to')->nullable(false);
             $table->string('type')->nullable(false);
             $table->integer('lantai')->default(1)->nullable(false);
             $table->timestamps();

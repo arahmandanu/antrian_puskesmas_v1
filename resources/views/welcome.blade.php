@@ -25,6 +25,13 @@
                 <span class="text-xl font-semibold text-center">Loket Antrian</span>
             </a>
 
+            <!-- Play Suara -->
+            <a href="{{ route('play_suara') }}"
+                class="flex flex-col items-center justify-center w-48 aspect-square bg-purple-500 text-white rounded-lg shadow-md hover:opacity-90 transition">
+                <i class="fa fa-volume-up fa-4x mb-2"></i>
+                <span class="text-xl font-semibold text-center">Play Suara</span>
+            </a>
+
             <!-- Admin -->
             <a href="{{ route('admin.dashboard') }}"
                 class="flex flex-col items-center justify-center w-48 aspect-square bg-green-500 text-white rounded-lg shadow-md hover:opacity-90 transition">

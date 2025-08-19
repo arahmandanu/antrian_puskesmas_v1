@@ -7,6 +7,7 @@ use App\Models\LocketCall;
 use App\Models\LocketHistoryCall;
 use App\Models\LocketQueue;
 use App\Models\LocketStaff;
+use App\Models\QueueCaller;
 use Illuminate\Support\Arr;
 
 class GetNextQueue extends \App\Services\AbstractService
@@ -22,7 +23,6 @@ class GetNextQueue extends \App\Services\AbstractService
 
     public function handle()
     {
-        $lastCall = LocketQueue::lastCallByLocketCode($this->locket_code, $this->locket_number)->first();
         $next = LocketQueue::nextQueue($this->locket_code)->first();
 
         if (!$next) {
@@ -33,9 +33,18 @@ class GetNextQueue extends \App\Services\AbstractService
         $next->locket_number = $this->locket_number;
         $next->save();
 
-        if ($lastCall) {
-            $locketStaff = LocketStaff::where('locket_number', $this->locket_number)->first();
-            if ($locketStaff) {
+        $locketStaff = LocketStaff::where('locket_number', $this->locket_number)->first();
+        if ($locketStaff) {
+            QueueCaller::create([
+                'number_code' =>  $this->locket_code,
+                'called' => false,
+                'type' => 'locket',
+                'lantai' => $locketStaff->lantai,
+                'number_queue' => $next->number_queue,
+                'called_to' => "loket {$this->locket_number}"
+            ]);
+
+            if ($lastCall = LocketQueue::lastCallByLocketCode($this->locket_code, $this->locket_number)->first()) {
                 LocketHistoryCall::create([
                     'locket_code' => $this->locket_code,
                     'locket_number' =>  $locketStaff->locket_number,
@@ -45,6 +54,7 @@ class GetNextQueue extends \App\Services\AbstractService
                 ]);
             }
         }
+
         return [
             'locket_code' => $this->locket_code,
             'number_queue' => $next->number_queue,
