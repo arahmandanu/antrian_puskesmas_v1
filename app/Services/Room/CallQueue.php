@@ -60,9 +60,9 @@ class CallQueue extends \App\Services\AbstractService
             'type' => 'poli',
             'lantai' => $this->room->lantai,
             'number_queue' => $this->numberQueue,
-            'called_to' => $this->room->name
+            'called_to' => $this->room->name,
+            'initiator_name' => "Poli"
         ]);
-
 
         RoomQueueHistoryCall::create([
             'room_code' => $this->room->code,

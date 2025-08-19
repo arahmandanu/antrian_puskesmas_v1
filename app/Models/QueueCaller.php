@@ -15,9 +15,14 @@ class QueueCaller extends Model
         'type',
         'lantai',
         'number_queue',
+        'initiator_name',
         'called_to',
         'created_at',
         'updated_at'
+    ];
+
+    protected $casts = [
+        'called' => 'boolean',
     ];
 
 
@@ -27,6 +32,16 @@ class QueueCaller extends Model
             ->where('lantai', $lantai)
             ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
             ->where('called', false)
+            ->orderBy('id', 'asc');
+    }
+
+    public function scopeLastCalled($query, $lantai, $limit = 10)
+    {
+        return $query
+            ->where('lantai', $lantai)
+            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->where('called', true)
+            ->limit($limit)
             ->orderBy('id', 'asc');
     }
 }

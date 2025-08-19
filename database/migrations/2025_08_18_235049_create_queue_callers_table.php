@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('number_code')->nullable(false);
             $table->string('number_queue')->nullable(false);
+            $table->string('initiator_name')->nullable(false);
             $table->boolean('called')->nullable(false)->default(false);
             $table->string('called_to')->nullable(false);
             $table->string('type')->nullable(false);

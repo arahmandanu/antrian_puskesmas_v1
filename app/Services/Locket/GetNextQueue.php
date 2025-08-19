@@ -41,7 +41,8 @@ class GetNextQueue extends \App\Services\AbstractService
                 'type' => 'locket',
                 'lantai' => $locketStaff->lantai,
                 'number_queue' => $next->number_queue,
-                'called_to' => "loket {$this->locket_number}"
+                'called_to' => "loket {$this->locket_number}",
+                'initiator_name' => LocketList::from($this->locket_code)->name
             ]);
 
             if ($lastCall = LocketQueue::lastCallByLocketCode($this->locket_code, $this->locket_number)->first()) {

@@ -403,9 +403,6 @@
   .mb-6 {
     margin-bottom: calc(var(--spacing) * 6);
   }
-  .mb-8 {
-    margin-bottom: calc(var(--spacing) * 8);
-  }
   .mb-10 {
     margin-bottom: calc(var(--spacing) * 10);
   }
@@ -475,17 +472,11 @@
   .h-24 {
     height: calc(var(--spacing) * 24);
   }
-  .h-48 {
-    height: calc(var(--spacing) * 48);
-  }
   .h-full {
     height: 100%;
   }
   .h-screen {
     height: 100vh;
-  }
-  .max-h-72 {
-    max-height: calc(var(--spacing) * 72);
   }
   .min-h-screen {
     min-height: 100vh;
@@ -713,9 +704,6 @@
   .border-green-600 {
     border-color: var(--color-green-600);
   }
-  .border-purple-400 {
-    border-color: var(--color-purple-400);
-  }
   .border-red-600 {
     border-color: var(--color-red-600);
   }
@@ -755,9 +743,6 @@
   .bg-gray-100 {
     background-color: var(--color-gray-100);
   }
-  .bg-gray-600 {
-    background-color: var(--color-gray-600);
-  }
   .bg-green-100 {
     background-color: var(--color-green-100);
   }
@@ -794,20 +779,8 @@
   .bg-pink-600 {
     background-color: var(--color-pink-600);
   }
-  .bg-purple-50 {
-    background-color: var(--color-purple-50);
-  }
-  .bg-purple-200 {
-    background-color: var(--color-purple-200);
-  }
-  .bg-purple-400 {
-    background-color: var(--color-purple-400);
-  }
   .bg-purple-500 {
     background-color: var(--color-purple-500);
-  }
-  .bg-purple-600 {
-    background-color: var(--color-purple-600);
   }
   .bg-red-500 {
     background-color: var(--color-red-500);
@@ -1154,12 +1127,6 @@
   .text-pink-800 {
     color: var(--color-pink-800);
   }
-  .text-purple-700 {
-    color: var(--color-purple-700);
-  }
-  .text-purple-800 {
-    color: var(--color-purple-800);
-  }
   .text-red-700 {
     color: var(--color-red-700);
   }
@@ -1301,13 +1268,6 @@
       }
     }
   }
-  .hover\:bg-gray-700 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-gray-700);
-      }
-    }
-  }
   .hover\:bg-green-600 {
     &:hover {
       @media (hover: hover) {
@@ -1333,27 +1293,6 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-pink-700);
-      }
-    }
-  }
-  .hover\:bg-purple-50 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-purple-50);
-      }
-    }
-  }
-  .hover\:bg-purple-300 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-purple-300);
-      }
-    }
-  }
-  .hover\:bg-purple-700 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-purple-700);
       }
     }
   }

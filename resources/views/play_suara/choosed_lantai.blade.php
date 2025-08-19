@@ -18,10 +18,19 @@
             <div class="flex-1 bg-white shadow-2xl rounded-3xl p-8 flex flex-col">
                 <h3 class="text-3xl font-bold mb-6 text-gray-800">Riwayat Antrian</h3>
                 <ul id="history" class="flex-1 overflow-y-auto space-y-4 text-2xl text-gray-700">
-                    <li class="text-gray-500 text-center text-xl">Belum ada panggilan</li>
+                    @forelse ($histories as $history)
+                        <li class="p-4 rounded-xl bg-gray-100">
+                            {{ $history->number_code }}{{ $history->number_queue }} - {{ $history->initiator_name }}</li>
+                    @empty
+                        <li class="text-gray-500 text-center text-xl">Belum ada panggilan</li>
+                    @endforelse
                 </ul>
             </div>
         </div>
+
+        <button id="start-btn" class="p-4 bg-blue-500 text-white rounded-lg mb-4">
+            Mulai Antrian
+        </button>
     </main>
 
     <script>
@@ -30,60 +39,90 @@
         let lastCallId = null;
         let lantai = document.getElementById('lantai').value;
 
+        const startBtn = document.getElementById('start-btn');
+
+        startBtn.addEventListener('click', () => {
+            // trigger speechSynthesis kosong dulu supaya browser mengizinkan
+            const utter = new SpeechSynthesisUtterance('');
+            speechSynthesis.speak(utter);
+
+            // mulai polling
+            updateAntrian();
+            setInterval(updateAntrian, 5000);
+
+            // sembunyikan tombol
+            startBtn.style.display = 'none';
+        });
+
+
         function updateAntrian() {
+            console.log('isSpeaking:', isSpeaking, 'isRequesting:', isRequesting);
+            // console.log(isRequesting, isSpeaking);
             // Jika sedang request atau sedang speaking, skip
             if (isRequesting || isSpeaking) return;
 
             isRequesting = true;
 
-            fetch("{{ route('play_suara.getNextCall', '') }}/" + lantai)
-                .then(res => res.json())
-                .then(data => {
-                    if (!data) return;
+            $.ajax({
+                type: "GET",
+                url: "{{ route('play_suara.getNextCall', '') }}/" + lantai,
+                data: {},
+                dataType: "JSON",
+                success: function(response) {
+                    if (response.hasOwnProperty('data')) {
+                        if (response.data !== null) {
+                            if (!response) return;
 
-                    // Cek jika ada panggilan baru
-                    if (lastCallId !== data.id) {
-                        lastCallId = data.id;
+                            // Cek jika ada panggilan baru
+                            data = response.data;
+                            console.log(data);
+                            if (lastCallId !== data.id) {
+                                lastCallId = data.id;
 
-                        // Update current call
-                        const currentCallEl = document.getElementById('current-call');
-                        currentCallEl.innerHTML = `
-                    <span class="text-8xl font-extrabold text-white">${data.locket_code}${String(data.number_queue).padStart(3,'0')}</span>
-                    <h4 class="text-4xl font-semibold mt-4">${data.poli_name}</h4>
-                `;
+                                // Update current call
+                                const currentCallEl = document.getElementById('current-call');
+                                currentCallEl.innerHTML = `
+                                    <span class="text-8xl font-extrabold text-white">${data.number_code}${String(data.number_queue).padStart(3,'0')}</span>
+                                    <h4 class="text-4xl font-semibold mt-4">${data.initiator_name}</h4>
+                                `;
 
-                        // Update riwayat
-                        const historyEl = document.getElementById('history');
-                        const li = document.createElement('li');
-                        li.textContent =
-                            `${data.locket_code}${String(data.number_queue).padStart(3,'0')} - ${data.poli_name}`;
-                        li.classList.add('p-4', 'rounded-xl', 'bg-gray-100');
-                        historyEl.prepend(li);
-                        while (historyEl.children.length > 10) {
-                            historyEl.removeChild(historyEl.lastChild);
+                                // Update riwayat
+                                const historyEl = document.getElementById('history');
+                                const li = document.createElement('li');
+                                li.textContent =
+                                    `${data.number_code}${String(data.number_queue).padStart(3,'0')} - ${data.initiator_name}`;
+                                li.classList.add('p-4', 'rounded-xl', 'bg-gray-100');
+                                historyEl.prepend(li);
+                                while (historyEl.children.length > 5) {
+                                    historyEl.removeChild(historyEl.lastChild);
+                                }
+
+                                // Panggilan suara
+                                isSpeaking = true;
+                                const utter = new SpeechSynthesisUtterance(
+                                    `Nomor antrian ${data.number_code}${String(data.number_queue).padStart(3,'0')}, silakan menuju  ${data.called_to}.`
+                                );
+                                utter.lang = "id-ID";
+                                utter.rate = 0.9;
+                                utter.onend = () => {
+                                    isSpeaking = false;
+                                };
+                                speechSynthesis.speak(utter);
+                            }
                         }
-
-                        // Panggilan suara
-                        isSpeaking = true;
-                        const utter = new SpeechSynthesisUtterance(
-                            `Nomor antrian ${data.locket_code}${String(data.number_queue).padStart(3,'0')}, silakan menuju lantai.`
-                        );
-                        utter.lang = "id-ID";
-                        utter.rate = 0.9;
-                        utter.onend = () => {
-                            isSpeaking = false;
-                        };
-                        speechSynthesis.speak(utter);
                     }
-                })
-                .catch(err => console.error('Gagal mengambil data antrian:', err))
-                .finally(() => {
+                },
+                error: function() {
+                    console.error('Gagal mengambil data antrian:')
+                },
+                complete: function() {
                     isRequesting = false;
-                });
+                }
+            });
         }
 
         // Polling setiap 5 detik
-        setInterval(updateAntrian, 5000);
-        updateAntrian();
+        // setInterval(updateAntrian, 5000);
+        // updateAntrian();
     </script>
 @endsection
