@@ -60,15 +60,11 @@ class LocketController extends Controller
     public function getNextQeueue(Request $request)
     {
         if ($request->wantsJson()) {
-            $next = (new \App\Services\Locket\GetNextQueue($request->input('locket_code'), $request->input('locket_number')))->handle();
-            if ($next === null) {
-                return $this->errorResponse('No more queues available for this locket.', 404);
-            }
-
-            return $this->successResponse($next);
-        } else {
-            return $this->errorResponse('Invalid request format. Please use JSON.', 400);
+            $result = (new \App\Services\Locket\GetNextQueue($request->input('locket_code'), $request->input('locket_number')))->handle();
+            return $this->resultResponseData($result);
         }
+
+        return $this->errorResponse('Invalid request format. Please use JSON.', 400);
     }
 
     public function getSisaAntrian(Request $request)
@@ -78,20 +74,19 @@ class LocketController extends Controller
             $result = $allTotal->pluck('total', 'locket_code')->toArray();
 
             return $this->successResponse($result);
-        } else {
-            return $this->errorResponse('Invalid request format. Please use JSON.', 400);
         }
+
+        return $this->errorResponse('Invalid request format. Please use JSON.', 400);
     }
 
     public function getRecallQueue(Request $request, $locket_code, $locket_number)
     {
         if ($request->wantsJson()) {
-            $lastQueue = (new GetRecallQueue($locket_code, $locket_number))->handle();
-
-            return $this->successResponse($lastQueue);
-        } else {
-            return $this->errorResponse('Invalid request format. Please use JSON.', 400);
+            $result = (new GetRecallQueue($locket_code, $locket_number))->handle();
+            return $this->resultResponseData($result);
         }
+
+        return $this->errorResponse('Invalid request format. Please use JSON.', 400);
     }
 
     public function loketGetPoli(Request $request, $locket_number)
@@ -127,8 +122,8 @@ class LocketController extends Controller
 
             flash()->success($result['message']);
             return $this->successResponse($result['data']);
-        } else {
-            return $this->errorResponse('Invalid request format. Please use JSON.', 400);
         }
+
+        return $this->errorResponse('Invalid request format. Please use JSON.', 400);
     }
 }

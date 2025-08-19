@@ -124,20 +124,20 @@
         const riwayatEl = document.getElementById("riwayat");
 
         $(document).ready(function() {
-            updateCache();
+            // updateCache();
             setInterval(() => {
                 updateSisaAntrian();
             }, 5000);
         });
 
-        function updateCache() {
-            if (historiesData.length === 0) {
-                let element = document.querySelectorAll('[registeredMenu]');
-                $.each(element, function(i, v) {
-                    localStorage.removeItem(`locketQueue-${v.getAttribute('registeredMenu')}`);
-                });
-            }
-        }
+        // function updateCache() {
+        //     if (historiesData.length === 0) {
+        //         let element = document.querySelectorAll('[registeredMenu]');
+        //         $.each(element, function(i, v) {
+        //             localStorage.removeItem(`locketQueue-${v.getAttribute('registeredMenu')}`);
+        //         });
+        //     }
+        // }
 
         function updateSisaAntrian() {
             $.ajax({
@@ -190,9 +190,9 @@
                     }
                 },
                 statusCode: {
-                    404: function() {
+                    422: function(response) {
                         Swal.fire({
-                            title: "Antrian kosong!",
+                            title: response.responseJSON.message,
                             icon: "error"
                         });
                         allButtons.forEach(btn => btn.disabled = false);
@@ -200,7 +200,7 @@
                     }
                 },
                 error: function(xhr, status, error) {
-                    if (xhr.status !== 404) {
+                    if (xhr.status !== 422) {
                         alert("Gagal memanggil antrian. Silakan coba lagi.");
                         allButtons.forEach(btn => btn.disabled = false);
                         btn.textContent = originalText;
@@ -210,41 +210,51 @@
         }
 
         function recallAntrian(btn, prefix, poli) {
-            let localData = localStorage.getItem(`locketQueue-${prefix}`);
+            // let localData = localStorage.getItem(`locketQueue-${prefix}`);
             const originalText = btn.textContent;
             btn.textContent = "Memanggil...";
 
-            if (localData === null) {
-                let url = recallUrlTemplate
-                    .replace(':code', prefix)
-                    .replace(':number', locketNumber);
-                $.ajax({
-                    type: "GET",
-                    url: url,
-                    data: {},
-                    dataType: "json",
-                    success: function(response) {
-                        if (response.hasOwnProperty('data')) {
-                            if (response.data?.number_queue && response.data?.locket_number && response.data
-                                ?.poli) {
-                                tampilkanNomor(btn, response.data?.locket_code + response.data?.number_queue,
-                                    response.data
-                                    ?.poli, originalText, response.data?.locket_code);
-                            } else {
-                                alert('Data Antrian Kosong!');
-                                allButtons.forEach(btn => btn.disabled = false);
-                                btn.textContent = originalText;
-                            }
+            // if (localData === null) {
+            let url = recallUrlTemplate
+                .replace(':code', prefix)
+                .replace(':number', locketNumber);
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: {},
+                dataType: "json",
+                success: function(response) {
+                    if (response.hasOwnProperty('data')) {
+                        if (response.data?.number_queue && response.data?.locket_number && response.data
+                            ?.poli) {
+                            tampilkanNomor(btn, response.data?.locket_code + response.data?.number_queue,
+                                response.data
+                                ?.poli, originalText, response.data?.locket_code, false);
                         } else {
+                            alert('Data Antrian Kosong!');
                             allButtons.forEach(btn => btn.disabled = false);
                             btn.textContent = originalText;
                         }
+                    } else {
+                        allButtons.forEach(btn => btn.disabled = false);
+                        btn.textContent = originalText;
                     }
-                });
-            } else {
-                allButtons.forEach(btn => btn.disabled = true);
-                tampilkanNomor(btn, localData, poli, originalText, prefix, false);
-            }
+                },
+                statusCode: {
+                    422: function(response) {
+                        Swal.fire({
+                            title: response.responseJSON.message,
+                            icon: "error"
+                        });
+                        allButtons.forEach(btn => btn.disabled = false);
+                        btn.textContent = originalText;
+                    }
+                },
+            });
+            // } else {
+            //     allButtons.forEach(btn => btn.disabled = true);
+            //     tampilkanNomor(btn, localData, poli, originalText, prefix, false);
+            // }
         }
 
         function tampilkanNomor(btn, prefix, poli, originalText, locket_code, update_riwayat = true) {
@@ -267,19 +277,23 @@
                 riwayatEl.firstElementChild.remove();
             }
 
-            // Panggilan suara
-            let teksPanggilan = `Nomor antrian ${ejaanNomor(nomor)}, silakan menuju loket ${locketNumber}`;
-            speechSynthesis.cancel();
-            let utter = new SpeechSynthesisUtterance(teksPanggilan);
-            utter.lang = "id-ID";
-            utter.rate = 0.9;
-            speechSynthesis.speak(utter);
+            // localStorage.setItem(`locketQueue-${locket_code}`, nomor);
+            allButtons.forEach(btn => btn.disabled = false);
+            btn.textContent = originalText;
 
-            utter.onend = () => {
-                localStorage.setItem(`locketQueue-${locket_code}`, nomor);
-                allButtons.forEach(btn => btn.disabled = false);
-                btn.textContent = originalText;
-            };
+            // Panggilan suara
+            // let teksPanggilan = `Nomor antrian ${ejaanNomor(nomor)}, silakan menuju loket ${locketNumber}`;
+            // speechSynthesis.cancel();
+            // let utter = new SpeechSynthesisUtterance(teksPanggilan);
+            // utter.lang = "id-ID";
+            // utter.rate = 0.9;
+            // speechSynthesis.speak(utter);
+
+            // utter.onend = () => {
+            //     localStorage.setItem(`locketQueue-${locket_code}`, nomor);
+            //     allButtons.forEach(btn => btn.disabled = false);
+            //     btn.textContent = originalText;
+            // };
         }
 
         function ejaanNomor(nomor) {

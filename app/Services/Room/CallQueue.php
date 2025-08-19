@@ -55,6 +55,7 @@ class CallQueue extends \App\Services\AbstractService
     private function createHistoryRoom($queue)
     {
         QueueCaller::create([
+            'owner_id' => $this->room->id,
             'number_code' =>  $this->roomCode,
             'called' => false,
             'type' => 'poli',

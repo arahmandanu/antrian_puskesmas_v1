@@ -8,6 +8,7 @@ use App\Models\LocketHistoryCall;
 use App\Models\LocketQueue;
 use App\Models\LocketStaff;
 use App\Models\QueueCaller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
 class GetNextQueue extends \App\Services\AbstractService
@@ -23,10 +24,22 @@ class GetNextQueue extends \App\Services\AbstractService
 
     public function handle()
     {
-        $next = LocketQueue::nextQueue($this->locket_code)->first();
+        $pendingCalled = ((new QueueCaller)->isExistPendingByOwnerid($this->locket_code));
+        if ($pendingCalled) {
+            return [
+                'error' => true,
+                'message' => 'Anda punya pending panggilan yang belum terpanggil!',
+                'data' => null
+            ];
+        }
 
+        $next = LocketQueue::nextQueue($this->locket_code)->first();
         if (!$next) {
-            return null;
+            return [
+                'error' => true,
+                'message' => 'Tidak ada antrian yang belum terpanggil!',
+                'data' => null
+            ];
         }
 
         $next->called = true;
@@ -36,6 +49,7 @@ class GetNextQueue extends \App\Services\AbstractService
         $locketStaff = LocketStaff::where('locket_number', $this->locket_number)->first();
         if ($locketStaff) {
             QueueCaller::create([
+                'owner_id' => $locketStaff->id,
                 'number_code' =>  $this->locket_code,
                 'called' => false,
                 'type' => 'locket',
@@ -57,10 +71,14 @@ class GetNextQueue extends \App\Services\AbstractService
         }
 
         return [
-            'locket_code' => $this->locket_code,
-            'number_queue' => $next->number_queue,
-            'locket_number' => $this->locket_number,
-            'poli' => LocketList::from($this->locket_code)->name,
+            'error' => false,
+            'message' => 'Success memanggil antrian!',
+            'data' =>  [
+                'locket_code' => $this->locket_code,
+                'number_queue' => $next->number_queue,
+                'locket_number' => $this->locket_number,
+                'poli' => LocketList::from($this->locket_code)->name,
+            ]
         ];
     }
 }
