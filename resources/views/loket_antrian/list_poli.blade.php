@@ -56,12 +56,12 @@
                 btn.classList.add("opacity-50", "cursor-not-allowed");
             });
 
-            $.ajax({
+            safeAjax({
                 type: "POST",
                 url: "{{ route('loket_antrian.createPoliQueue') }}",
                 data: {
                     room_code: roomCode,
-                    _token: "{{ csrf_token() }}",
+                    // _token: "{{ csrf_token() }}",
                 },
                 dataType: "json",
                 success: function(response) {

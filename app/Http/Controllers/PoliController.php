@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\QueueCaller;
 use App\Models\Room;
 use App\Models\RoomQueue;
 use App\Services\Room\CallQueue;
@@ -66,11 +67,10 @@ class PoliController extends Controller
             $totalNotCalled =  $room->queuesNotCalled()
                 ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
                 ->count();
-        } else {
-            return $this->errorResponse('Invalid request format. Please use JSON.', 400);
+            return $this->successResponse(['total' => $totalNotCalled, 'pagination' => $resultsNotCalled], 'Data Retrieved!');
         }
 
-        return $this->successResponse(['total' => $totalNotCalled, 'pagination' => $resultsNotCalled], 'Data Retrieved!');
+        return $this->errorResponse('Invalid request format. Please use JSON.', 400);
     }
 
     public function callQueueByRoom(Request $request, Room $room)
@@ -87,77 +87,36 @@ class PoliController extends Controller
         }
     }
 
+    public function recallQueueByRoom(Request $request, Room $room)
+    {
+        if (!$request->wantsJson())  return $this->errorResponse('Invalid request format. Please use JSON.', 400);
+
+        $pendingExist = (new QueueCaller())->isExistPendingByOwnerid($room->id, 'poli');
+        if ($pendingExist) return $this->errorResponse('Anda memiliki pending antrian yang belum di panggil!', 422);
+
+        $result = $room->queuesCalled()
+            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->take(1)->first();
+        if (!$result) return $this->errorResponse('Anda tidak memiliki riwayat antrian!', 422);
+
+        QueueCaller::create([
+            'owner_id' => $room->id,
+            'number_code' =>  $result->room_code,
+            'called' => false,
+            'type' => 'poli',
+            'lantai' => $room->lantai,
+            'number_queue' => $result->number_queue,
+            'called_to' => $room->name,
+            'initiator_name' => "Poli"
+        ]);
+        return $this->successResponse($result);
+    }
+
 
     public function showQueueByRoom(Request $request, Room $room)
     {
         return view('pasien.poli_terpanggil', [
             'poli' => $room
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Room  $room
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Room $room)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Room  $room
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Room $room)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Room  $room
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Room $room)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Room  $room
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Room $room)
-    {
-        //
     }
 }

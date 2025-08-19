@@ -124,23 +124,13 @@
         const riwayatEl = document.getElementById("riwayat");
 
         $(document).ready(function() {
-            // updateCache();
             setInterval(() => {
                 updateSisaAntrian();
             }, 5000);
         });
 
-        // function updateCache() {
-        //     if (historiesData.length === 0) {
-        //         let element = document.querySelectorAll('[registeredMenu]');
-        //         $.each(element, function(i, v) {
-        //             localStorage.removeItem(`locketQueue-${v.getAttribute('registeredMenu')}`);
-        //         });
-        //     }
-        // }
-
         function updateSisaAntrian() {
-            $.ajax({
+            safeAjax({
                 url: "{{ route('loket_antrian.sisaAntrian') }}",
                 method: 'GET',
                 dataType: 'json',
@@ -158,16 +148,15 @@
         }
 
         function panggilAntrian(btn, prefix, poli) {
-            // Disable semua tombol di container yang sama
             allButtons.forEach(btn => btn.disabled = true);
             const originalText = btn.textContent;
             btn.textContent = "Memanggil...";
 
-            $.ajax({
+            safeAjax({
                 type: "POST",
                 url: "{{ route('loket_antrian.nextQueue') }}",
                 data: {
-                    _token: "{{ csrf_token() }}",
+                    // _token: "{{ csrf_token() }}",
                     locket_code: prefix,
                     poli: poli,
                     locket_number: locketNumber,
@@ -210,15 +199,13 @@
         }
 
         function recallAntrian(btn, prefix, poli) {
-            // let localData = localStorage.getItem(`locketQueue-${prefix}`);
             const originalText = btn.textContent;
             btn.textContent = "Memanggil...";
 
-            // if (localData === null) {
             let url = recallUrlTemplate
                 .replace(':code', prefix)
                 .replace(':number', locketNumber);
-            $.ajax({
+            safeAjax({
                 type: "GET",
                 url: url,
                 data: {},
@@ -251,49 +238,27 @@
                     }
                 },
             });
-            // } else {
-            //     allButtons.forEach(btn => btn.disabled = true);
-            //     tampilkanNomor(btn, localData, poli, originalText, prefix, false);
-            // }
         }
 
         function tampilkanNomor(btn, prefix, poli, originalText, locket_code, update_riwayat = true) {
             let nomor = prefix;
 
             if (update_riwayat) {
-                // Update riwayat
                 let item = document.createElement("li");
                 item.textContent = `${nomor} - ${poli}`;
                 riwayatEl.prepend(item);
             }
 
-            // Batasi maksimal 5 item
             while (riwayatEl.children.length > 5) {
                 riwayatEl.removeChild(riwayatEl.lastChild);
             }
 
-            // Hapus teks default jika ada
             if (riwayatEl.firstElementChild.textContent.includes("Belum ada")) {
                 riwayatEl.firstElementChild.remove();
             }
 
-            // localStorage.setItem(`locketQueue-${locket_code}`, nomor);
             allButtons.forEach(btn => btn.disabled = false);
             btn.textContent = originalText;
-
-            // Panggilan suara
-            // let teksPanggilan = `Nomor antrian ${ejaanNomor(nomor)}, silakan menuju loket ${locketNumber}`;
-            // speechSynthesis.cancel();
-            // let utter = new SpeechSynthesisUtterance(teksPanggilan);
-            // utter.lang = "id-ID";
-            // utter.rate = 0.9;
-            // speechSynthesis.speak(utter);
-
-            // utter.onend = () => {
-            //     localStorage.setItem(`locketQueue-${locket_code}`, nomor);
-            //     allButtons.forEach(btn => btn.disabled = false);
-            //     btn.textContent = originalText;
-            // };
         }
 
         function ejaanNomor(nomor) {

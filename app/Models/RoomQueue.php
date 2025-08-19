@@ -11,6 +11,10 @@ class RoomQueue extends Model
 
     protected $table = 'room_queues';
 
+    protected $casts = [
+        'called' => 'boolean',
+    ];
+
     protected $fillable = [
         'room_code',
         'number_queue',
@@ -24,6 +28,7 @@ class RoomQueue extends Model
         return $this
             ->where('room_code', '=', $roomCode)
             ->where('number_queue', $numberQueue)
+            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
             ->first();
     }
 

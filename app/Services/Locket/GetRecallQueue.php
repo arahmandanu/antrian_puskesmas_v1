@@ -21,7 +21,7 @@ class GetRecallQueue extends \App\Services\AbstractService
     public function handle()
     {
         $locketStaff = LocketStaff::where('locket_number', $this->locketNumber)->first();
-        $pendingCalled = ((new QueueCaller())->isExistPendingByOwnerid($locketStaff->id));
+        $pendingCalled = ((new QueueCaller())->isExistPendingByOwnerid($locketStaff->id, 'locket'));
         if ($pendingCalled) {
             return [
                 'error' => true,

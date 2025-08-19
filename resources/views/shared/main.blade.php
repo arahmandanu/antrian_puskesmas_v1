@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <!-- jQuery -->
     <script src="{{ asset('js/startmin/js/jquery.min.js') }}"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
 <body class="bg-gray-100 flex flex-col min-h-screen">
@@ -22,6 +23,18 @@
     @yield('content')
 
     @include('shared.footer')
+    <script>
+        setInterval(() => {
+            $.get("{{ route('refreshToken') }}", function(data) {
+                document.querySelector('meta[name="csrf-token"]').setAttribute('content', data.csrf_token);
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': data.csrf_token
+                    }
+                });
+            });
+        }, 5 * 60 * 1000);
+    </script>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>

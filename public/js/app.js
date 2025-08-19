@@ -34819,6 +34819,42 @@ function ejaanNomor(nomor) {
 window.ejaanNomor = ejaanNomor;
 
 window.Swiper = swiper_bundle__WEBPACK_IMPORTED_MODULE_1__["default"];
+$.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+  }
+});
+
+// Helper: refresh CSRF and update meta + ajaxSetup
+function refreshCsrfToken(callback) {
+  $.get('/refresh-csrf', function (data) {
+    var newToken = data.csrf_token;
+    document.querySelector('meta[name="csrf-token"]').setAttribute('content', newToken);
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': newToken
+      }
+    });
+    if (callback) callback(newToken);
+  });
+}
+
+// Wrapper for safe AJAX with auto-retry
+window.safeAjax = function (options) {
+  var jqXHR = $.ajax(options);
+  jqXHR.fail(function (xhr) {
+    if (xhr.status === 419) {
+      console.warn("CSRF mismatch, refreshing token…");
+      refreshCsrfToken(function (newToken) {
+        options.headers = {
+          "X-CSRF-TOKEN": newToken
+        };
+        $.ajax(options); // retry once (fire & forget)
+      });
+    }
+  });
+  return jqXHR; // return so caller can chain
+};
 
 /***/ }),
 

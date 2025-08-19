@@ -63,7 +63,7 @@
 
             isRequesting = true;
 
-            $.ajax({
+            safeAjax({
                 type: "GET",
                 url: "{{ route('play_suara.getNextCall', '') }}/" + lantai,
                 data: {},

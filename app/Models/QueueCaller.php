@@ -26,9 +26,10 @@ class QueueCaller extends Model
         'called' => 'boolean',
     ];
 
-    public function isExistPendingByOwnerid($ownerId)
+    public function isExistPendingByOwnerid($ownerId, $type)
     {
         return $this->where('owner_id', $ownerId)
+            ->where('type', $type)
             ->where('called', false)
             ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
             ->limit(1)

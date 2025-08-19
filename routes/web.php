@@ -17,6 +17,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/refresh-csrf', function () {
+    return response()->json(['csrf_token' => csrf_token()]);
+})->name('refreshToken');
+
 Route::group(['prefix' => '/play_suara'], function () {
     Route::get('/', function () {
         return view('play_suara.index');
@@ -44,6 +48,7 @@ Route::group(['prefix' => '/poli'], function () {
     Route::get('/generate_view/{room}', [App\Http\Controllers\PoliController::class, 'generateView'])->name('poli.generateView');
     Route::get('/get-queue/{room}', [App\Http\Controllers\PoliController::class, 'getQueueByRoom'])->name('poli.getQueueByRoom');
     Route::post('/call-queue/{room}', [App\Http\Controllers\PoliController::class, 'callQueueByRoom'])->name('poli.callQueueByRoom');
+    Route::post('/recall-queue/{room}', [App\Http\Controllers\PoliController::class, 'recallQueueByRoom'])->name('poli.recallQueueByRoom');
 
     Route::get('/show-current-queue/{room}', [App\Http\Controllers\PoliController::class, 'showQueueByRoom'])->name('poli.showQueueByRoom');
 });

@@ -97,13 +97,13 @@
             const buttons = overlay.parentElement.querySelectorAll('button');
             buttons.forEach(btn => btn.disabled = true);
 
-            $.ajax({
+            safeAjax({
                     type: "POST",
                     url: "{{ route('loket_antrian.createQueue') }}",
                     data: {
                         code: code,
                         poli: poli,
-                        _token: "{{ csrf_token() }}",
+                        // _token: "{{ csrf_token() }}",
                     },
                     dataType: "JSON"
                 })

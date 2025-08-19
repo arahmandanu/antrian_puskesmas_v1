@@ -24,7 +24,8 @@ class GetNextQueue extends \App\Services\AbstractService
 
     public function handle()
     {
-        $pendingCalled = ((new QueueCaller)->isExistPendingByOwnerid($this->locket_code));
+        $locketStaff = LocketStaff::where('locket_number', $this->locket_number)->first();
+        $pendingCalled = ((new QueueCaller)->isExistPendingByOwnerid($locketStaff->id, 'locket'));
         if ($pendingCalled) {
             return [
                 'error' => true,
@@ -46,7 +47,6 @@ class GetNextQueue extends \App\Services\AbstractService
         $next->locket_number = $this->locket_number;
         $next->save();
 
-        $locketStaff = LocketStaff::where('locket_number', $this->locket_number)->first();
         if ($locketStaff) {
             QueueCaller::create([
                 'owner_id' => $locketStaff->id,

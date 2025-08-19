@@ -27,8 +27,16 @@ class CallQueue extends \App\Services\AbstractService
         $isExist = null;
         $error = false;
         try {
-            $isExist = (new RoomQueue)->isExistByCode($this->roomCode, $this->numberQueue);
+            $pendingExist = (new QueueCaller)->isExistPendingByOwnerid($this->room->id, 'poli');
+            if ($pendingExist) {
+                return [
+                    'error' => true,
+                    'message' => 'Anda punya pending panggilan yang belum terpanggil!',
+                    'data' => null
+                ];
+            }
 
+            $isExist = (new RoomQueue)->isExistByCode($this->roomCode, $this->numberQueue);
             if ($isExist = (new RoomQueue)->isExistByCode($this->roomCode, $this->numberQueue)) {
                 if ($isExist->called) {
                     $message = 'Antrian sudah dipanggil, silahkan klik recall.';
