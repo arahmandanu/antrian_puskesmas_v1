@@ -9,8 +9,14 @@
                 class="flex-1 bg-purple-500 shadow-2xl rounded-3xl p-8 flex flex-col justify-center items-center text-white">
                 <h3 class="text-3xl font-bold mb-6">Sedang Dipanggil</h3>
                 <div id="current-call" class="flex flex-col items-center justify-center h-full">
-                    <span class="text-8xl font-extrabold">-</span>
-                    <h4 class="text-4xl font-semibold mt-4">-</h4>
+                    @if ($histories)
+                        <span
+                            class="text-8xl font-extrabold">{{ $histories[0]->number_code }}{{ $histories[0]->number_queue }}</span>
+                        <h4 class="text-4xl font-semibold mt-4">{{ $histories[0]->called_to }}</h4>
+                    @else
+                        <span class="text-8xl font-extrabold">-</span>
+                        <h4 class="text-4xl font-semibold mt-4">-</h4>
+                    @endif
                 </div>
             </div>
 
@@ -56,8 +62,6 @@
 
 
         function updateAntrian() {
-            console.log('isSpeaking:', isSpeaking, 'isRequesting:', isRequesting);
-            // console.log(isRequesting, isSpeaking);
             // Jika sedang request atau sedang speaking, skip
             if (isRequesting || isSpeaking) return;
 
@@ -75,7 +79,6 @@
 
                             // Cek jika ada panggilan baru
                             data = response.data;
-                            console.log(data);
                             if (lastCallId !== data.id) {
                                 lastCallId = data.id;
 
@@ -120,9 +123,5 @@
                 }
             });
         }
-
-        // Polling setiap 5 detik
-        // setInterval(updateAntrian, 5000);
-        // updateAntrian();
     </script>
 @endsection

@@ -52,6 +52,6 @@ class QueueCaller extends Model
             ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
             ->where('called', true)
             ->limit($limit)
-            ->orderBy('id', 'asc');
+            ->orderBy('created_at', 'desc');
     }
 }
