@@ -4,18 +4,21 @@ namespace App\Services\Room;
 
 use App\Models\Room;
 use App\Models\RoomQueue;
+use App\Models\RoomQueueHistoryCall;
 
 class CallQueue extends \App\Services\AbstractService
 {
     protected Room $room;
     protected string $roomCode;
-    protected string $numberCode;
+    protected string $numberQueue;
+    protected  $currentTime;
 
-    public function __construct($room, $roomCode, $numberCode)
+    public function __construct($room, $roomCode, $numberQueue)
     {
         $this->room = $room;
         $this->roomCode = $roomCode;
-        $this->numberCode = $numberCode;
+        $this->numberQueue = $numberQueue;
+        $this->currentTime = now();
     }
 
     public function handle()
@@ -23,17 +26,16 @@ class CallQueue extends \App\Services\AbstractService
         $isExist = null;
         $error = false;
         try {
-            $isExist = (new RoomQueue)->isExistByCode($this->roomCode, $this->numberCode);
+            $isExist = (new RoomQueue)->isExistByCode($this->roomCode, $this->numberQueue);
 
-            if ($isExist = (new RoomQueue)->isExistByCode($this->roomCode, $this->numberCode)) {
+            if ($isExist = (new RoomQueue)->isExistByCode($this->roomCode, $this->numberQueue)) {
                 if ($isExist->called) {
                     $message = 'Antrian sudah dipanggil, silahkan klik recall.';
                 } else {
                     $isExist->called = true;
                     if ($isExist->save()) {
                         $message = 'Success call';
-                        $this->room->last_call_queue = $this->numberCode;
-                        $this->room->save();
+                        $this->createHistoryRoom($isExist);
                     }
                 }
             }
@@ -47,5 +49,18 @@ class CallQueue extends \App\Services\AbstractService
             'error' => $error,
             "message" => $message
         ];
+    }
+
+    private function createHistoryRoom($queue)
+    {
+        RoomQueueHistoryCall::create([
+            'room_code' => $this->room->code,
+            'number_queue' =>  $this->room->last_call_queue,
+            'process_time_queue_room' => $this->currentTime->diffInSeconds($this->room->last_call_time),
+        ]);
+
+        $this->room->last_call_queue = $this->numberQueue;
+        $this->room->last_call_time = $this->currentTime;
+        $this->room->save();
     }
 }
