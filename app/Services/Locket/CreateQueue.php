@@ -3,7 +3,10 @@
 namespace App\Services\Locket;
 
 use App\Enum\LocketList;
+use App\Models\Company;
 use App\Models\LocketQueue;
+use App\Services\Printer\LocketPrint;
+use App\Utils\Result;
 
 class CreateQueue extends \App\Services\AbstractService
 {
@@ -18,14 +21,22 @@ class CreateQueue extends \App\Services\AbstractService
 
     public function handle()
     {
+        $response = null;
         $generateNumberQueue = $this->generateQueueNumber();
-        $numberQeueue = LocketQueue::create([
+        $company = Company::first();
+        if (!$company) return Result::failure('Printer belum terpasang');
+
+        if ($response = LocketQueue::create([
             'poli' => $this->poli,
             'locket_code' => $this->code,
             'number_queue' => $generateNumberQueue,
-        ]);
+        ])) {
+            $response = (new LocketPrint($response, $company))->handle();
+        } else {
+            return Result::failure('Gagal membuat antrian!');
+        }
 
-        return $numberQeueue;
+        return $response;
     }
 
     public function generateQueueNumber()

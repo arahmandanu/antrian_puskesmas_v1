@@ -32,7 +32,9 @@ class LocketController extends Controller
             ]);
 
             $queue = (new \App\Services\Locket\CreateQueue($request->input('poli'), $request->input('code')))->handle();
-            return $this->successResponse($queue, "Antrian untuk {$request->input('poli')} dengan kode {$request->input('code')} berhasil dibuat.");
+
+            return $this->resultResponseData($queue->toArray(), 201);
+            // $this->successResponse($queue, "Antrian untuk {$request->input('poli')} dengan kode {$request->input('code')} berhasil dibuat.");
         } else {
             return $this->errorResponse('Invalid request format. Please use JSON.', 400);
         }

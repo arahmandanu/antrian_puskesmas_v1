@@ -103,14 +103,13 @@
                     data: {
                         code: code,
                         poli: poli,
-                        // _token: "{{ csrf_token() }}",
                     },
                     dataType: "JSON"
                 })
                 .fail(function(data, textStatus, xhr) {
                     Swal.fire({
                         title: 'Error!',
-                        text: 'Do you want to continue',
+                        text: data.responseJSON.message,
                         icon: 'error',
                         confirmButtonText: 'Cool'
                     });
