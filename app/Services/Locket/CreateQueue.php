@@ -24,7 +24,7 @@ class CreateQueue extends \App\Services\AbstractService
         $response = null;
         $generateNumberQueue = $this->generateQueueNumber();
         $company = Company::first();
-        if (!$company) return Result::failure('Printer belum terpasang');
+        if (!$company || $company->printer === null) return Result::failure('Printer belum terpasang');
 
         if ($response = LocketQueue::create([
             'poli' => $this->poli,

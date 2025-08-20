@@ -6,6 +6,7 @@ use App\Enum\LocketList;
 use App\Models\Company;
 use App\Models\LocketQueue;
 use App\Utils\Result;
+use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 
