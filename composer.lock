@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d762111eef7bd0c4898a79af30b84df5",
+    "content-hash": "42fd3a015452f8fac5589dd7869fb88d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3356,6 +3356,49 @@
                 }
             ],
             "time": "2025-07-23T16:08:05+00:00"
+        },
+        {
+            "name": "starekrow/lockbox",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/starekrow/lockbox.git",
+                "reference": "c9019f999ca553a816a623a5a5adde8249e4f20c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/starekrow/lockbox/zipball/c9019f999ca553a816a623a5a5adde8249e4f20c",
+                "reference": "c9019f999ca553a816a623a5a5adde8249e4f20c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "starekrow\\Lockbox\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Lockbox is a simple, tiered system for working with cryptographic keys and encrypted data.",
+            "keywords": [
+                "lockbox",
+                "vault"
+            ],
+            "support": {
+                "issues": "https://github.com/starekrow/lockbox/issues",
+                "source": "https://github.com/starekrow/lockbox/tree/master"
+            },
+            "time": "2017-12-15T16:29:27+00:00"
         },
         {
             "name": "symfony/console",

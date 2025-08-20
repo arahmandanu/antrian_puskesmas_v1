@@ -13,3 +13,10 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+
+/public/cipher.txt
+/public/key.txt
+
+
+cipher.txt
+key.txt

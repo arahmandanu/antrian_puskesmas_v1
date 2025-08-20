@@ -3,13 +3,10 @@
 namespace App\Services\Locket;
 
 use App\Enum\LocketList;
-use App\Models\LocketCall;
 use App\Models\LocketHistoryCall;
 use App\Models\LocketQueue;
 use App\Models\LocketStaff;
 use App\Models\QueueCaller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 
 class GetNextQueue extends \App\Services\AbstractService
 {

@@ -75,12 +75,12 @@
         <div id="page-wrapper">
             @yield('content')
         </div>
-        <!-- /#page-wrapper -->
-        <footer class="bg-black text-white mt-auto">
-            &copy; 2025 by PT Karya Wiguna. Semua hak cipta dilindungi.
-        </footer>
     </div>
-    <!-- /#wrapper -->
+
+    <footer class="bg-black text-white mt-auto">
+        &copy; 2025 by PT Karya Wiguna. Semua hak cipta dilindungi.
+    </footer>
+
 
     <!-- Bootstrap datatable -->
     <script src="{{ asset('js/dataTables/jquery.dataTables.min.js') }}"></script>
