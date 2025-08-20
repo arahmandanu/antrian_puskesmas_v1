@@ -127,6 +127,11 @@
             setInterval(() => {
                 updateSisaAntrian();
             }, 5000);
+
+            setInterval(() => {
+                updateSisaAntrian();
+                resetRiwayatIfNewDay();
+            }, 60000);
         });
 
         function updateSisaAntrian() {
@@ -263,6 +268,24 @@
 
         function ejaanNomor(nomor) {
             return nomor.split("").join(" ");
+        }
+
+        function resetRiwayatIfNewDay() {
+            let nowDate = new Date().toISOString().slice(0, 10);
+
+            if (nowDate !== lastHistoryDate) {
+                lastHistoryDate = nowDate;
+
+                riwayatEl.innerHTML = "";
+                let li = document.createElement("li");
+                li.textContent = "Belum ada panggilan";
+                li.classList.add("text-gray-500");
+                riwayatEl.appendChild(li);
+
+                if (typeof historyList !== "undefined") {
+                    historyList = [];
+                }
+            }
         }
     </script>
 @endsection

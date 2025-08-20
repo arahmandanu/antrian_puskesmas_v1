@@ -6,6 +6,7 @@ use App\Models\QueueCaller;
 use App\Models\Room;
 use App\Models\RoomQueue;
 use App\Services\Room\CallQueue;
+use App\Services\Room\GetNextQueueCustomerView;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -118,5 +119,13 @@ class PoliController extends Controller
         return view('pasien.poli_terpanggil', [
             'poli' => $room
         ]);
+    }
+
+    public function getNextQueueByRoom(Request $request, Room $room)
+    {
+        if (!$request->wantsJson())  return $this->errorResponse('Invalid request format. Please use JSON.', 400);
+
+        $result = (new GetNextQueueCustomerView($room))->handle();
+        return $this->resultResponseData($result);
     }
 }

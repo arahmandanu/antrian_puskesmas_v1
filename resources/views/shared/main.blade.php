@@ -13,6 +13,7 @@
     <!-- jQuery -->
     <script src="{{ asset('js/startmin/js/jquery.min.js') }}"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="server-date" content="{{ now()->toDateString() }}">
 </head>
 
 <body class="bg-gray-100 flex flex-col min-h-screen">
@@ -24,6 +25,10 @@
 
     @include('shared.footer')
     <script>
+        let lastHistoryDate = document
+            .querySelector('meta[name="server-date"]')
+            .getAttribute('content');
+
         setInterval(() => {
             $.get("{{ route('refreshToken') }}", function(data) {
                 document.querySelector('meta[name="csrf-token"]').setAttribute('content', data.csrf_token);

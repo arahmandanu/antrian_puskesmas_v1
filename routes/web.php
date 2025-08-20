@@ -51,6 +51,7 @@ Route::group(['prefix' => '/poli'], function () {
     Route::post('/recall-queue/{room}', [App\Http\Controllers\PoliController::class, 'recallQueueByRoom'])->name('poli.recallQueueByRoom');
 
     Route::get('/show-current-queue/{room}', [App\Http\Controllers\PoliController::class, 'showQueueByRoom'])->name('poli.showQueueByRoom');
+    Route::get('/next-queue/{room}', [App\Http\Controllers\PoliController::class, 'getNextQueueByRoom'])->name('poli.getNextQueueByRoom');
 });
 
 Route::group(['prefix' => '/admin', 'middleware' => ['AlreadyLogin']], function () {

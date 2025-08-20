@@ -12,7 +12,6 @@ window.ejaanNomor = ejaanNomor;
 import Swiper from 'swiper/bundle';
 window.Swiper = Swiper;
 
-
 $.ajaxSetup({
     headers: {
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')

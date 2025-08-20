@@ -69,6 +69,32 @@
         let poliName = document.getElementById("poli_name").value;
         let numberTotal = document.getElementById("number-total-antrian");
 
+        $(document).ready(function() {
+            renderWaitingList();
+            renderHistory();
+            startPolling();
+            setInterval(() => {
+                resetIfNewDay();
+            }, 5000);
+        });
+
+        function resetIfNewDay() {
+            let today = new Date().toISOString().slice(0, 10);
+            if (today !== lastHistoryDate) {
+                // reset semua data
+                lastHistoryDate = today;
+                lastCalled = null;
+                waitingList = [];
+                historyList = [];
+
+                // reset tampilan
+                nomorEl.textContent = "-";
+                numberTotal.textContent = "0";
+
+                renderWaitingList();
+                renderHistory();
+            }
+        }
         // start polling
         function startPolling() {
             if (!pollingInterval) {
@@ -145,17 +171,13 @@
                 setButtonsDisabled(true);
                 let tempWaitingList = [...waitingList];
                 let next = tempWaitingList.shift();
-                // let next = waitingList.shift();
-                // console.log(next, waitingList);
-                // return;
                 isBusy = true;
                 stopPolling(); // stop while calling
                 safeAjax({
                     type: "POST",
                     url: "{{ route('poli.callQueueByRoom', '') }}/" + poliId,
                     data: {
-                        number_queue: next,
-                        // _token: "{{ csrf_token() }}",
+                        number_queue: next
                     },
                     dataType: "JSON",
                     success: function(response) {
@@ -176,7 +198,7 @@
                         tempWaitingList = null;
                         renderWaitingList();
                         renderHistory();
-                        startPolling(); // resume after finish
+                        startPolling();
                     }
                 });
             }
@@ -191,9 +213,7 @@
             safeAjax({
                 type: "POST",
                 url: "{{ route('poli.recallQueueByRoom', '') }}/" + poliId,
-                data: {
-                    // _token: "{{ csrf_token() }}",
-                },
+                data: {},
                 dataType: "JSON",
                 success: function(response) {
                     console.log(response);
@@ -211,58 +231,10 @@
                     startPolling();
                 }
             });
-
-            // if (lastCalled) {
-            //     isBusy = true;
-            //     setButtonsDisabled(true);
-            //     stopPolling();
-            //     callQueue(lastCalled);
-            //     startPolling();
-            // } else {
-
-            // }
         });
-
-        // setInterval(() => {
-        //     safeAjax({
-        //         type: "GET",
-        //         url: "{{ route('poli.getQueueByRoom', '') }}/" + poliId,
-        //         data: {},
-        //         dataType: "JSON",
-        //         success: function(response) {
-        //             if (response.hasOwnProperty('data')) {
-        //                 if (response.data.hasOwnProperty('total')) {
-        //                     numberTotal.textContent = response?.data?.total;
-        //                 }
-        //                 if (response.data.pagination.length > 0) {
-        //                     waitingList = response?.data?.pagination;
-
-        //                     renderWaitingList();
-        //                 }
-        //             }
-        //         }
-        //     });
-        // }, 5000);
-
-        // Tampilkan awal
-        renderWaitingList();
-        renderHistory();
-        startPolling();
 
         function callQueue(queue) {
             setButtonsDisabled(false);
-
-            // let teksPanggilan = `Nomor antrian ${window.ejaanNomor(queue)}, silakan menuju ${poliName}`;
-            // speechSynthesis.cancel();
-            // let utter = new SpeechSynthesisUtterance(teksPanggilan);
-            // utter.lang = "id-ID";
-            // utter.rate = 0.9;
-            // speechSynthesis.speak(utter);
-
-            // utter.onend = () => {
-            //     setButtonsDisabled(false);
-            //     isBusy = false;
-            // };
         }
 
         function setButtonsDisabled(state) {

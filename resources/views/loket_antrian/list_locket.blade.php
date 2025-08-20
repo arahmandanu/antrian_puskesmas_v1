@@ -13,7 +13,7 @@
 
                 @forelse ($lokets as $loket)
                     <!-- Loket 1 -->
-                    <a href="{{ route('loket_antrian.generateView', $loket->locket_number) }}" onclick="pilihLoket('Loket 1')"
+                    <a href="{{ route('loket_antrian.generateView', $loket->locket_number) }}"
                         class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-lg
                  hover:shadow-2xl hover:scale-105 transform transition-all duration-300
                  flex flex-col items-center justify-center p-6">
