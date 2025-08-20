@@ -72,7 +72,11 @@ class CompanyController extends Controller
      */
     public function update(Request $request, Company $company)
     {
-        //
+        $company->printer = $request->input('printer');
+        $company->save();
+
+        flash()->success('berhasil update data company');
+        return redirect()->back();
     }
 
     /**

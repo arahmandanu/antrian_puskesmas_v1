@@ -94,11 +94,7 @@ Route::middleware(['ValidApps'])->group(function () {
 
         Route::group(['prefix' => 'company'], function () {
             Route::get('/', [App\Http\Controllers\Admin\CompanyController::class, 'index'])->name('admin.company.index');
-            Route::get('/create', [App\Http\Controllers\Admin\CompanyController::class, 'create'])->name('admin.loket.create');
-            Route::post('/store', [App\Http\Controllers\Admin\CompanyController::class, 'store'])->name('admin.loket.store');
-            Route::get('/{loket}/edit', [App\Http\Controllers\Admin\CompanyController::class, 'edit'])->name('admin.loket.edit');
-            Route::put('/{loket}', [App\Http\Controllers\Admin\CompanyController::class, 'update'])->name('admin.loket.update');
-            Route::delete('/{loket}', [App\Http\Controllers\Admin\CompanyController::class, 'destroy'])->name('admin.loket.destroy');
+            Route::put('/{company}', [App\Http\Controllers\Admin\CompanyController::class, 'update'])->name('admin.company.update');
         });
     });
 });

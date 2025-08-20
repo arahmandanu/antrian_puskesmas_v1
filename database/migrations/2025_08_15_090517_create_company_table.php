@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->boolean('active')->default(true);
             $table->text('logo')->nullable(true);
+            $table->string('printer')->nullable(true);
             $table->timestamps();
         });
     }

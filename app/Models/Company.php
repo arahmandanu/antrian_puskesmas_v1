@@ -16,6 +16,7 @@ class Company extends Model
         'address',
         'active',
         'logo',
+        'printer',
         'created_at',
         'updated_at'
     ];
