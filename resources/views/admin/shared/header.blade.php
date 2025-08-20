@@ -10,12 +10,12 @@
                 <i class="fa fa-user fa-fw"></i> {{ auth()->user()->email }} <b class="caret"></b>
             </a>
             <ul class="dropdown-menu dropdown-user">
-                <li>
-                    <a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                </li>
+                {{-- <li>
+                    <a href=""><i class="fa fa-user fa-fw"></i> User Profile</a>
+                </li> --}}
 
                 <li>
-                    <a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                    <a href="{{ route('admin.company.index') }}"><i class="fa fa-gear fa-fw"></i> Settings</a>
                 </li>
 
                 <li class="divider"></li>

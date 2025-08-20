@@ -11,6 +11,7 @@ use App\Models\RoomQueue;
 use App\Models\StatConsole;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use starekrow\Lockbox\CryptoKey;
 
 class IsCompanyValid
@@ -49,6 +50,8 @@ class IsCompanyValid
         }
 
         $this->fillTodayStat($data);
+        Config::set('mysite.company_name', $registered['company_name']);
+        Config::set('mysite.company_adress', $registered['company_code']);
         return $next($request);
     }
 
