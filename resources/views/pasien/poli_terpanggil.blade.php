@@ -8,11 +8,7 @@
             class="bg-white rounded-2xl shadow-2xl p-12 w-full max-w-3xl flex flex-col items-center text-center transform transition duration-300 hover:scale-105">
             <p class="text-gray-500 text-2xl mb-6">Sedang Dipanggil</p>
             <div class="text-9xl font-extrabold text-green-700 tracking-wider drop-shadow-md" id="nomor-sekarang">
-                @if ($poli->current_queue)
-                    {{ $poli->code }}{{ $poli->current_queue }}
-                @else
-                    -
-                @endif
+                {{ $currentQueue }}
             </div>
         </div>
 
@@ -21,11 +17,7 @@
             class="bg-white rounded-2xl shadow-xl p-12 w-full max-w-3xl flex flex-col items-center text-center transform transition duration-300 hover:scale-105">
             <p class="text-gray-500 text-xl mb-6">Nomor Berikutnya</p>
             <div class="text-7xl font-bold text-gray-800 tracking-wide" id="nomor-selanjutnya">
-                @if ($poli->current_queue)
-                    {{ $poli->code }}{{ str_pad($poli->current_queue + 1, config('mysite.total_locket_queue', 4), '0', STR_PAD_LEFT) }}
-                @else
-                    -
-                @endif
+                {{ $nextQueue }}
             </div>
         </div>
 
@@ -49,12 +41,18 @@
 
         // 🔹 Fungsi untuk ambil data dari API
         function fetchQueue() {
+            const today = new Date().toISOString().slice(0, 10);
+            if (today !== lastHistoryDate) {
+                currentDate = today;
+                resetQueue(); // reset ke default kalau ganti hari
+                return;
+            }
+
             safeAjax({
                 type: "GET",
                 url: "{{ route('poli.getNextQueueByRoom', $poli->id) }}",
                 dataType: "JSON",
                 success: function(response) {
-                    console.log(response);
                     if (response.data) {
                         const nomorNow = response.data.room_code + response.data.number_queue;
 
@@ -71,6 +69,10 @@
                     console.error("Gagal ambil data:", xhr);
                 }
             });
+        }
+
+        function resetQueue() {
+            updateNomor("-", "-");
         }
 
         setInterval(fetchQueue, 5000);
