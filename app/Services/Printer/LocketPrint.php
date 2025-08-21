@@ -25,22 +25,24 @@ class LocketPrint extends \App\Services\AbstractService
     public function handle()
     {
         try {
-            $connector = new WindowsPrintConnector($this->company->printer);
-            $printer = new Printer($connector);
+            if (config('mysite.printer_on', true)) {
+                $connector = new WindowsPrintConnector($this->company->printer);
+                $printer = new Printer($connector);
 
-            // Format struk antrian
-            $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->setTextSize(2, 2);
-            $printer->text("ANTRIAN\n\n");
-            $printer->setTextSize(4, 4);
-            $printer->text($this->queue->locket_code . $this->queue->number_queue . "\n\n");
+                // Format struk antrian
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $printer->setTextSize(2, 2);
+                $printer->text("ANTRIAN\n\n");
+                $printer->setTextSize(4, 4);
+                $printer->text($this->queue->locket_code . $this->queue->number_queue . "\n\n");
 
-            $printer->setTextSize(1, 1);
-            $printer->text(LocketList::from($this->queue->locket_code)->name . "\n\n");
-            $printer->text(date("d-m-Y H:i") . "\n\n");
+                $printer->setTextSize(1, 1);
+                $printer->text(LocketList::from($this->queue->locket_code)->name . "\n\n");
+                $printer->text(date("d-m-Y H:i") . "\n\n");
 
-            $printer->cut();
-            $printer->close();
+                $printer->cut();
+                $printer->close();
+            }
 
             $error = false;
             $message = 'Sukses print nomor antrian loket';

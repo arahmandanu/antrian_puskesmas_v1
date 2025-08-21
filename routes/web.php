@@ -22,13 +22,12 @@ Route::middleware(['ValidApps'])->group(function () {
         return response()->json(['csrf_token' => csrf_token()]);
     })->name('refreshToken');
 
-    Route::get('/show-all-queue', function () {
-        return view('show-all-queue');
-    });
+    Route::get('/show-all-queue/{lantai}', [App\Http\Controllers\MasterController::class, 'showAllQueueByLantai'])->name('master.showAllQueueByLantai');
 
     Route::group(['prefix' => '/play_suara'], function () {
         Route::get('/', [App\Http\Controllers\PlaySoundController::class, 'start'])->name('play_suara');
-        Route::get('/choosed_lantai/{lantai}', [App\Http\Controllers\PlaySoundController::class, 'index'])->name('play_suara.choosedLantai');
+        // Route::get('/choosed_lantai/{lantai}', [App\Http\Controllers\PlaySoundController::class, 'index'])->name('play_suara.choosedLantai');
+        Route::get('/choosed_lantai/{lantai}',  [App\Http\Controllers\MasterController::class, 'showAllQueueByLantai'])->name('play_suara.choosedLantai');
         Route::get('/get_next_call/{lantai}', [App\Http\Controllers\PlaySoundController::class, 'getNextCall'])->name('play_suara.getNextCall');
     });
 

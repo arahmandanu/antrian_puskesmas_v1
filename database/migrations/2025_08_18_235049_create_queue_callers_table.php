@@ -24,6 +24,12 @@ return new class extends Migration
             $table->string('type')->nullable(false);
             $table->integer('lantai')->default(1)->nullable(false);
             $table->timestamps();
+
+            // composite index
+            $table->index(['called', 'created_at']);
+
+            // unique index
+            $table->unique(['number_code', 'created_at']);
         });
     }
 

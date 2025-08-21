@@ -20,6 +20,12 @@ return new class extends Migration
             $table->text('number_queue')->nullable(false);
             $table->boolean('called')->nullable(false)->default(false);
             $table->timestamps();
+
+            // composite index
+            $table->index(['called', 'created_at']);
+
+            // unique index
+            $table->unique(['locket_code', 'created_at']);
         });
     }
 

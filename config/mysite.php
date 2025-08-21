@@ -9,4 +9,6 @@ return [
     'total_lantai' => '3',
     // total loket yang ada
     'total_loket' => '5',
+    // enable disable printer
+    'printer_on' => false,
 ];
