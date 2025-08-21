@@ -22,6 +22,10 @@ Route::middleware(['ValidApps'])->group(function () {
         return response()->json(['csrf_token' => csrf_token()]);
     })->name('refreshToken');
 
+    Route::get('/show-all-queue', function () {
+        return view('show-all-queue');
+    });
+
     Route::group(['prefix' => '/play_suara'], function () {
         Route::get('/', [App\Http\Controllers\PlaySoundController::class, 'start'])->name('play_suara');
         Route::get('/choosed_lantai/{lantai}', [App\Http\Controllers\PlaySoundController::class, 'index'])->name('play_suara.choosedLantai');
