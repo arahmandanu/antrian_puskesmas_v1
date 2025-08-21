@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class PlaySoundController extends Controller
 {
+    public function start(Request $request)
+    {
+        return view('play_suara.index');
+    }
+
     public function index(Request $request, $lantai)
     {
         return view('play_suara.choosed_lantai', [

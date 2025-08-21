@@ -23,10 +23,7 @@ Route::middleware(['ValidApps'])->group(function () {
     })->name('refreshToken');
 
     Route::group(['prefix' => '/play_suara'], function () {
-        Route::get('/', function () {
-            return view('play_suara.index');
-        })->name('play_suara');
-
+        Route::get('/', [App\Http\Controllers\PlaySoundController::class, 'start'])->name('play_suara');
         Route::get('/choosed_lantai/{lantai}', [App\Http\Controllers\PlaySoundController::class, 'index'])->name('play_suara.choosedLantai');
         Route::get('/get_next_call/{lantai}', [App\Http\Controllers\PlaySoundController::class, 'getNextCall'])->name('play_suara.getNextCall');
     });
