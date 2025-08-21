@@ -31,7 +31,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Printer</label>
+                                <label>Printer Loket</label>
                                 <input class="form-control" name="printer" value="{{ $company->printer ?? '' }}">
                             </div>
 
