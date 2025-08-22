@@ -156,10 +156,9 @@
                     padding:0;
                     margin:0;
                 }
-                h1 { margin:2px 0; font-size:25px; }
-                .poli-name { margin:2px 0; font-weight:bold; font-size:20px; }
-                .queue-number { margin:2px 0; font-weight:bold; font-size:25px; }
-                p { margin:1px 0; font-size:20px; }
+                h1 { margin:2px 0; font-size:10vw; }
+                p.poli-name { margin:2px 0; font-weight:bold; font-size:9vw; }
+                p.queue-number { margin:2px 0; font-weight:bold; font-size:9vw; }
                 .separator { border-top:1px solid #000; margin:2px 0; }
                 @media print {
                     @page {
