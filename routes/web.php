@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/tes', function () {
+    return view('tes');
+});
+
 Route::middleware(['ValidApps'])->group(function () {
     Route::get('/', function () {
         return view('welcome');

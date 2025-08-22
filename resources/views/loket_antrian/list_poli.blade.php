@@ -141,7 +141,8 @@
             <meta charset="UTF-8">
             <title>Nomor Antrian</title>
             <style>
-                * { box-sizing: border-box; }
+
+                * { box-sizing: border-box; font-family: 'Times New Roman';}
                 body {
                     margin:10px;
                     padding:0;
