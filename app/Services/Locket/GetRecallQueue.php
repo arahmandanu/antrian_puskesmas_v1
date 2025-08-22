@@ -31,27 +31,29 @@ class GetRecallQueue extends \App\Services\AbstractService
         }
 
         $lastCall = LocketQueue::lastCallByLocketCode($this->locketCode, $this->locketNumber)->first();
-        QueueCaller::create([
-            'owner_id' => $locketStaff->id,
-            'number_code' =>  $this->locketCode,
-            'called' => false,
-            'type' => 'locket',
-            'lantai' => $locketStaff->lantai,
-            'number_queue' => $lastCall->number_queue,
-            'called_to' => "loket {$this->locketNumber}",
-            'initiator_name' => LocketList::from($this->locketCode)->name
-        ]);
-
-        return [
-            'error' => false,
-            'message' => 'Success recall antrian!',
-            'data' => [
-                'locket_code' => $this->locketCode,
+        if ($lastCall) {
+            QueueCaller::create([
+                'owner_id' => $locketStaff->id,
+                'number_code' =>  $this->locketCode,
+                'called' => false,
+                'type' => 'locket',
+                'lantai' => $locketStaff->lantai,
                 'number_queue' => $lastCall->number_queue,
-                'locket_number' => $this->locketNumber,
-                'poli' => LocketList::from($this->locketCode)->name,
-            ]
-        ];
+                'called_to' => "loket {$this->locketNumber}",
+                'initiator_name' => LocketList::from($this->locketCode)->name
+            ]);
+
+            return [
+                'error' => false,
+                'message' => 'Success recall antrian!',
+                'data' => [
+                    'locket_code' => $this->locketCode,
+                    'number_queue' => $lastCall->number_queue,
+                    'locket_number' => $this->locketNumber,
+                    'poli' => LocketList::from($this->locketCode)->name,
+                ]
+            ];
+        }
 
         return [
             'error' => true,

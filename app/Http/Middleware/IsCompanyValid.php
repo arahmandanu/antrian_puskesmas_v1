@@ -26,8 +26,8 @@ class IsCompanyValid
     public function handle(Request $request, Closure $next)
     {
         try {
-            $key = CryptoKey::Import(file_get_contents("key.txt"));
-            $ciphertext = file_get_contents("cipher.txt");
+            $key = CryptoKey::Import(file_get_contents(base_path("key.txt")));
+            $ciphertext = file_get_contents(base_path("cipher.txt"));
             $message = $key->Unlock($ciphertext);
             $registered = json_decode($message, true);
             if (empty($registered['company_name']) || empty($registered['company_code'])) return $this->out();

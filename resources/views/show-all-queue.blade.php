@@ -14,12 +14,23 @@
     <script src="{{ asset('js/startmin/js/jquery.min.js') }}"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="server-date" content="{{ now()->toDateString() }}">
+    <meta name="base-url" content="{{ url('/') }}">
 </head>
 
 <body class="bg-gray-100 flex flex-col min-h-screen">
     <input type="hidden" id='lantai' value="{{ $lantai }}">
+
+    <!-- Loading Screen -->
+    {{-- <div id="loading-screen" class="fixed inset-0 bg-white flex flex-col items-center justify-center z-50">
+        <div class="w-80 bg-gray-200 rounded-full h-4 overflow-hidden">
+            <div id="progress-bar" class="bg-green-600 h-4 w-0 transition-all duration-300 ease-in-out"></div>
+        </div>
+        <p id="progress-text" class="mt-4 text-gray-600 font-semibold">0%</p>
+        <p class="text-sm text-gray-400 mt-2">Memuat asset...</p>
+    </div> --}}
+
     <!-- Main Content -->
-    <main class="flex-grow flex flex-col items-center  p-6 bg-gray-50">
+    <main id="app-content" class="flex-grow flex flex-col items-center p-6 bg-gray-50">
 
         <h2 class="text-2xl font-semibold text-gray-600 mb-8 text-center">
             Nomor Sedang Dipanggil di Semua Poli
@@ -63,30 +74,6 @@
                 </div>
             @empty
             @endforelse
-
-            {{-- @for ($i = 1; $i <= 20; $i++)
-                <div id="poli-{{ $i }}"
-                    class="bg-white rounded-3xl shadow-2xl border border-gray-200
-            flex flex-col items-center justify-between text-center px-8 py-6 w-fit h-fit mx-auto">
-
-                    <!-- Header Poli -->
-                    <p
-                        class="text-white font-bold mb-2 px-4 py-1 rounded-full
-    bg-gradient-to-r from-blue-500 to-blue-700 shadow-lg
-    text-[clamp(0.8rem,1.2vw,1.5rem)] leading-tight
-    text-center break-words max-w-[90%] max-h-[2.5em] overflow-hidden">
-                        POLI Kulit & Kelamin
-                    </p>
-
-                    <!-- Nomor Antrian -->
-                    <span
-                        class="font-extrabold text-green-700 drop-shadow-xl nomor-antrian
-                text-[clamp(1.5rem,3vw,3.5rem)] leading-tight tracking-wider text-center break-words">
-                        -
-                    </span>
-                </div>
-            @endfor --}}
-
         </div>
     </main>
 
@@ -96,14 +83,17 @@
         let lastCallId = null;
         let lantai = document.getElementById('lantai').value;
         let soundEnabled = false;
+        let baseUrl = document
+            .querySelector('meta[name="base-url"]')
+            .getAttribute('content');
 
         document.getElementById('enable-sound').addEventListener('click', () => {
             soundEnabled = true;
 
             // Test suara awal (agar browser mengizinkan speechSynthesis)
-            const testUtter = new SpeechSynthesisUtterance("Suara berhasil diaktifkan");
-            testUtter.lang = "id-ID";
-            speechSynthesis.speak(testUtter);
+            // const testUtter = new SpeechSynthesisUtterance("Suara berhasil diaktifkan");
+            // testUtter.lang = "id-ID";
+            // speechSynthesis.speak(testUtter);
 
             // Hilangkan tombol setelah diklik
             document.getElementById('sound-container').style.display = "none";
@@ -128,38 +118,28 @@
 
                             // Cek jika ada panggilan baru
                             data = response.data;
-                            if (lastCallId !== data.id) {
-                                // lastCallId = data.id;
+                            // lastCallId = data.id;
 
-                                // Update current call
-                                let box;
-                                if (data.type == 'locket') {
-                                    box = document.querySelector(
-                                        `#${data.type}-${data.owner_id} .nomor-antrian`);
-                                } else {
-                                    box = document.querySelector(`#poli-${data.owner_id} .nomor-antrian`);
-                                }
+                            // Update current call
+                            let box;
+                            if (data.type == 'locket') {
+                                box = document.querySelector(
+                                    `#${data.type}-${data.owner_id} .nomor-antrian`);
+                            } else {
+                                box = document.querySelector(`#poli-${data.owner_id} .nomor-antrian`);
+                            }
 
-                                if (!box) return;
-                                if (box.textContent == data.number_code + data.number_queue) return;
+                            if (!box) return;
+                            // if (box.textContent == data.number_code + data.number_queue) return;
 
-                                box.textContent = data.number_code + data.number_queue ?? "-";
-                                // animasi
-                                box.classList.add("animate-pulse");
-                                setTimeout(() => box.classList.remove("animate-pulse"), 1000);
-                                if (soundEnabled) {
-                                    // Panggilan suara
-                                    isSpeaking = true;
-                                    const utter = new SpeechSynthesisUtterance(
-                                        `Nomor antrian ${data.number_code}${String(data.number_queue).padStart(3,'0')}, silakan menuju  ${data.called_to}.`
-                                    );
-                                    utter.lang = "id-ID";
-                                    utter.rate = 0.9;
-                                    utter.onend = () => {
-                                        isSpeaking = false;
-                                    };
-                                    speechSynthesis.speak(utter);
-                                }
+                            box.textContent = data.number_code + data.number_queue ?? "-";
+                            // animasi
+                            box.classList.add("animate-pulse");
+                            setTimeout(() => box.classList.remove("animate-pulse"), 1000);
+
+                            if (soundEnabled) {
+                                isSpeaking = true;
+                                soundCallerLocal(data);
                             }
                         }
                     }
@@ -173,7 +153,85 @@
             });
         }
 
-        setInterval(updateAntrian, 5000);
+        function soundCallerLocal(data) {
+            // let arrNumberQ = data.number_queue.split("").map(Number);
+            // let front = [
+            //     "{{ asset('/sound/nomor_antrian.mp3') }}",
+            //     `{{ asset('/sound/${data.number_code}.mp3') }}`,
+            // ];
+            // let middle = [];
+            // arrNumberQ.forEach(element => {
+            //     middle.push(`{{ asset('/sound/${element}.mp3') }}`)
+            // });
+            // let end = [
+            //     `{{ asset('/sound/silahkan_menuju.mp3') }}`
+            // ]
+            // let allSound = [...front, ...middle, ...end];
+            // console.log(allSound);
+            // let index = 0;
+            // let audio = new Audio(allSound[index]);
+
+            // audio.onended = () => {
+            //     index++;
+            //     if (index < allSound.length) {
+            //         audio.src = allSound[index];
+            //         audio.play();
+            //     } else {
+            //         isSpeaking = false;
+            //     }
+            // };
+            // audio.play();
+
+            const utter = new SpeechSynthesisUtterance(
+                `Nomor antrian ${data.number_code}${String(data.number_queue).padStart(3,'0')}, silakan menuju  ${data.called_to}.`
+            );
+
+            utter.lang = "id-ID";
+            utter.rate = 0.9;
+            utter.onend = () => {
+                isSpeaking = false;
+            };
+            speechSynthesis.speak(utter);
+        }
+
+        setInterval(updateAntrian, 3000);
+
+        // if ("serviceWorker" in navigator) {
+        //     navigator.serviceWorker.register(baseUrl + "/sound_cache.js?baseUrl=" + baseUrl, {
+        //             scope: './'
+        //         })
+        //         .then(reg => {
+        //             console.log("SW terdaftar", reg, navigator.serviceWorker.controller);
+
+        //             if (navigator.serviceWorker.controller) {
+        //                 navigator.serviceWorker.controller.postMessage({
+        //                     type: "CHECK_CACHE"
+        //                 });
+        //             } else {
+        //                 navigator.serviceWorker.addEventListener('controllerchange', () => {
+        //                     navigator.serviceWorker.controller?.postMessage({
+        //                         type: "CHECK_CACHE"
+        //                     });
+        //                 });
+        //             }
+        //         });
+
+        //     navigator.serviceWorker.addEventListener("message", event => {
+        //         if (event.data.type === "CACHE_PROGRESS") {
+        //             const {
+        //                 loaded,
+        //                 total
+        //             } = event.data;
+        //             const percent = Math.round((loaded / total) * 100);
+        //             document.getElementById("progress-bar").style.width = percent + "%";
+        //             document.getElementById("progress-text").innerText = percent + "%";
+        //         }
+        //         if (event.data.type === "CACHE_DONE") {
+        //             document.getElementById("loading-screen").style.display = "none";
+        //             document.getElementById("app-content").classList.remove("hidden");
+        //         }
+        //     });
+        // }
     </script>
 
     @include('shared.footer')
