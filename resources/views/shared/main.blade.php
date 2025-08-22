@@ -14,6 +14,8 @@
     <script src="{{ asset('js/startmin/js/jquery.min.js') }}"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="server-date" content="{{ now()->toDateString() }}">
+    <meta name="company-name" content="{{ Config::get('mysite.company_name', 'KOSONG') }}">
+    <meta name="address-name" content="{{ Config::get('mysite.company_adress', 'KOSONG') }}">
 </head>
 
 <body class="bg-gray-100 flex flex-col min-h-screen">

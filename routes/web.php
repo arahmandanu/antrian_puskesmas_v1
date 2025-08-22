@@ -42,6 +42,8 @@ Route::middleware(['ValidApps'])->group(function () {
 
         Route::get('/show_poli/{locket_number}', [App\Http\Controllers\LocketController::class, 'loketGetPoli'])->name('loket_antrian.showPoli');
         Route::post('/create_poli_queue', [App\Http\Controllers\LocketController::class, 'loketCreatePoliQueue'])->name('loket_antrian.createPoliQueue');
+
+        Route::get('/print_queue/{queue}', [App\Http\Controllers\LocketController::class, 'loketGetPrintPoliQueue'])->name('loket_antrian.getPrintPoliQueue');
     });
 
     Route::group(['prefix' => '/poli'], function () {
