@@ -200,6 +200,11 @@
                         callQueue(lastCalled);
                     }
                 });
+            } else {
+                Swal.fire({
+                    title: "Antrian Kosong",
+                    icon: "error"
+                });
             }
         });
 
