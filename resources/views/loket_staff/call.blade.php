@@ -197,7 +197,7 @@
                         renderWaitingList();
                         renderHistory();
                         startPolling();
-                        callQueue(lastCalled);
+                        openButton(lastCalled);
                     }
                 });
             } else {
@@ -231,12 +231,12 @@
                     renderWaitingList();
                     renderHistory();
                     startPolling();
-                    callQueue(lastCalled);
+                    openButton(lastCalled);
                 }
             });
         });
 
-        function callQueue(queue) {
+        function openButton(queue) {
             setTimeout(() => {
                 setButtonsDisabled(false);
             }, 1000);
