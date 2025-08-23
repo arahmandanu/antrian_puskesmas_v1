@@ -6,6 +6,7 @@ use App\Models\QueueCaller;
 use App\Models\Room;
 use App\Models\RoomQueue;
 use App\Models\RoomQueueHistoryCall;
+use Illuminate\Support\Facades\Lang;
 
 class CallQueue extends \App\Services\AbstractService
 {
@@ -31,7 +32,7 @@ class CallQueue extends \App\Services\AbstractService
             if ($pendingExist) {
                 return [
                     'error' => true,
-                    'message' => 'Anda punya pending panggilan yang belum terpanggil!',
+                    'message' => Lang::get('messages.pending_queue', ['queue' => $pendingExist->formatAsQueueNumber()], 'id'),
                     'data' => null
                 ];
             }

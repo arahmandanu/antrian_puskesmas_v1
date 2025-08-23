@@ -54,4 +54,9 @@ class QueueCaller extends Model
             ->limit($limit)
             ->orderBy('created_at', 'desc');
     }
+
+    public function formatAsQueueNumber()
+    {
+        return $this->number_code . $this->number_queue;
+    }
 }

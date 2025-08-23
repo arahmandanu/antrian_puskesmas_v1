@@ -8,6 +8,7 @@ use App\Models\RoomQueue;
 use App\Services\Room\CallQueue;
 use App\Services\Room\GetNextQueueCustomerView;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 
 class PoliController extends Controller
@@ -93,7 +94,7 @@ class PoliController extends Controller
         if (!$request->wantsJson())  return $this->errorResponse('Invalid request format. Please use JSON.', 400);
 
         $pendingExist = (new QueueCaller())->isExistPendingByOwnerid($room->id, 'poli');
-        if ($pendingExist) return $this->errorResponse('Anda memiliki pending antrian yang belum di panggil!', 422);
+        if ($pendingExist) return $this->errorResponse(Lang::get('messages.pending_queue', ['queue' => $pendingExist->formatAsQueueNumber()], 'id'), 422);
 
         $result = $room->queuesCalled()
             ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])

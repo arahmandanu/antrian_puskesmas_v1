@@ -122,14 +122,13 @@
             "{{ route('loket_antrian.recall', ['locket_code' => ':code', 'locket_number' => ':number']) }}";
         let locketNumber = document.getElementById('loket_number').value;
         const riwayatEl = document.getElementById("riwayat");
-
+        const allSisaAntrian = document.querySelectorAll('[id^="sisa-"]');
         $(document).ready(function() {
             setInterval(() => {
                 updateSisaAntrian();
-            }, 5000);
+            }, 3000);
 
             setInterval(() => {
-                updateSisaAntrian();
                 resetRiwayatIfNewDay();
             }, 60000);
         });
@@ -141,6 +140,13 @@
                 dataType: 'json',
                 success: function(data) {
                     if (data.hasOwnProperty('data')) {
+                        let codeFromResponse = Object.keys(data.data);
+                        allSisaAntrian.forEach(el => {
+                            let key = el.id.replace("sisa-", "");
+                            if (!codeFromResponse.includes(key)) {
+                                $(`#sisa-${key}`).text(`Sisa antrian: 0`);
+                            }
+                        });
                         $.each(data.data, function(indexInArray, valueOfElement) {
                             $(`#sisa-${indexInArray}`).text(`Sisa antrian: ${valueOfElement}`);
                         });
@@ -161,7 +167,6 @@
                 type: "POST",
                 url: "{{ route('loket_antrian.nextQueue') }}",
                 data: {
-                    // _token: "{{ csrf_token() }}",
                     locket_code: prefix,
                     poli: poli,
                     locket_number: locketNumber,
@@ -199,6 +204,9 @@
                         allButtons.forEach(btn => btn.disabled = false);
                         btn.textContent = originalText;
                     }
+                },
+                complete: function() {
+                    updateSisaAntrian();
                 }
             });
         }

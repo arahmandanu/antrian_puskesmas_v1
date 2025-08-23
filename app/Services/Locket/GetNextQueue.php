@@ -7,6 +7,7 @@ use App\Models\LocketHistoryCall;
 use App\Models\LocketQueue;
 use App\Models\LocketStaff;
 use App\Models\QueueCaller;
+use Illuminate\Support\Facades\Lang;
 
 class GetNextQueue extends \App\Services\AbstractService
 {
@@ -22,11 +23,11 @@ class GetNextQueue extends \App\Services\AbstractService
     public function handle()
     {
         $locketStaff = LocketStaff::where('locket_number', $this->locket_number)->first();
-        $pendingCalled = ((new QueueCaller)->isExistPendingByOwnerid($locketStaff->id, 'locket'));
-        if ($pendingCalled) {
+        $pendingExist = ((new QueueCaller)->isExistPendingByOwnerid($locketStaff->id, 'locket'));
+        if ($pendingExist) {
             return [
                 'error' => true,
-                'message' => 'Anda punya pending panggilan yang belum terpanggil!',
+                'message' => Lang::get('messages.pending_queue', ['queue' => $pendingExist->formatAsQueueNumber()], 'id'),
                 'data' => null
             ];
         }

@@ -23,13 +23,19 @@
         <!-- Modal Antrian -->
         <div id="queue-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white rounded-lg shadow-lg p-6 w-80 relative">
-                <button onclick="closeModal()"
-                    class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">&times;</button>
+                {{-- <button onclick="closeModal()"
+                    class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">&times;</button> --}}
                 <h2 class="text-xl font-bold mb-4" id="modal-poli-name">Poli XYZ</h2>
                 <p class="text-3xl font-bold mb-6 text-center" id="modal-queue-number">001</p>
-                <button onclick="printQueue()" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
-                    Print Nomor Antrian
-                </button>
+                <div class="flex gap-3">
+                    <button onclick="printQueue()" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+                        Print Nomor Antrian
+                    </button>
+                    <button onclick="backToLoket()"
+                        class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">
+                        Kembali
+                    </button>
+                </div>
             </div>
         </div>
     </main>
@@ -115,13 +121,18 @@
             });
         }
 
-        function closeModal() {
-            modal.classList.add("hidden");
-            // Enable buttons again
-            document.querySelectorAll(".poli-btn").forEach(btn => {
-                btn.disabled = false;
-                btn.classList.remove("opacity-50", "cursor-not-allowed");
-            });
+        // function closeModal() {
+        //     modal.classList.add("hidden");
+        //     // Enable buttons again
+        //     document.querySelectorAll(".poli-btn").forEach(btn => {
+        //         btn.disabled = false;
+        //         btn.classList.remove("opacity-50", "cursor-not-allowed");
+        //     });
+        // }
+
+        function backToLoket() {
+            window.location.href = "{{ route('loket_antrian.generateView', '') }}/" +
+                locketNumber;
         }
 
         function printQueue() {
@@ -141,8 +152,10 @@
             <meta charset="UTF-8">
             <title>Nomor Antrian</title>
             <style>
-
-                * { box-sizing: border-box; font-family: 'Times New Roman';}
+                * {
+                    box-sizing: border-box;
+                    font-family: 'Times New Roman';
+                }
                 body {
                     margin:10px;
                     padding:0;
@@ -156,10 +169,31 @@
                     padding:0;
                     margin:0;
                 }
-                h1 { margin:2px 0; font-size:10vw; }
-                p.poli-name { margin:2px 0; font-weight:bold; font-size:9vw; }
-                p.queue-number { margin:2px 0; font-weight:bold; font-size:9vw; }
-                .separator { border-top:1px solid #000; margin:2px 0; }
+                h1 {
+                    margin:2px 0;
+                    font-size:6vw;
+                }
+                p.poli-name {
+                    margin:2px 0;
+                    font-weight:bold;
+                    font-size:9vw;
+                }
+                p.queue-number {
+                    margin:2px 0;
+                    font-weight:bold;
+                    font-size:9vw;
+                }
+                p.header-name {
+                    margin:2px 0;
+                    font-size:5vw;
+                }
+                .separator {
+                    border-top:1px solid #000;
+                    margin:2px 0;
+                }
+                #jam-sekarang{
+                    font-size: 5vw;
+                }
                 @media print {
                     @page {
                         size:76mm auto;
@@ -171,15 +205,13 @@
         </head>
         <body>
             <div id="container">
-                <h1>Puskesmas</h1>
                 <h1>${companyName}</h1>
                 <div class="separator"></div>
-                </br></br>
+                <p class="header-name">Antrian</p>
                 <p class="poli-name">${poliName}</p>
                 </br></br>
                 <p class="queue-number">${queueNumber}</p>
                 <div class="separator"></div>
-                </br></br></br>
                 <p id="jam-sekarang">Jam: ${tanggalWaktu}</p>
             </div>
             <script>
@@ -192,9 +224,6 @@
             printWindow.document.write(content);
             printWindow.document.close();
             printWindow.focus();
-
-            window.location.href = "{{ route('loket_antrian.generateView', '') }}/" +
-                locketNumber;
         }
     </script>
 @endsection
