@@ -279,9 +279,7 @@
         }
 
         function resetRiwayatIfNewDay() {
-            let nowDate = new Date().toISOString().slice(0, 10);
-
-            if (nowDate !== lastHistoryDate) {
+            if (todayLocal() !== lastHistoryDate) {
                 lastHistoryDate = nowDate;
 
                 riwayatEl.innerHTML = "";

@@ -79,8 +79,7 @@
         });
 
         function resetIfNewDay() {
-            let today = new Date().toISOString().slice(0, 10);
-            if (today !== lastHistoryDate) {
+            if (todayLocal() !== lastHistoryDate) {
                 // reset semua data
                 lastHistoryDate = today;
                 lastCalled = null;
@@ -97,10 +96,7 @@
         }
         // start polling
         function startPolling() {
-            console.log("asd");
             if (!pollingInterval) {
-                console.log(pollingInterval, "wakt start");
-                console.log("vasda");
                 pollingInterval = setInterval(fetchQueue, 1000);
             }
         }
@@ -110,7 +106,6 @@
             if (pollingInterval) {
                 clearInterval(pollingInterval);
                 pollingInterval = null;
-                console.log(pollingInterval, "wakt ustop");
             }
         }
 

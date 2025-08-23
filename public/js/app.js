@@ -34855,6 +34855,10 @@ window.safeAjax = function (options) {
   });
   return jqXHR; // return so caller can chain
 };
+window.todayLocal = function () {
+  var d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
+};
 
 /***/ }),
 

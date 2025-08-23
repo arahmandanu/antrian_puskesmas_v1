@@ -41,8 +41,7 @@
 
         // 🔹 Fungsi untuk ambil data dari API
         function fetchQueue() {
-            const today = new Date().toISOString().slice(0, 10);
-            if (today !== lastHistoryDate) {
+            if (todayLocal() !== lastHistoryDate) {
                 currentDate = today;
                 resetQueue(); // reset ke default kalau ganti hari
                 return;
