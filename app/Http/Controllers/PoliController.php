@@ -6,6 +6,7 @@ use App\Models\QueueCaller;
 use App\Models\Room;
 use App\Services\Room\CallQueue;
 use App\Services\Room\GetNextQueueCustomerView;
+use App\Utils\Result;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
 
@@ -56,41 +57,31 @@ class PoliController extends Controller
 
     public function getQueueByRoom(Request $request, Room $room)
     {
-        if ($request->wantsJson()) {
-            $resultsNotCalled =  $room->queuesNotCalled()
-                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
-                ->take(5)
-                ->get()->map(function ($queue) {
-                    return $queue->room_code . $queue->number_queue;
-                });
+        $resultsNotCalled =  $room->queuesNotCalled()
+            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->take(5)
+            ->get()->map(function ($queue) {
+                return $queue->room_code . $queue->number_queue;
+            });
 
-            $totalNotCalled =  $room->queuesNotCalled()
-                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
-                ->count();
-            return $this->successResponse(['total' => $totalNotCalled, 'pagination' => $resultsNotCalled], 'Data Retrieved!');
-        }
+        $totalNotCalled =  $room->queuesNotCalled()
+            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->count();
 
-        return $this->errorResponse('Invalid request format. Please use JSON.', 400);
+        return $this->successResponse(Result::success(['total' => $totalNotCalled, 'pagination' => $resultsNotCalled], Lang::get('messages.success_retrive_data', [], 'id')));
     }
 
     public function callQueueByRoom(Request $request, Room $room)
     {
-        if ($request->wantsJson()) {
-            $numberCode = $request->input('number_queue');
-            $roomCode = substr($numberCode, 0, 1);
-            $numberCode  = substr($numberCode, 1);
-
-            $result = (new CallQueue($room, $roomCode, $numberCode))->handle();
-            return $this->resultResponseData($result, 201);
-        } else {
-            return $this->errorResponse('Invalid request format. Please use JSON.', 400);
-        }
+        $numberCode = $request->input('number_queue');
+        $roomCode = substr($numberCode, 0, 1);
+        $numberCode  = substr($numberCode, 1);
+        $result = (new CallQueue($room, $roomCode, $numberCode))->handle();
+        return $this->resultResponseData($result, 201);
     }
 
     public function recallQueueByRoom(Request $request, Room $room)
     {
-        if (!$request->wantsJson())  return $this->errorResponse('Invalid request format. Please use JSON.', 400);
-
         $pendingExist = (new QueueCaller())->isExistPendingByOwnerid($room->id, 'poli');
         if ($pendingExist) return $this->errorResponse(Lang::get('messages.pending_queue', ['queue' => $pendingExist->formatAsQueueNumber()], 'id'), 422);
 
@@ -109,7 +100,8 @@ class PoliController extends Controller
             'called_to' => $room->name,
             'initiator_name' => "Poli"
         ]);
-        return $this->successResponse($result);
+
+        return $this->successResponse(Result::success($result, Lang::get('messages.success_retrive_data', [], 'id')));
     }
 
 
@@ -131,8 +123,6 @@ class PoliController extends Controller
 
     public function getNextQueueByRoom(Request $request, Room $room)
     {
-        if (!$request->wantsJson())  return $this->errorResponse('Invalid request format. Please use JSON.', 400);
-
         $result = (new GetNextQueueCustomerView($room))->handle();
         return $this->resultResponseData($result);
     }

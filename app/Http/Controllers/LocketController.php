@@ -9,8 +9,10 @@ use App\Models\LocketStaff;
 use App\Models\Room;
 use App\Services\Locket\GetRecallQueue;
 use App\Services\Room\CreateQueue;
+use App\Utils\Result;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Lang;
 
 class LocketController extends Controller
 {
@@ -38,20 +40,12 @@ class LocketController extends Controller
 
     public function createQueue(Request $request)
     {
-        if ($request->wantsJson()) {
-            $list = LocketList::allIntoString();
-
-            $request->validate([
-                'code' => ['required', "in:$list"],
-            ]);
-
-            $queue = (new \App\Services\Locket\CreateQueue($request->input('poli'), $request->input('code')))->handle();
-
-            return $this->resultResponseData($queue->toArray(), 201);
-            // $this->successResponse($queue, "Antrian untuk {$request->input('poli')} dengan kode {$request->input('code')} berhasil dibuat.");
-        } else {
-            return $this->errorResponse('Invalid request format. Please use JSON.', 400);
-        }
+        $list = LocketList::allIntoString();
+        $request->validate([
+            'code' => ['required', "in:$list"],
+        ]);
+        $queue = (new \App\Services\Locket\CreateQueue($request->input('poli'), $request->input('code')))->handle();
+        return $this->resultResponseData($queue->toArray(), 201);
     }
 
     public function locketList()
@@ -75,34 +69,21 @@ class LocketController extends Controller
 
     public function getNextQeueue(Request $request)
     {
-        if ($request->wantsJson()) {
-            $result = (new \App\Services\Locket\GetNextQueue($request->input('locket_code'), $request->input('locket_number')))->handle();
-            return $this->resultResponseData($result);
-        }
-
-        return $this->errorResponse('Invalid request format. Please use JSON.', 400);
+        $result = (new \App\Services\Locket\GetNextQueue($request->input('locket_code'), $request->input('locket_number')))->handle();
+        return $this->resultResponseData($result);
     }
 
     public function getSisaAntrian(Request $request)
     {
-        if ($request->wantsJson()) {
-            $allTotal = (new LocketQueue())->locketTotal();
-            $result = $allTotal->pluck('total', 'locket_code')->toArray();
-
-            return $this->successResponse($result);
-        }
-
-        return $this->errorResponse('Invalid request format. Please use JSON.', 400);
+        $allTotal = (new LocketQueue())->locketTotal();
+        $result = $allTotal->pluck('total', 'locket_code')->toArray();
+        return $this->successResponse(Result::success($result, Lang::get('messages.success_retrive_data', [], 'id')));
     }
 
     public function getRecallQueue(Request $request, $locket_code, $locket_number)
     {
-        if ($request->wantsJson()) {
-            $result = (new GetRecallQueue($locket_code, $locket_number))->handle();
-            return $this->resultResponseData($result);
-        }
-
-        return $this->errorResponse('Invalid request format. Please use JSON.', 400);
+        $result = (new GetRecallQueue($locket_code, $locket_number))->handle();
+        return $this->resultResponseData($result);
     }
 
     public function loketGetPoli(Request $request, $locket_number)
@@ -124,22 +105,18 @@ class LocketController extends Controller
 
     public function loketCreatePoliQueue(Request $request)
     {
-        if ($request->wantsJson()) {
-            $listCode = (new Room)->listRoomCode();
-            $request->validate([
-                'room_code' => 'required|in:' . join(",", $listCode->toArray()),
-            ]);
+        $listCode = (new Room)->listRoomCode();
+        $request->validate([
+            'room_code' => 'required|in:' . join(",", $listCode->toArray()),
+        ]);
 
-            $result = (new CreateQueue(Room::where('code', '=', $request->input('room_code'))->first()))->handle();
-            if ($result['error']) {
-                flash()->error($result['message']);
-                return $this->errorResponse($result['message'], 422);
-            }
-
-            flash()->success($result['message']);
-            return $this->successResponse($result['data']);
+        $result = (new CreateQueue(Room::where('code', '=', $request->input('room_code'))->first()))->handle();
+        if ($result['error']) {
+            flash()->error($result['message']);
+            return $this->errorResponse($result['message'], 422);
         }
 
-        return $this->errorResponse('Invalid request format. Please use JSON.', 400);
+        flash()->success($result['message']);
+        return $this->successResponse(Result::success($result['data'], Lang::get('messages.success_retrive_data', [], 'id')));
     }
 }

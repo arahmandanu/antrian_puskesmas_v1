@@ -34,27 +34,30 @@ Route::middleware(['ValidApps'])->group(function () {
     Route::group(['prefix' => '/loket'], function () {
         Route::get('/', [App\Http\Controllers\LocketController::class, 'index'])->name('loket_antrian.index');
         Route::get('/list', [App\Http\Controllers\LocketController::class, 'locketList'])->name('loket_antrian.list');
-        Route::post('/create-queue', [App\Http\Controllers\LocketController::class, 'createQueue'])->name('loket_antrian.createQueue');
         Route::get('/generate_view/{locket_number}', [App\Http\Controllers\LocketController::class, 'generateView'])->name('loket_antrian.generateView');
-        Route::get('/sisa-antrian', [App\Http\Controllers\LocketController::class, 'getSisaAntrian'])->name('loket_antrian.sisaAntrian');
-        Route::post('/call-queue', [App\Http\Controllers\LocketController::class, 'getNextQeueue'])->name('loket_antrian.nextQueue');
-        Route::get('/queue-recall/{locket_code}/{locket_number}', [App\Http\Controllers\LocketController::class, 'getRecallQueue'])->name('loket_antrian.recall');
-
         Route::get('/show_poli/{locket_number}', [App\Http\Controllers\LocketController::class, 'loketGetPoli'])->name('loket_antrian.showPoli');
-        Route::post('/create_poli_queue', [App\Http\Controllers\LocketController::class, 'loketCreatePoliQueue'])->name('loket_antrian.createPoliQueue');
-
         Route::get('/print_queue/{queue}', [App\Http\Controllers\LocketController::class, 'loketGetPrintPoliQueue'])->name('loket_antrian.getPrintPoliQueue');
+
+        Route::group(['middleware' => ['jsonOnly']], function () {
+            Route::post('/create-queue', [App\Http\Controllers\LocketController::class, 'createQueue'])->name('loket_antrian.createQueue');
+            Route::get('/sisa-antrian', [App\Http\Controllers\LocketController::class, 'getSisaAntrian'])->name('loket_antrian.sisaAntrian');
+            Route::post('/call-queue', [App\Http\Controllers\LocketController::class, 'getNextQeueue'])->name('loket_antrian.nextQueue');
+            Route::get('/queue-recall/{locket_code}/{locket_number}', [App\Http\Controllers\LocketController::class, 'getRecallQueue'])->name('loket_antrian.recall');
+            Route::post('/create_poli_queue', [App\Http\Controllers\LocketController::class, 'loketCreatePoliQueue'])->name('loket_antrian.createPoliQueue');
+        });
     });
 
     Route::group(['prefix' => '/poli'], function () {
         Route::get('/list', [App\Http\Controllers\PoliController::class, 'index'])->name('loket_antrian.poli_list');
         Route::get('/generate_view/{room}', [App\Http\Controllers\PoliController::class, 'generateView'])->name('poli.generateView');
-        Route::get('/get-queue/{room}', [App\Http\Controllers\PoliController::class, 'getQueueByRoom'])->name('poli.getQueueByRoom');
-        Route::post('/call-queue/{room}', [App\Http\Controllers\PoliController::class, 'callQueueByRoom'])->name('poli.callQueueByRoom');
-        Route::post('/recall-queue/{room}', [App\Http\Controllers\PoliController::class, 'recallQueueByRoom'])->name('poli.recallQueueByRoom');
-
         Route::get('/show-current-queue/{room}', [App\Http\Controllers\PoliController::class, 'showQueueByRoom'])->name('poli.showQueueByRoom');
-        Route::get('/next-queue/{room}', [App\Http\Controllers\PoliController::class, 'getNextQueueByRoom'])->name('poli.getNextQueueByRoom');
+
+        Route::group(['middleware' => ['jsonOnly']], function () {
+            Route::get('/get-queue/{room}', [App\Http\Controllers\PoliController::class, 'getQueueByRoom'])->name('poli.getQueueByRoom');
+            Route::get('/next-queue/{room}', [App\Http\Controllers\PoliController::class, 'getNextQueueByRoom'])->name('poli.getNextQueueByRoom');
+            Route::post('/call-queue/{room}', [App\Http\Controllers\PoliController::class, 'callQueueByRoom'])->name('poli.callQueueByRoom');
+            Route::post('/recall-queue/{room}', [App\Http\Controllers\PoliController::class, 'recallQueueByRoom'])->name('poli.recallQueueByRoom');
+        });
     });
 
     Route::group(['prefix' => '/admin', 'middleware' => ['AlreadyLogin']], function () {

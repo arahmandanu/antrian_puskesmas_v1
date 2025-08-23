@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'AlreadyLogin' => \App\Http\Middleware\AlreadyLogin::class,
         'ValidApps' => IsCompanyValid::class,
+        'jsonOnly' => \App\Http\Middleware\ForceJsonRequest::class,
     ];
 }

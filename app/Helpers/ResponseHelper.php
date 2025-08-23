@@ -2,14 +2,16 @@
 
 namespace App\Helpers;
 
+use App\Utils\Result;
+
 trait ResponseHelper
 {
     public static function successResponse($data = null, $message = 'Success', $status = 200)
     {
         return response()->json([
             'status'  => 'success',
-            'message' => $message,
-            'data'    => $data,
+            'message' => $data instanceof Result ? $data->getMessage() : $message,
+            'data'    => $data instanceof Result ? $data->getData() : $data,
         ], $status);
     }
 
