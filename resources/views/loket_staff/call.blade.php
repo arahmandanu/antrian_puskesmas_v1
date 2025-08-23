@@ -185,20 +185,19 @@
                         nomorEl.textContent = next;
                         lastCalled = next;
                         historyList.unshift(next);
-                        callQueue(lastCalled);
                     },
                     error: function(response) {
                         Swal.fire({
                             title: response.responseJSON.message,
                             icon: "error"
                         });
-                        setButtonsDisabled(false);
                     },
                     complete: function() {
                         tempWaitingList = null;
                         renderWaitingList();
                         renderHistory();
                         startPolling();
+                        callQueue(lastCalled);
                     }
                 });
             }
@@ -208,7 +207,6 @@
             isBusy = true;
             setButtonsDisabled(true);
             stopPolling();
-            callQueue(lastCalled);
             startPolling();
             safeAjax({
                 type: "POST",
@@ -229,12 +227,15 @@
                     renderWaitingList();
                     renderHistory();
                     startPolling();
+                    callQueue(lastCalled);
                 }
             });
         });
 
         function callQueue(queue) {
-            setButtonsDisabled(false);
+            setInterval(() => {
+                setButtonsDisabled(false);
+            }, 1000);
         }
 
         function setButtonsDisabled(state) {

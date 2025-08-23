@@ -6,6 +6,13 @@ use App\Utils\Result;
 
 trait ResponseHelper
 {
+    public static function customResponse($data = null, $message = 'Success')
+    {
+        if ($data->isFailure()) return self::errorResponse($message, 422, $data);
+
+        return self::successResponse($data, $message);
+    }
+
     public static function successResponse($data = null, $message = 'Success', $status = 200)
     {
         return response()->json([
@@ -19,8 +26,8 @@ trait ResponseHelper
     {
         return response()->json([
             'status'  => 'error',
-            'message' => $message,
-            'errors'  => $errors,
+            'message' => $errors instanceof Result ? $errors->getMessage() : $message,
+            'errors'  => $errors instanceof Result ? $errors->getData() : $errors,
         ], $status);
     }
 

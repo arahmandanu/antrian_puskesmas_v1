@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\QueueCaller;
 use App\Models\Room;
 use App\Services\Room\CallQueue;
 use App\Services\Room\GetNextQueueCustomerView;
+use App\Services\Room\ReCallQueue;
 use App\Utils\Result;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
@@ -80,28 +80,9 @@ class PoliController extends Controller
         return $this->resultResponseData($result, 201);
     }
 
-    public function recallQueueByRoom(Request $request, Room $room)
+    public function recallQueueByRoom(Room $room)
     {
-        $pendingExist = (new QueueCaller())->isExistPendingByOwnerid($room->id, 'poli');
-        if ($pendingExist) return $this->errorResponse(Lang::get('messages.pending_queue', ['queue' => $pendingExist->formatAsQueueNumber()], 'id'), 422);
-
-        $result = $room->queuesCalled()
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
-            ->take(1)->first();
-        if (!$result) return $this->errorResponse('Anda tidak memiliki riwayat antrian!', 422);
-
-        QueueCaller::create([
-            'owner_id' => $room->id,
-            'number_code' =>  $result->room_code,
-            'called' => false,
-            'type' => 'poli',
-            'lantai' => $room->lantai,
-            'number_queue' => $result->number_queue,
-            'called_to' => $room->name,
-            'initiator_name' => "Poli"
-        ]);
-
-        return $this->successResponse(Result::success($result, Lang::get('messages.success_retrive_data', [], 'id')));
+        return $this->customResponse((new ReCallQueue($room))->handle());
     }
 
 
