@@ -97,7 +97,10 @@
         }
         // start polling
         function startPolling() {
+            console.log("asd");
             if (!pollingInterval) {
+                console.log(pollingInterval, "wakt start");
+                console.log("vasda");
                 pollingInterval = setInterval(fetchQueue, 1000);
             }
         }
@@ -107,6 +110,7 @@
             if (pollingInterval) {
                 clearInterval(pollingInterval);
                 pollingInterval = null;
+                console.log(pollingInterval, "wakt ustop");
             }
         }
 
@@ -193,6 +197,7 @@
                         });
                     },
                     complete: function() {
+                        isBusy = false;
                         tempWaitingList = null;
                         renderWaitingList();
                         renderHistory();
@@ -207,7 +212,6 @@
             isBusy = true;
             setButtonsDisabled(true);
             stopPolling();
-            startPolling();
             safeAjax({
                 type: "POST",
                 url: "{{ route('poli.recallQueueByRoom', '') }}/" + poliId,
@@ -233,7 +237,7 @@
         });
 
         function callQueue(queue) {
-            setInterval(() => {
+            setTimeout(() => {
                 setButtonsDisabled(false);
             }, 1000);
         }

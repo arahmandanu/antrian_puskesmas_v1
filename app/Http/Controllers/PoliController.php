@@ -58,7 +58,7 @@ class PoliController extends Controller
 
     public function getQueueByRoom(Request $request, Room $room)
     {
-        return $this->successResponse((new GetQueueByRoom($room))->handle());
+        return $this->customResponse((new GetQueueByRoom($room))->handle());
     }
 
     public function callQueueByRoom(Request $request, Room $room)
