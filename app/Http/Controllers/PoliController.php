@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\QueueCaller;
 use App\Models\Room;
-use App\Models\RoomQueue;
 use App\Services\Room\CallQueue;
 use App\Services\Room\GetNextQueueCustomerView;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Str;
 
 class PoliController extends Controller
 {

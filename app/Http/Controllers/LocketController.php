@@ -7,7 +7,6 @@ use App\Enum\LocketList;
 use App\Models\LocketQueue;
 use App\Models\LocketStaff;
 use App\Models\Room;
-use App\Models\RoomQueue;
 use App\Services\Locket\GetRecallQueue;
 use App\Services\Room\CreateQueue;
 use Illuminate\Support\Str;
