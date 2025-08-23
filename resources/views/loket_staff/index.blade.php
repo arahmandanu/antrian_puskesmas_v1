@@ -280,7 +280,7 @@
 
         function resetRiwayatIfNewDay() {
             if (todayLocal() !== lastHistoryDate) {
-                lastHistoryDate = nowDate;
+                lastHistoryDate = todayLocal();
 
                 riwayatEl.innerHTML = "";
                 let li = document.createElement("li");

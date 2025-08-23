@@ -81,7 +81,7 @@
         function resetIfNewDay() {
             if (todayLocal() !== lastHistoryDate) {
                 // reset semua data
-                lastHistoryDate = today;
+                lastHistoryDate = todayLocal();
                 lastCalled = null;
                 waitingList = [];
                 historyList = [];
@@ -97,7 +97,7 @@
         // start polling
         function startPolling() {
             if (!pollingInterval) {
-                pollingInterval = setInterval(fetchQueue, 1000);
+                pollingInterval = setInterval(fetchQueue, 3000);
             }
         }
 

@@ -42,7 +42,7 @@
         // 🔹 Fungsi untuk ambil data dari API
         function fetchQueue() {
             if (todayLocal() !== lastHistoryDate) {
-                currentDate = today;
+                currentDate = todayLocal();
                 resetQueue(); // reset ke default kalau ganti hari
                 return;
             }
