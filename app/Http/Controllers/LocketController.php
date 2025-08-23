@@ -8,6 +8,7 @@ use App\Models\LocketQueue;
 use App\Models\LocketStaff;
 use App\Models\Room;
 use App\Services\Locket\GetRecallQueue;
+use App\Services\Locket\GetRestQueue;
 use App\Services\Room\CreateQueue;
 use App\Utils\Result;
 use Illuminate\Support\Str;
@@ -74,9 +75,7 @@ class LocketController extends Controller
 
     public function getSisaAntrian(Request $request)
     {
-        $allTotal = (new LocketQueue())->locketTotal();
-        $result = $allTotal->pluck('total', 'locket_code')->toArray();
-        return $this->successResponse(Result::success($result, Lang::get('messages.success_retrive_data', [], 'id')));
+        return $this->customResponse((new GetRestQueue())->handle());
     }
 
     public function getRecallQueue(Request $request, $locket_code, $locket_number)
