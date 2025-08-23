@@ -58,7 +58,7 @@ class GetRecallQueue extends \App\Services\AbstractService
 
         return [
             'error' => true,
-            'message' => 'History panggil kosong!',
+            'message' => Lang::get('messages.empty_history', [], 'id'),
             'data' => null,
         ];
     }

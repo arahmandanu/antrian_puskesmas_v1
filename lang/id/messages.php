@@ -14,4 +14,5 @@ return [
     */
 
     'pending_queue' => 'Anda memiliki pending antrian yang belum terpanggil </br> :queue',
+    'empty_history' => 'Riwayat panggilan antrian anda kosong'
 ];

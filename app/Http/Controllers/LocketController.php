@@ -10,15 +10,29 @@ use App\Models\Room;
 use App\Services\Locket\GetRecallQueue;
 use App\Services\Room\CreateQueue;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class LocketController extends Controller
 {
     public function index()
     {
+        $videos = File::files('public/iklan_videos');
+        $mp4Files = array_filter($videos, function ($file) {
+            return $file->getExtension() === 'mp4';
+        });
+
+        $filesImage = File::files('public/iklan_images');
+        $images = array_filter($filesImage, function ($file) {
+            $ext = strtolower($file->getExtension());
+            return in_array($ext, ['jpg', 'jpeg', 'webp']);
+        });
+
         return view('loket_antrian.index', [
             'pendaftaran' => LocketList::PENDAFTARAN,
             'laborate' => LocketList::LABORATE,
             'lansia' => LocketList::LANSIA,
+            'iklanVideos' => $mp4Files,
+            'iklanImages' => $images
         ]);
     }
 

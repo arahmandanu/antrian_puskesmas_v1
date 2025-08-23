@@ -7,19 +7,22 @@
         <div class="w-4/5" id="all_iklan">
             <div class="swiper w-full h-full">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide flex items-center justify-center bg-grey">
-                        <video class="w-full h-full" muted autoplay loop>
-                            <source src="public/videos/tes.mp4" type="video/mp4">
-                        </video>
-                    </div>
+                    @forelse ($iklanVideos as $video)
+                        <div class="swiper-slide flex items-center justify-center bg-grey">
+                            <video class="w-full h-full" muted autoplay loop>
+                                <source src="{{ $video->getPath() }}/{{ $video->getFilename() }}" type="video/mp4">
+                            </video>
+                        </div>
+                    @empty
+                    @endforelse
 
-                    <div class="swiper-slide">
-                        <img src="https://picsum.photos/id/1015/1200/800" class="w-full h-full object-cover" alt="iklan 1">
-                    </div>
-
-                    <div class="swiper-slide">
-                        <img src="https://picsum.photos/id/1024/1200/800" class="w-full h-full object-cover" alt="iklan 2">
-                    </div>
+                    @forelse ($iklanImages as $image)
+                        <div class="swiper-slide">
+                            <img src="{{ $image->getPath() }}/{{ $image->getFilename() }}"
+                                class="w-full h-full object-cover" alt="iklan 1">
+                        </div>
+                    @empty
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -63,11 +66,7 @@
                 loop: true,
                 autoplay: {
                     delay: 4000, // 4 detik untuk gambar
-                    disableOnInteraction: true,
-                },
-                pagination: {
-                    el: ".swiper-pagination",
-                    clickable: true,
+                    disableOnInteraction: false,
                 },
             });
 
@@ -75,16 +74,22 @@
                 const activeSlide = swiper.slides[swiper.activeIndex];
                 const video = activeSlide.querySelector("video");
 
-                // kalau slide ada video
+                // Jika slide ada video
                 if (video) {
-                    swiper.autoplay.stop(); // hentikan auto scroll
-                    video.currentTime = 0;
+                    swiper.autoplay.stop(); // hentikan autoplay swiper
+                    video.currentTime = 0; // mulai dari awal
                     video.play();
+
+                    // Hapus event sebelumnya biar tidak numpuk
+                    video.onended = null;
 
                     video.onended = () => {
                         swiper.slideNext(); // pindah slide setelah video selesai
-                        swiper.autoplay.start(); // mulai lagi autoplay
+                        swiper.autoplay.start(); // aktifkan autoplay lagi
                     };
+                } else {
+                    // Kalau slide bukan video, pastikan autoplay tetap berjalan
+                    swiper.autoplay.start();
                 }
             });
         });
