@@ -44,8 +44,8 @@ class LocketController extends Controller
         $request->validate([
             'code' => ['required', "in:$list"],
         ]);
-        $queue = (new \App\Services\Locket\CreateQueue($request->input('poli'), $request->input('code')))->handle();
-        return $this->resultResponseData($queue->toArray(), 201);
+
+        return $this->customResponse((new \App\Services\Locket\CreateQueue($request->input('poli'), $request->input('code')))->handle());
     }
 
     public function locketList()
@@ -69,8 +69,7 @@ class LocketController extends Controller
 
     public function getNextQeueue(Request $request)
     {
-        $result = (new \App\Services\Locket\GetNextQueue($request->input('locket_code'), $request->input('locket_number')))->handle();
-        return $this->resultResponseData($result);
+        return $this->customResponse((new \App\Services\Locket\GetNextQueue($request->input('locket_code'), $request->input('locket_number')))->handle());
     }
 
     public function getSisaAntrian(Request $request)
@@ -83,7 +82,7 @@ class LocketController extends Controller
     public function getRecallQueue(Request $request, $locket_code, $locket_number)
     {
         $result = (new GetRecallQueue($locket_code, $locket_number))->handle();
-        return $this->resultResponseData($result);
+        return $this->customResponse($result);
     }
 
     public function loketGetPoli(Request $request, $locket_number)

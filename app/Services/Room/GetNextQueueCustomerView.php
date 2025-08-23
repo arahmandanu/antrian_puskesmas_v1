@@ -3,7 +3,8 @@
 namespace App\Services\Room;
 
 use App\Models\Room;
-use App\Models\RoomQueue;
+use App\Utils\Result;
+use Illuminate\Support\Facades\Lang;
 
 class GetNextQueueCustomerView extends \App\Services\AbstractService
 {
@@ -17,17 +18,9 @@ class GetNextQueueCustomerView extends \App\Services\AbstractService
     public function handle()
     {
         if ($lastCalled = $this->room->queuesCalled()->first()) {
-            return [
-                'data' => $lastCalled,
-                'error' => false,
-                "message" => 'Success!'
-            ];
+            return Result::success($lastCalled,  Lang::get('messages.success_retrive_data', [], 'id'));
         }
 
-        return [
-            'data' => null,
-            'error' => true,
-            "message" => 'Antrian kosong!'
-        ];
+        return Result::failure(Lang::get('messages.empty_queue', [], 'id'), null);
     }
 }

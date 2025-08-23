@@ -7,6 +7,7 @@ use App\Models\LocketHistoryCall;
 use App\Models\LocketQueue;
 use App\Models\LocketStaff;
 use App\Models\QueueCaller;
+use App\Utils\Result;
 use Illuminate\Support\Facades\Lang;
 
 class GetNextQueue extends \App\Services\AbstractService
@@ -25,20 +26,12 @@ class GetNextQueue extends \App\Services\AbstractService
         $locketStaff = LocketStaff::where('locket_number', $this->locket_number)->first();
         $pendingExist = ((new QueueCaller)->isExistPendingByOwnerid($locketStaff->id, 'locket'));
         if ($pendingExist) {
-            return [
-                'error' => true,
-                'message' => Lang::get('messages.pending_queue', ['queue' => $pendingExist->formatAsQueueNumber()], 'id'),
-                'data' => null
-            ];
+            return Result::failure(Lang::get('messages.pending_queue', ['queue' => $pendingExist->formatAsQueueNumber()], 'id'), null);
         }
 
         $next = LocketQueue::nextQueue($this->locket_code)->first();
         if (!$next) {
-            return [
-                'error' => true,
-                'message' => 'Tidak ada antrian yang belum terpanggil!',
-                'data' => null
-            ];
+            return Result::failure(Lang::get('messages.next_queue_is_empty', [], 'id'), null);
         }
 
         $next->called = true;
@@ -68,15 +61,11 @@ class GetNextQueue extends \App\Services\AbstractService
             }
         }
 
-        return [
-            'error' => false,
-            'message' => 'Success memanggil antrian!',
-            'data' =>  [
-                'locket_code' => $this->locket_code,
-                'number_queue' => $next->number_queue,
-                'locket_number' => $this->locket_number,
-                'poli' => LocketList::from($this->locket_code)->name,
-            ]
-        ];
+        return Result::success([
+            'locket_code' => $this->locket_code,
+            'number_queue' => $next->number_queue,
+            'locket_number' => $this->locket_number,
+            'poli' => LocketList::from($this->locket_code)->name
+        ], Lang::get('messages.success_call', [], 'id'));
     }
 }

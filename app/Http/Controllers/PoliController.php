@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Room;
 use App\Services\Room\CallQueue;
 use App\Services\Room\GetNextQueueCustomerView;
+use App\Services\Room\GetQueueByRoom;
 use App\Services\Room\ReCallQueue;
 use App\Utils\Result;
 use Illuminate\Http\Request;
@@ -57,18 +58,7 @@ class PoliController extends Controller
 
     public function getQueueByRoom(Request $request, Room $room)
     {
-        $resultsNotCalled =  $room->queuesNotCalled()
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
-            ->take(5)
-            ->get()->map(function ($queue) {
-                return $queue->room_code . $queue->number_queue;
-            });
-
-        $totalNotCalled =  $room->queuesNotCalled()
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
-            ->count();
-
-        return $this->successResponse(Result::success(['total' => $totalNotCalled, 'pagination' => $resultsNotCalled], Lang::get('messages.success_retrive_data', [], 'id')));
+        return $this->successResponse((new GetQueueByRoom($room))->handle());
     }
 
     public function callQueueByRoom(Request $request, Room $room)
@@ -76,8 +66,7 @@ class PoliController extends Controller
         $numberCode = $request->input('number_queue');
         $roomCode = substr($numberCode, 0, 1);
         $numberCode  = substr($numberCode, 1);
-        $result = (new CallQueue($room, $roomCode, $numberCode))->handle();
-        return $this->resultResponseData($result, 201);
+        return $this->customResponse((new CallQueue($room, $roomCode, $numberCode))->handle());
     }
 
     public function recallQueueByRoom(Room $room)
@@ -104,7 +93,6 @@ class PoliController extends Controller
 
     public function getNextQueueByRoom(Request $request, Room $room)
     {
-        $result = (new GetNextQueueCustomerView($room))->handle();
-        return $this->resultResponseData($result);
+        return $this->customResponse((new GetNextQueueCustomerView($room))->handle());
     }
 }

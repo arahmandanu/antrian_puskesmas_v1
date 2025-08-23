@@ -15,6 +15,10 @@ trait ResponseHelper
 
     public static function successResponse($data = null, $message = 'Success', $status = 200)
     {
+        if (request()->method() != 'GET') {
+            $status = 201;
+        }
+
         return response()->json([
             'status'  => 'success',
             'message' => $data instanceof Result ? $data->getMessage() : $message,

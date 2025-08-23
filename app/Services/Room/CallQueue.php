@@ -6,6 +6,7 @@ use App\Models\QueueCaller;
 use App\Models\Room;
 use App\Models\RoomQueue;
 use App\Models\RoomQueueHistoryCall;
+use App\Utils\Result;
 use Illuminate\Support\Facades\Lang;
 
 class CallQueue extends \App\Services\AbstractService
@@ -30,22 +31,38 @@ class CallQueue extends \App\Services\AbstractService
         try {
             $pendingExist = (new QueueCaller)->isExistPendingByOwnerid($this->room->id, 'poli');
             if ($pendingExist) {
-                return [
-                    'error' => true,
-                    'message' => Lang::get('messages.pending_queue', ['queue' => $pendingExist->formatAsQueueNumber()], 'id'),
-                    'data' => null
-                ];
+
+                return Result::failure(Lang::get('messages.pending_queue', ['queue' => $pendingExist->formatAsQueueNumber()], 'id'), null);
             }
 
             $isExist = (new RoomQueue)->isExistByCode($this->roomCode, $this->numberQueue);
             if ($isExist = (new RoomQueue)->isExistByCode($this->roomCode, $this->numberQueue)) {
                 if ($isExist->called) {
-                    $message = 'Antrian sudah dipanggil, silahkan klik recall.';
+                    $message = Lang::get('messages.already_called', [], 'id');
                 } else {
                     $isExist->called = true;
                     if ($isExist->save()) {
-                        $message = 'Success call';
-                        $this->createHistoryRoom($isExist);
+                        $message = Lang::get('messages.success_call', [], 'id');
+                        QueueCaller::create([
+                            'owner_id' => $this->room->id,
+                            'number_code' =>  $this->roomCode,
+                            'called' => false,
+                            'type' => 'poli',
+                            'lantai' => $this->room->lantai,
+                            'number_queue' => $this->numberQueue,
+                            'called_to' => $this->room->name,
+                            'initiator_name' => "Poli"
+                        ]);
+
+                        RoomQueueHistoryCall::create([
+                            'room_code' => $this->room->code,
+                            'number_queue' =>  $this->room->last_call_queue,
+                            'process_time_queue_room' => $this->currentTime->diffInSeconds($this->room->last_call_time),
+                        ]);
+
+                        $this->room->last_call_queue = $this->numberQueue;
+                        $this->room->last_call_time = $this->currentTime;
+                        $this->room->save();
                     }
                 }
             }
@@ -54,34 +71,6 @@ class CallQueue extends \App\Services\AbstractService
             $message = $th->getMessage();
         }
 
-        return [
-            'data' => $isExist,
-            'error' => $error,
-            "message" => $message
-        ];
-    }
-
-    private function createHistoryRoom($queue)
-    {
-        QueueCaller::create([
-            'owner_id' => $this->room->id,
-            'number_code' =>  $this->roomCode,
-            'called' => false,
-            'type' => 'poli',
-            'lantai' => $this->room->lantai,
-            'number_queue' => $this->numberQueue,
-            'called_to' => $this->room->name,
-            'initiator_name' => "Poli"
-        ]);
-
-        RoomQueueHistoryCall::create([
-            'room_code' => $this->room->code,
-            'number_queue' =>  $this->room->last_call_queue,
-            'process_time_queue_room' => $this->currentTime->diffInSeconds($this->room->last_call_time),
-        ]);
-
-        $this->room->last_call_queue = $this->numberQueue;
-        $this->room->last_call_time = $this->currentTime;
-        $this->room->save();
+        return Result::take($error, $isExist, $message);
     }
 }
