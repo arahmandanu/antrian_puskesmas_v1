@@ -10,5 +10,5 @@ return [
     // total loket yang ada
     'total_loket' => '5',
     // enable disable printer
-    'printer_on' => true,
+    'printer_on' => false,
 ];

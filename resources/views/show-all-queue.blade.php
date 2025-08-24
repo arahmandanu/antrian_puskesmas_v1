@@ -45,36 +45,14 @@
         </div>
 
         <!-- Grid semua poli -->
-        <div id="grid-all"
+        <section id="grid-all"
             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 w-full p-8">
             @forelse ($calledList as $queue)
-                <div id="{{ $queue['type'] }}-{{ $queue['staff']['id'] }}"
-                    class="bg-white rounded-3xl shadow-2xl border border-gray-200
-            flex flex-col items-center justify-between text-center px-8 py-6 w-fit h-fit mx-auto">
-
-                    <!-- Header Poli -->
-                    <p
-                        class="text-white font-bold mb-2 px-4 py-1 rounded-full
-    bg-gradient-to-r from-blue-500 to-blue-700 shadow-lg
-    text-[clamp(0.8rem,1.2vw,1.5rem)] leading-tight
-    text-center break-words max-w-100 max-h-[2.5em] overflow-hidden">
-                        {{ $queue['name'] }}
-                    </p>
-
-                    <!-- Nomor Antrian -->
-                    <span
-                        class="font-extrabold text-green-700 drop-shadow-xl nomor-antrian
-                text-[clamp(1.5rem,3vw,3.5rem)] leading-tight tracking-wider text-center break-words">
-                        @if (isset($queue['queue']))
-                            {{ $queue['queue']['number_code'] }}{{ $queue['queue']['number_queue'] }}
-                        @else
-                            -
-                        @endif
-                    </span>
-                </div>
+                @include('components.queue-card', ['queue' => $queue])
             @empty
+                <div class="col-span-full text-center text-gray-400 py-8">Tidak ada antrian yang sedang dipanggil.</div>
             @endforelse
-        </div>
+        </section>
     </main>
 
     <script>

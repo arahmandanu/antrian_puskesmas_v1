@@ -120,8 +120,10 @@
                     });
                 })
                 .always(function() {
-                    overlay.classList.add('hidden');
-                    buttons.forEach(btn => btn.disabled = false);
+                    setTimeout(() => {
+                        overlay.classList.add('hidden');
+                        buttons.forEach(btn => btn.disabled = false);
+                    }, 1000);
                 });
         }
     </script>

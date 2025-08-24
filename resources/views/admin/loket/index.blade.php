@@ -27,6 +27,7 @@
                                     <tr>
                                         <th>Nomor Loket</th>
                                         <th>Nama Staff</th>
+                                        <th>Letak</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -35,6 +36,7 @@
                                         <tr class="odd gradeX">
                                             <td>{{ $loket->locket_number }}</td>
                                             <td>{{ $loket->staff_name }}</td>
+                                            <td>Lantai {{ $loket->lantai }}</td>
                                             <td class="center">
                                                 <a type="button" href="{{ route('admin.loket.edit', $loket->id) }}"
                                                     class="btn btn-success btn-circle"><i class="fa fa-pencil"></i>
