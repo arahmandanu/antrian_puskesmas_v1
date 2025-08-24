@@ -40,6 +40,18 @@
         </section>
     </main>
 
+    <!-- Overlay popup panggilan -->
+    <div id="call-overlay"
+        class="hidden fixed inset-0 backdrop-blur-md bg-green-500/30 flex items-center justify-center z-50">
+        <div id="call-popup"
+            class="bg-white/90 text-green-700 font-extrabold rounded-2xl
+                shadow-xl px-16 py-12 opacity-0 scale-90 transition-all duration-500 text-center">
+            <div id="call-number" class="text-[12vw] leading-none">A001</div>
+            <div id="call-destination" class="mt-6 text-[4vw] text-gray-800 font-bold tracking-tight leading-tight">Menuju
+                Poli Umum</div>
+        </div>
+    </div>
+
     <script>
         let isRequesting = false; // flag untuk API
         let isSpeaking = false; // flag untuk suara
@@ -49,6 +61,8 @@
         let baseUrl = document
             .querySelector('meta[name="base-url"]')
             .getAttribute('content');
+
+        setInterval(updateAntrian, 3000);
 
         document.getElementById('enable-sound').addEventListener('click', () => {
             soundEnabled = true;
@@ -98,7 +112,10 @@
                             box.textContent = data.number_code + data.number_queue ?? "-";
                             // animasi
                             box.classList.add("animate-pulse");
-                            setTimeout(() => box.classList.remove("animate-pulse"), 1000);
+                            box.classList.remove("animate-pulse");
+
+                            showCallOverlay(data.number_code + String(data.number_queue).padStart(3, '0'), data
+                                .called_to);
 
                             if (soundEnabled) {
                                 isSpeaking = true;
@@ -152,12 +169,10 @@
             utter.lang = "id-ID";
             utter.rate = 0.9;
             utter.onend = () => {
-                isSpeaking = false;
+                closeCallOverlay();
             };
             speechSynthesis.speak(utter);
         }
-
-        setInterval(updateAntrian, 3000);
 
         // if ("serviceWorker" in navigator) {
         //     navigator.serviceWorker.register(baseUrl + "/sound_cache.js?baseUrl=" + baseUrl, {
@@ -195,22 +210,35 @@
         //         }
         //     });
         // }
-    </script>
 
-    <script>
-        let lastHistoryDate = document
-            .querySelector('meta[name="server-date"]')
-            .getAttribute('content');
+        function showCallOverlay(numberText, destination) {
+            const overlay = document.getElementById("call-overlay");
+            const popup = document.getElementById("call-popup");
+            const numberEl = document.getElementById("call-number");
+            const destEl = document.getElementById("call-destination");
 
-        setInterval(() => {
-            $.get("{{ route('refreshToken') }}", function(data) {
-                document.querySelector('meta[name="csrf-token"]').setAttribute('content', data.csrf_token);
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': data.csrf_token
-                    }
-                });
+            numberEl.textContent = numberText;
+            destEl.textContent = destination;
+
+            overlay.classList.remove("hidden");
+
+            requestAnimationFrame(() => {
+                popup.classList.remove("opacity-0", "scale-90");
+                popup.classList.add("opacity-100", "scale-100");
             });
-        }, 5 * 60 * 1000);
+        }
+
+        function closeCallOverlay() {
+            const overlay = document.getElementById("call-overlay");
+            const popup = document.getElementById("call-popup");
+
+            popup.classList.remove("opacity-100", "scale-100");
+            popup.classList.add("opacity-0", "scale-90");
+
+            setTimeout(() => {
+                isSpeaking = false;
+                overlay.classList.add("hidden");
+            }, 500); // tunggu animasi keluar
+        }
     </script>
 @endsection
