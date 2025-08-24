@@ -1,23 +1,8 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('shared.main')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loket Antrian Puskesmas</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/locket.css') }}">
-    <!-- Custom Fonts -->
-    <link href="{{ asset('css/startmin/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <!-- jQuery -->
-    <script src="{{ asset('js/startmin/js/jquery.min.js') }}"></script>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="server-date" content="{{ now()->toDateString() }}">
-    <meta name="base-url" content="{{ url('/') }}">
-</head>
+@php($noHeader = true)
 
-<body class="bg-gray-100 flex flex-col min-h-screen">
+@section('content')
     <input type="hidden" id='lantai' value="{{ $lantai }}">
 
     <!-- Loading Screen -->
@@ -212,8 +197,6 @@
         // }
     </script>
 
-    @include('shared.footer')
-
     <script>
         let lastHistoryDate = document
             .querySelector('meta[name="server-date"]')
@@ -230,10 +213,4 @@
             });
         }, 5 * 60 * 1000);
     </script>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="{{ asset('js/app.js') }}"></script>
-</body>
-
-</html>
+@endsection

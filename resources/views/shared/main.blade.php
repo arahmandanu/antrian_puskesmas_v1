@@ -14,18 +14,24 @@
     <script src="{{ asset('js/startmin/js/jquery.min.js') }}"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="server-date" content="{{ now()->toDateString() }}">
+    <meta name="base-url" content="{{ url('/') }}">
     <meta name="company-name" content="{{ Config::get('mysite.company_name', 'KOSONG') }}">
     <meta name="address-name" content="{{ Config::get('mysite.company_adress', 'KOSONG') }}">
 </head>
 
 <body class="bg-gray-100 flex flex-col min-h-screen">
 
-    @include('shared.header')
+    @if (!isset($noHeader) || $noHeader === false)
+        @include('shared.header')
+    @endif
 
     <!-- Main Content -->
     @yield('content')
 
-    @include('shared.footer')
+    @if (!isset($noFooter) || $noFooter === false)
+        @include('shared.footer')
+    @endif
+
     <script>
         let lastHistoryDate = document
             .querySelector('meta[name="server-date"]')

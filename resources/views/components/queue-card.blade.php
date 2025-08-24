@@ -8,7 +8,7 @@
     </p>
     <!-- Nomor Antrian -->
     <span
-        class="font-extrabold text-green-700 drop-shadow-xl nomor-antrian text-[clamp(3rem,4vw,5rem)] leading-tight tracking-wider text-center break-words">
+        class="font-extrabold text-green-700 drop-shadow-xl nomor-antrian text-[clamp(3rem,4vw,5rem)] leading-tight tracking-tighter text-center break-words">
         @if (isset($queue['queue']))
             {{ $queue['queue']['number_code'] }}{{ $queue['queue']['number_queue'] }}
         @else
