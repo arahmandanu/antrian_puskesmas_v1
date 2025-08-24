@@ -17,10 +17,10 @@ class GetNextQueueCustomerView extends \App\Services\AbstractService
 
     public function handle()
     {
-        if ($lastCalled = $this->room->queuesCalled()->first()) {
-            return Result::success($lastCalled,  Lang::get('messages.success_retrive_data', [], 'id'));
+        if (!$lastCalled = $this->room->queuesCalled()->first()) {
+            return Result::failure(Lang::get('messages.empty_queue', [], 'id'), null);
         }
 
-        return Result::failure(Lang::get('messages.empty_queue', [], 'id'), null);
+        return Result::success($lastCalled,  Lang::get('messages.success_retrive_data', [], 'id'));
     }
 }

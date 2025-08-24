@@ -8,6 +8,7 @@ use App\Models\RoomQueue;
 use App\Models\RoomQueueHistoryCall;
 use App\Utils\Result;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\DB;
 
 class CallQueue extends \App\Services\AbstractService
 {
@@ -28,10 +29,11 @@ class CallQueue extends \App\Services\AbstractService
     {
         $isExist = null;
         $error = false;
+        DB::beginTransaction();
         try {
             $pendingExist = (new QueueCaller)->isExistPendingByOwnerid($this->room->id, 'poli');
             if ($pendingExist) {
-
+                DB::rollBack();
                 return Result::failure(Lang::get('messages.pending_queue', ['queue' => $pendingExist->formatAsQueueNumber()], 'id'), null);
             }
 
@@ -66,7 +68,9 @@ class CallQueue extends \App\Services\AbstractService
                     }
                 }
             }
+            DB::commit();
         } catch (\Throwable $th) {
+            DB::rollBack();
             $error = true;
             $message = $th->getMessage();
         }

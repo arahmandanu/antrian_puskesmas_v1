@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\LocketQueue;
 use App\Services\Printer\LocketPrint;
 use App\Utils\Result;
+use Illuminate\Support\Facades\DB;
 
 class CreateQueue extends \App\Services\AbstractService
 {
@@ -21,22 +22,35 @@ class CreateQueue extends \App\Services\AbstractService
 
     public function handle()
     {
-        $response = null;
-        $generateNumberQueue = $this->generateQueueNumber();
-        $company = Company::first();
-        if (!$company || $company->printer === null) return Result::failure('Printer belum terpasang');
+        DB::beginTransaction();
+        try {
+            $response = null;
+            $generateNumberQueue = $this->generateQueueNumber();
+            $company = Company::first();
+            if (!$company || $company->printer === null) {
+                DB::rollBack();
+                return Result::failure('Printer belum terpasang');
+            }
 
-        if ($response = LocketQueue::create([
-            'poli' => $this->poli,
-            'locket_code' => $this->code,
-            'number_queue' => $generateNumberQueue,
-        ])) {
-            $response = (new LocketPrint($response, $company))->handle();
-        } else {
-            return Result::failure('Gagal membuat antrian!');
+            $queue = LocketQueue::create([
+                'poli' => $this->poli,
+                'locket_code' => $this->code,
+                'number_queue' => $generateNumberQueue,
+            ]);
+
+            if ($queue) {
+                $response = (new LocketPrint($queue, $company))->handle();
+                DB::commit();
+            } else {
+                DB::rollBack();
+                return Result::failure('Gagal membuat antrian!');
+            }
+
+            return $response;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return Result::failure('Terjadi kesalahan: ' . $e->getMessage());
         }
-
-        return $response;
     }
 
     public function generateQueueNumber()
