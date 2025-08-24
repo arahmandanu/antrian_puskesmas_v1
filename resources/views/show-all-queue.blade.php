@@ -33,7 +33,7 @@
     <main id="app-content" class="flex-grow flex flex-col items-center p-6 bg-gray-50">
 
         <h2 class="text-2xl font-semibold text-gray-600 mb-8 text-center">
-            Nomor Sedang Dipanggil di Semua Poli
+            Nomor Terpanggil
         </h2>
 
         <!-- Tombol Aktifkan Suara -->
@@ -46,7 +46,7 @@
 
         <!-- Grid semua poli -->
         <section id="grid-all"
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 w-full p-8">
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 w-full p-3">
             @forelse ($calledList as $queue)
                 @include('components.queue-card', ['queue' => $queue])
             @empty
