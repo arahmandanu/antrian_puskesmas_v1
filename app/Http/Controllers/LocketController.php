@@ -10,10 +10,8 @@ use App\Models\Room;
 use App\Services\Locket\GetRecallQueue;
 use App\Services\Locket\GetRestQueue;
 use App\Services\Room\CreateQueue;
-use App\Utils\Result;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Lang;
 
 class LocketController extends Controller
 {
@@ -39,16 +37,6 @@ class LocketController extends Controller
         ]);
     }
 
-    public function createQueue(Request $request)
-    {
-        $list = LocketList::allIntoString();
-        $request->validate([
-            'code' => ['required', "in:$list"],
-        ]);
-
-        return $this->customResponse((new \App\Services\Locket\CreateQueue($request->input('poli'), $request->input('code')))->handle());
-    }
-
     public function locketList()
     {
         return view('loket_antrian.list_locket', [
@@ -68,22 +56,6 @@ class LocketController extends Controller
         ]);
     }
 
-    public function getNextQeueue(Request $request)
-    {
-        return $this->customResponse((new \App\Services\Locket\GetNextQueue($request->input('locket_code'), $request->input('locket_number')))->handle());
-    }
-
-    public function getSisaAntrian(Request $request)
-    {
-        return $this->customResponse((new GetRestQueue())->handle());
-    }
-
-    public function getRecallQueue(Request $request, $locket_code, $locket_number)
-    {
-        $result = (new GetRecallQueue($locket_code, $locket_number))->handle();
-        return $this->customResponse($result);
-    }
-
     public function loketGetPoli(Request $request, $locket_number)
     {
         $allRoom = Room::show()->get();
@@ -101,6 +73,32 @@ class LocketController extends Controller
         ]);
     }
 
+    public function createQueue(Request $request)
+    {
+        $list = LocketList::allIntoString();
+        $request->validate([
+            'code' => ['required', "in:$list"],
+        ]);
+
+        return $this->customResponse((new \App\Services\Locket\CreateQueue($request->input('poli'), $request->input('code')))->handle());
+    }
+
+    public function getNextQeueue(Request $request)
+    {
+        return $this->customResponse((new \App\Services\Locket\GetNextQueue($request->input('locket_code'), $request->input('locket_number')))->handle());
+    }
+
+    public function getSisaAntrian(Request $request)
+    {
+        return $this->customResponse((new GetRestQueue())->handle());
+    }
+
+    public function getRecallQueue(Request $request, $locket_code, $locket_number)
+    {
+        $result = (new GetRecallQueue($locket_code, $locket_number))->handle();
+        return $this->customResponse($result);
+    }
+
     public function loketCreatePoliQueue(Request $request)
     {
         $listCode = (new Room)->listRoomCode();
@@ -109,12 +107,6 @@ class LocketController extends Controller
         ]);
 
         $result = (new CreateQueue(Room::where('code', '=', $request->input('room_code'))->first()))->handle();
-        if ($result['error']) {
-            flash()->error($result['message']);
-            return $this->errorResponse($result['message'], 422);
-        }
-
-        flash()->success($result['message']);
-        return $this->successResponse(Result::success($result['data'], Lang::get('messages.success_retrive_data', [], 'id')));
+        return $this->customResponse($result);
     }
 }

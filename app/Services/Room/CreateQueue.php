@@ -4,7 +4,9 @@ namespace App\Services\Room;
 
 use App\Models\Room;
 use App\Models\RoomQueue;
+use App\Utils\Result;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 
 class CreateQueue extends \App\Services\AbstractService
 {
@@ -28,7 +30,7 @@ class CreateQueue extends \App\Services\AbstractService
             $this->room->current_queue = $newQueue->number_queue;
             $this->room->save();
             $error = false;
-            $message = "Berhasil membuat antrian poli {$this->room->name}";
+            $message = Lang::get('messages.success_retrive_data', [], 'id');
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -36,11 +38,7 @@ class CreateQueue extends \App\Services\AbstractService
             $message = $th->getMessage();
         }
 
-        return [
-            'data' => $newQueue,
-            'error' => $error,
-            "message" => $message
-        ];
+        return Result::take($error, $newQueue, $message);
     }
 
     public function generateNumberQueue()

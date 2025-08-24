@@ -56,6 +56,22 @@ class PoliController extends Controller
         ]);
     }
 
+    public function showQueueByRoom(Request $request, Room $room)
+    {
+        $currentQueue = "-";
+        $nextQueue = "-";
+        if ($lastCalled = $room->queuesCalled()->first()) {
+            $currentQueue = $lastCalled->room_code . $lastCalled->number_queue;
+            $nextQueue = $lastCalled->room_code . str_pad($lastCalled->number_queue + 1, config('mysite.total_locket_queue', 4), '0', STR_PAD_LEFT);
+        }
+
+        return view('pasien.poli_terpanggil', [
+            'poli' => $room,
+            'currentQueue' => $currentQueue,
+            'nextQueue' => $nextQueue
+        ]);
+    }
+
     public function getQueueByRoom(Request $request, Room $room)
     {
         return $this->customResponse((new GetQueueByRoom($room))->handle());
@@ -74,22 +90,6 @@ class PoliController extends Controller
         return $this->customResponse((new ReCallQueue($room))->handle());
     }
 
-
-    public function showQueueByRoom(Request $request, Room $room)
-    {
-        $currentQueue = "-";
-        $nextQueue = "-";
-        if ($lastCalled = $room->queuesCalled()->first()) {
-            $currentQueue = $lastCalled->room_code . $lastCalled->number_queue;
-            $nextQueue = $lastCalled->room_code . str_pad($lastCalled->number_queue + 1, config('mysite.total_locket_queue', 4), '0', STR_PAD_LEFT);
-        }
-
-        return view('pasien.poli_terpanggil', [
-            'poli' => $room,
-            'currentQueue' => $currentQueue,
-            'nextQueue' => $nextQueue
-        ]);
-    }
 
     public function getNextQueueByRoom(Request $request, Room $room)
     {
