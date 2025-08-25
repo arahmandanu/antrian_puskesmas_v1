@@ -48,11 +48,32 @@ class LocketController extends Controller
     {
         $allTotal = (new LocketQueue())->locketTotal();
         $result = $allTotal->pluck('total', 'locket_code')->toArray();
+        $menus = [
+            [
+                'type' => LocketList::PENDAFTARAN,
+                'color' => 'yellow',
+                'icon' => '📝',
+                'title' => 'Pendaftaran',
+            ],
+            [
+                'type' => LocketList::LABORATE,
+                'color' => 'blue',
+                'icon' => '🔬',
+                'title' => 'Laborate',
+            ],
+            [
+                'type' => LocketList::LANSIA,
+                'color' => 'pink',
+                'icon' => '👵',
+                'title' => 'Lansia',
+            ],
+        ];
 
         return view('loket_staff.index', [
             'loket' => $locket_number,
             'locket_totals' => $result,
-            'histories' => (new LocketQueue())->getHistoryBy($locket_number->locket_number)
+            'histories' => (new LocketQueue())->getHistoryBy($locket_number->locket_number),
+            'menus' => $menus
         ]);
     }
 

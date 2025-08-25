@@ -1,95 +1,47 @@
 @extends('shared.main')
 
 @section('content')
+    <!-- Main Content -->
     @php
         use App\Enum\LocketList;
     @endphp
 
-    <!-- Main Content -->
     <main class="flex flex-col flex-grow items-center p-6 overflow-y-auto h-screen custom-scrollbar">
         <input type="hidden" value="{{ $loket->locket_number }}" id="loket_number">
         <input type="hidden" value="{{ $loket->id }}" id="id">
 
-        <div class="flex justify-center items-center w-full max-w-3xl mb-10">
-            <h2 class="text-lg font-light text-center">
-                Selamat datang {{ $loket->staff_name }}, Anda berada di Loket {{ $loket->locket_number }}
-                <br>
-                Panel Panggilan Antrian Staff Loket
+        <!-- Header -->
+        <div class="w-full max-w-3xl mb-10 text-center">
+            <h2 class="text-xl font-light">
+                Selamat datang <span class="font-semibold">{{ $loket->staff_name }}</span>,
+                Anda berada di <span class="font-semibold">Loket {{ $loket->locket_number }}</span>
             </h2>
+            <p class="text-gray-600">Panel Panggilan Antrian Staff Loket</p>
         </div>
 
-        <!-- Tombol Panggilan -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl mb-5">
+        <!-- Menu Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl mb-8">
+            @foreach ($menus as $menu)
+                <div registeredMenu="{{ $menu['type'] }}"
+                    class="bg-{{ $menu['color'] }}-400 rounded-2xl shadow-lg p-5 flex flex-col items-center gap-2">
+                    <span class="text-3xl">{{ $menu['icon'] }}</span>
+                    <h2 class="text-xl font-bold">{{ $menu['title'] }}</h2>
+                    <span class="text-sm font-medium" id="sisa-{{ $menu['type'] }}">
+                        Sisa antrian: {{ $locket_totals[$menu['type']->value] ?? 0 }}
+                    </span>
 
-            <!-- Pendaftaran -->
-            <div registeredMenu="{{ LocketList::PENDAFTARAN }}"
-                class="bg-yellow-400 rounded-2xl shadow-xl p-4 flex flex-col items-center gap-2">
-                <span class="text-3xl">📝</span>
-                <h2 class="text-xl font-bold">Pendaftaran</h2>
-                <span class="text-sm font-medium" id="sisa-{{ LocketList::PENDAFTARAN }}">Sisa antrian:
-                    {{ $locket_totals[LocketList::PENDAFTARAN->value] ?? 0 }}</span>
-                </span>
-
-                <div class="flex gap-4 mt-2 w-full">
-                    <button
-                        onclick="panggilAntrian(this,'{{ LocketList::PENDAFTARAN }}', '{{ LocketList::from(LocketList::PENDAFTARAN->value)->name }}')"
-                        class="flex-1 py-2 rounded-xl bg-yellow-600 text-white font-bold hover:bg-yellow-700">
-                        Panggil
-                    </button>
-                    <button
-                        onclick="recallAntrian(this, '{{ LocketList::PENDAFTARAN }}', '{{ LocketList::from(LocketList::PENDAFTARAN->value)->name }}')"
-                        class="flex-1 py-2 rounded-xl bg-yellow-200 text-yellow-800 font-bold hover:bg-yellow-300">
-                        Recall
-                    </button>
+                    <div class="flex gap-3 mt-3 w-full p-3">
+                        <button onclick="panggilAntrian(this,'{{ $menu['type'] }}', '{{ $menu['type']->name }}')"
+                            class="flex-1 py-2 rounded-xl bg-{{ $menu['color'] }}-600 text-white font-semibold hover:bg-{{ $menu['color'] }}-700 transition">
+                            Panggil
+                        </button>
+                        <button onclick="recallAntrian(this,'{{ $menu['type'] }}', '{{ $menu['type']->name }}')"
+                            class="flex-1 py-2 rounded-xl bg-{{ $menu['color'] }}-200 text-{{ $menu['color'] }}-800 font-semibold hover:bg-{{ $menu['color'] }}-300 transition">
+                            Recall
+                        </button>
+                    </div>
                 </div>
-            </div>
-
-            <!-- Laborate -->
-            <div registeredMenu="{{ LocketList::LABORATE }}"
-                class="bg-blue-400 rounded-2xl shadow-xl p-4 flex flex-col items-center gap-2">
-                <span class="text-3xl">🔬</span>
-                <h2 class="text-xl font-bold">Laborate</h2>
-                <span class="text-sm font-medium" id="sisa-{{ LocketList::LABORATE }}">Sisa antrian:
-                    {{ $locket_totals[LocketList::LABORATE->value] ?? 0 }}</span>
-                </span>
-
-                <div class="flex gap-4 mt-2 w-full">
-                    <button
-                        onclick="panggilAntrian(this,'{{ LocketList::LABORATE }}', '{{ LocketList::from(LocketList::LABORATE->value)->name }}')"
-                        class="flex-1 py-2 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700">
-                        Panggil
-                    </button>
-                    <button
-                        onclick="recallAntrian(this, '{{ LocketList::LABORATE }}', '{{ LocketList::from(LocketList::LABORATE->value)->name }}')"
-                        class="flex-1 py-2 rounded-xl bg-blue-200 text-blue-800 font-bold hover:bg-blue-300">
-                        Recall
-                    </button>
-                </div>
-            </div>
-
-            <!-- Lansia -->
-            <div registeredMenu="{{ LocketList::LANSIA }}"
-                class="bg-pink-400 rounded-2xl shadow-xl p-4 flex flex-col items-center gap-2">
-                <span class="text-3xl">👵</span>
-                <h2 class="text-xl font-bold">Lansia</h2>
-                <span class="text-sm font-medium" id="sisa-{{ LocketList::LANSIA }}">Sisa antrian:
-                    {{ $locket_totals[LocketList::LANSIA->value] ?? 0 }}</span>
-                </span>
-
-                <div class="flex gap-4 mt-2 w-full">
-                    <button
-                        onclick="panggilAntrian(this,'{{ LocketList::LANSIA }}', '{{ LocketList::from(LocketList::LANSIA->value)->name }}')"
-                        class="flex-1 py-2 rounded-xl bg-pink-600 text-white font-bold hover:bg-pink-700">
-                        Panggil
-                    </button>
-                    <button
-                        onclick="recallAntrian(this, '{{ LocketList::LANSIA }}', '{{ LocketList::from(LocketList::LANSIA->value)->name }}')"
-                        class="flex-1 py-2 rounded-xl bg-pink-200 text-pink-800 font-bold hover:bg-pink-300">
-                        Recall
-                    </button>
-                </div>
-            </div>
-
+            @endforeach
         </div>
 
         <!-- Tombol Pilih Poli -->
@@ -123,6 +75,7 @@
         let locketNumber = document.getElementById('loket_number').value;
         const riwayatEl = document.getElementById("riwayat");
         const allSisaAntrian = document.querySelectorAll('[id^="sisa-"]');
+
         $(document).ready(function() {
             setInterval(() => {
                 updateSisaAntrian();
