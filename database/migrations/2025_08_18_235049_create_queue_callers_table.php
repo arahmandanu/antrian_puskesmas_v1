@@ -30,6 +30,9 @@ return new class extends Migration
 
             // unique index
             $table->unique(['number_code', 'created_at']);
+
+            // unique index for find exist pending
+            $table->index(['owner_id', 'type', 'called', 'created_at']);
         });
     }
 

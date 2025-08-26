@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('room_queue_calls', function (Blueprint $table) {
             $table->id();
             $table->string('room_code')->nullable(false);
-            $table->text('number_queue')->nullable(false);
+            $table->string('number_queue')->nullable(false);
             $table->boolean('called')->default(false);
             $table->timestamps();
         });

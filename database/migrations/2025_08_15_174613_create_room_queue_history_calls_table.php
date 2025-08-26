@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('room_queue_history_calls', function (Blueprint $table) {
             $table->id();
             $table->string('room_code')->nullable(false);
-            $table->text('number_queue')->nullable();
+            $table->string('number_queue')->nullable();
             $table->integer('process_time_queue_room')->nullable();
             $table->timestamps();
         });

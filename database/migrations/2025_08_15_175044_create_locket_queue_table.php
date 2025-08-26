@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('locket_code')->nullable(false);
             $table->integer('locket_number')->nullable(true);
-            $table->text('number_queue')->nullable(false);
+            $table->string('number_queue')->nullable(false);
             $table->boolean('called')->nullable(false)->default(false);
             $table->timestamps();
 

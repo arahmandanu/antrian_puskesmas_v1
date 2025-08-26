@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique()->nullable(false);
             $table->text('name')->nullable(false);
-            $table->text('current_queue')->nullable();
+            $table->string('current_queue')->nullable();
             $table->boolean('show')->default(true);
             $table->integer('lantai')->default(1)->nullable(false);
-            $table->text('last_call_queue')->nullable();
+            $table->string('last_call_queue')->nullable();
             $table->dateTime('last_call_time')->nullable();
             $table->timestamps();
         });

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('locket_call', function (Blueprint $table) {
             $table->id();
-            $table->text('number_queue')->nullable(false);
+            $table->string('number_queue')->nullable(false);
             $table->text('locket_code')->nullable(false);
             $table->integer('locket_number')->nullable(true);
             $table->boolean('called')->default(false);
