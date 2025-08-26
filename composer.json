@@ -12,6 +12,7 @@
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
+        "livewire/livewire": "^2.12",
         "mike42/escpos-php": "^4.0",
         "spatie/laravel-permission": "^6.21",
         "starekrow/lockbox": "dev-master"
