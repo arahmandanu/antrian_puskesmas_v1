@@ -2,6 +2,11 @@
     body {
         height: 100%;
         overflow: auto;
+
+        .swal2-height-auto {
+            height: 100% !important;
+            /* or auto depending on your layout */
+        }
     }
 
     body {
@@ -46,3 +51,4 @@
         scrollbar-width: thin;
         scrollbar-color: #16a34a #f1f5f9;
     }
+

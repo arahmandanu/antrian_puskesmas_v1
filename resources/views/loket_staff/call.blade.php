@@ -188,7 +188,11 @@
                     error: function(response) {
                         Swal.fire({
                             title: response.responseJSON.message,
-                            icon: "error"
+                            icon: "error",
+                            didOpen: () => {
+                                document.body.removeAttribute('style');
+                                document.body.classList.remove('swal2-height-auto');
+                            }
                         });
                     },
                     complete: function() {
@@ -203,7 +207,11 @@
             } else {
                 Swal.fire({
                     title: "Antrian Kosong",
-                    icon: "error"
+                    icon: "error",
+                    didOpen: () => {
+                        document.body.removeAttribute('style');
+                        document.body.classList.remove('swal2-height-auto');
+                    }
                 });
             }
         });
@@ -223,7 +231,11 @@
                 error: function(response) {
                     Swal.fire({
                         title: response.responseJSON.message,
-                        icon: "error"
+                        icon: "error",
+                        didOpen: () => {
+                            document.body.removeAttribute('style');
+                            document.body.classList.remove('swal2-height-auto');
+                        }
                     });
                 },
                 complete: function() {

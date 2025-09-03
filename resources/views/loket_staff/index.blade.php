@@ -145,7 +145,11 @@
                     422: function(response) {
                         Swal.fire({
                             title: response.responseJSON.message,
-                            icon: "error"
+                            icon: "error",
+                            didOpen: () => {
+                                document.body.removeAttribute('style');
+                                document.body.classList.remove('swal2-height-auto');
+                            }
                         });
                         allButtons.forEach(btn => btn.disabled = false);
                         btn.textContent = originalText;
@@ -197,7 +201,11 @@
                     422: function(response) {
                         Swal.fire({
                             title: response.responseJSON.message,
-                            icon: "error"
+                            icon: "error",
+                            didOpen: () => {
+                                document.body.removeAttribute('style');
+                                document.body.classList.remove('swal2-height-auto');
+                            }
                         });
                         allButtons.forEach(btn => btn.disabled = false);
                         btn.textContent = originalText;

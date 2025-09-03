@@ -110,7 +110,11 @@
                         title: 'Error!',
                         text: response.responseJSON.message,
                         icon: 'error',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'OK',
+                        didOpen: () => {
+                            document.body.removeAttribute('style');
+                            document.body.classList.remove('swal2-height-auto');
+                        }
                     }).then((result) => {
                         if (result.isConfirmed) {
                             window.location.href = "{{ route('loket_antrian.generateView', '') }}/" +

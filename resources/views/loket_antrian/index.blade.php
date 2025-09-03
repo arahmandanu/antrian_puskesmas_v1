@@ -116,7 +116,11 @@
                         title: 'Error!',
                         text: data.responseJSON.message,
                         icon: 'error',
-                        confirmButtonText: 'Cool'
+                        confirmButtonText: 'Cool',
+                        didOpen: () => {
+                            document.body.removeAttribute('style');
+                            document.body.classList.remove('swal2-height-auto');
+                        }
                     });
                 })
                 .always(function() {
