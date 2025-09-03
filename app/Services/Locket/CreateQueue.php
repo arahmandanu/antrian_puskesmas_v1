@@ -27,7 +27,7 @@ class CreateQueue extends \App\Services\AbstractService
             $response = null;
             $generateNumberQueue = $this->generateQueueNumber();
             $company = Company::first();
-            if (!$company || $company->printer === null) {
+            if ((config('mysite.printer_on', true) === true) && (!$company || $company->printer === null)) {
                 DB::rollBack();
                 return Result::failure('Printer belum terpasang');
             }

@@ -22,12 +22,12 @@
         </h2>
 
         <!-- Tombol Aktifkan Suara -->
-        <div class="mb-6" id="sound-container">
+        {{-- <div class="mb-6" id="sound-container">
             <button id="enable-sound"
                 class="px-6 py-3 bg-green-600 text-white font-semibold rounded-xl shadow-lg hover:bg-green-700">
                 🔊 Aktifkan Suara
             </button>
-        </div>
+        </div> --}}
 
         <!-- Grid semua poli -->
         <section id="grid-all"
@@ -57,28 +57,28 @@
         let isSpeaking = false; // flag untuk suara
         let lastCallId = null;
         let lantai = document.getElementById('lantai').value;
-        let soundEnabled = false;
+        // let soundEnabled = false;
         let baseUrl = document
             .querySelector('meta[name="base-url"]')
             .getAttribute('content');
 
         setInterval(updateAntrian, 3000);
 
-        document.getElementById('enable-sound').addEventListener('click', () => {
-            soundEnabled = true;
+        // document.getElementById('enable-sound').addEventListener('click', () => {
+        //     soundEnabled = true;
 
-            // Test suara awal (agar browser mengizinkan speechSynthesis)
-            // const testUtter = new SpeechSynthesisUtterance("Suara berhasil diaktifkan");
-            // testUtter.lang = "id-ID";
-            // speechSynthesis.speak(testUtter);
+        // Test suara awal (agar browser mengizinkan speechSynthesis)
+        // const testUtter = new SpeechSynthesisUtterance("Suara berhasil diaktifkan");
+        // testUtter.lang = "id-ID";
+        // speechSynthesis.speak(testUtter);
 
-            // Hilangkan tombol setelah diklik
-            document.getElementById('sound-container').style.display = "none";
-        });
+        // Hilangkan tombol setelah diklik
+        // document.getElementById('sound-container').style.display = "none";
+        // });
 
         function updateAntrian() {
             // Jika sedang request atau sedang speaking, skip
-            if (!soundEnabled) return;
+            // if (!soundEnabled) return;
             if (isRequesting || isSpeaking) return;
 
             isRequesting = true;
@@ -117,10 +117,10 @@
                             showCallOverlay(data.number_code + String(data.number_queue).padStart(3, '0'), data
                                 .called_to);
 
-                            if (soundEnabled) {
-                                isSpeaking = true;
-                                soundCallerLocal(data);
-                            }
+                            // if (soundEnabled) {
+                            isSpeaking = true;
+                            soundCallerLocal(data);
+                            // }
                         }
                     }
                 },
