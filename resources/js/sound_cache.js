@@ -7,8 +7,9 @@ const AUDIO_BASE_URL = `${BASE_URL}/sound/`;
 const letters = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
 // Angka 0-9
 const numbers = Array.from({ length: 10 }, (_, i) => String(i));
+const custom = ['akupresur', 'bpu', 'caten', 'farmasi', 'gigi', 'haji', 'ims', 'jiwa gizi', 'lab', 'lansia', 'loket', 'mtbs', 'nomor_antrian', 'pkpr', 'poli', 'polijiwagizi', 'psikolog', 'ptm', 'ruang', 'silahkan_menuju', 'surveilans']
 // Gabungkan
-const alphanumeric = [...letters, ...numbers];
+const alphanumeric = [...letters, ...numbers, ...custom];
 
 // Daftar asset
 const ASSETS_TO_CACHE = alphanumeric.map(el => `${AUDIO_BASE_URL}${el}.mp3`);

@@ -61,6 +61,7 @@
         let isSpeaking = false; // flag untuk suara
         let lastCallId = null;
         let lantai = document.getElementById('lantai').value;
+        const audioCache = {};
         // let soundEnabled = false;
         let baseUrl = document
             .querySelector('meta[name="base-url"]')
@@ -168,7 +169,18 @@
             // speechSynthesis.speak(utter);
         }
 
+        function preloadSounds(sounds) {
+            sounds.forEach(url => {
+                if (!audioCache[url]) {
+                    const audio = new Audio(url);
+                    audio.preload = "auto";
+                    audioCache[url] = audio;
+                }
+            });
+        }
+
         function playSequential(sounds, onFinish) {
+            preloadSounds(sounds); // pastikan semua sudah ada di cache
             let index = 0;
 
             function playNext() {
@@ -177,12 +189,23 @@
                     return;
                 }
 
-                const audio = new Audio(sounds[index]);
+                const audio = audioCache[sounds[index]];
                 index++;
 
+                if (!audio) {
+                    playNext(); // skip kalau tidak ada
+                    return;
+                }
+
+                // reset agar bisa diputar ulang
+                audio.currentTime = 0;
+
                 audio.onended = playNext;
-                audio.onerror = playNext; // kalau file gagal, lanjut
-                audio.play();
+                audio.onerror = playNext; // kalau error, lanjut aja
+                audio.play().catch(err => {
+                    console.warn("Audio play error:", err);
+                    playNext();
+                });
             }
 
             playNext();
@@ -222,7 +245,6 @@
                     document.getElementById("loading-screen").style.display = "none";
                     document.getElementById("app-content").classList.remove("hidden");
                 }
-                console.log(event.data.type);
             });
         }
 

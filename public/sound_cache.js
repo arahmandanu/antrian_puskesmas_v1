@@ -26,8 +26,9 @@ var numbers = Array.from({
 }, function (_, i) {
   return String(i);
 });
+var custom = ['akupresur', 'bpu', 'caten', 'farmasi', 'gigi', 'haji', 'ims', 'jiwa gizi', 'lab', 'lansia', 'loket', 'mtbs', 'nomor_antrian', 'pkpr', 'poli', 'polijiwagizi', 'psikolog', 'ptm', 'ruang', 'silahkan_menuju', 'surveilans'];
 // Gabungkan
-var alphanumeric = [].concat(letters, numbers);
+var alphanumeric = [].concat(letters, numbers, custom);
 
 // Daftar asset
 var ASSETS_TO_CACHE = alphanumeric.map(function (el) {
