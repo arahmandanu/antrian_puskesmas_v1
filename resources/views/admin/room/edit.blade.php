@@ -21,8 +21,8 @@
                             @csrf
                             <div class="form-group">
                                 <label>Nama Poli</label>
-                                <input class="form-control" name="name" placeholder="Masukkan nama poli" required
-                                    value="{{ $poli->name ?? '' }}">
+                                <input class="form-control" name="name" readonly placeholder="Masukkan nama poli"
+                                    required value="{{ $poli->name ?? '' }}">
                             </div>
 
                             <div class="form-group">

@@ -4,6 +4,11 @@
     <!-- Main Content -->
     @php
         use App\Enum\LocketList;
+        $colorClasses = [
+            'yellow' => 'bg-yellow-400 hover:bg-yellow-300 text-yellow-800',
+            'blue' => 'bg-blue-400 hover:bg-blue-300 text-blue-800',
+            'pink' => 'bg-pink-400 hover:bg-pink-300 text-pink-800',
+        ];
     @endphp
 
     <main class="flex flex-col flex-grow items-center p-6 overflow-y-auto h-screen custom-scrollbar">
@@ -23,7 +28,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl mb-8">
             @foreach ($menus as $menu)
                 <div registeredMenu="{{ $menu['type'] }}"
-                    class="bg-{{ $menu['color'] }}-400 rounded-2xl shadow-lg p-5 flex flex-col items-center gap-2">
+                    class="rounded-2xl shadow-lg p-5 flex flex-col items-center gap-2 {{ $colorClasses[$menu['color']] }}">
                     <span class="text-3xl">{{ $menu['icon'] }}</span>
                     <h2 class="text-xl font-bold">{{ $menu['title'] }}</h2>
                     <span class="text-sm font-medium" id="sisa-{{ $menu['type'] }}">
@@ -32,11 +37,17 @@
 
                     <div class="flex gap-3 mt-3 w-full p-3">
                         <button onclick="panggilAntrian(this,'{{ $menu['type'] }}', '{{ $menu['type']->name }}')"
-                            class="flex-1 py-2 rounded-xl bg-{{ $menu['color'] }}-600 text-white font-semibold hover:bg-{{ $menu['color'] }}-700 transition">
+                            class="flex-1 py-2 rounded-xl font-semibold text-white {{ $menu['color'] === 'yellow' ? 'bg-yellow-600 hover:bg-yellow-700' : '' }}
+                               {{ $menu['color'] === 'blue' ? 'bg-blue-600 hover:bg-blue-700' : '' }}
+                               {{ $menu['color'] === 'pink' ? 'bg-pink-600 hover:bg-pink-700' : '' }}">
                             Panggil
                         </button>
+
                         <button onclick="recallAntrian(this,'{{ $menu['type'] }}', '{{ $menu['type']->name }}')"
-                            class="flex-1 py-2 rounded-xl bg-{{ $menu['color'] }}-200 text-{{ $menu['color'] }}-800 font-semibold hover:bg-{{ $menu['color'] }}-300 transition">
+                            class="flex-1 py-2 rounded-xl font-semibold
+                               {{ $menu['color'] === 'yellow' ? 'bg-yellow-200 hover:bg-yellow-300 text-yellow-800' : '' }}
+                               {{ $menu['color'] === 'blue' ? 'bg-blue-200 hover:bg-blue-300 text-blue-800' : '' }}
+                               {{ $menu['color'] === 'pink' ? 'bg-pink-200 hover:bg-pink-300 text-pink-800' : '' }}">
                             Recall
                         </button>
                     </div>

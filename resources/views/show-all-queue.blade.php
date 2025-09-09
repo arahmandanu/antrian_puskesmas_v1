@@ -6,13 +6,13 @@
     <input type="hidden" id='lantai' value="{{ $lantai }}">
 
     <!-- Loading Screen -->
-    {{-- <div id="loading-screen" class="fixed inset-0 bg-white flex flex-col items-center justify-center z-50">
+    <div id="loading-screen" class="fixed inset-0 bg-white flex flex-col items-center justify-center z-50">
         <div class="w-80 bg-gray-200 rounded-full h-4 overflow-hidden">
             <div id="progress-bar" class="bg-green-600 h-4 w-0 transition-all duration-300 ease-in-out"></div>
         </div>
         <p id="progress-text" class="mt-4 text-gray-600 font-semibold">0%</p>
         <p class="text-sm text-gray-400 mt-2">Memuat asset...</p>
-    </div> --}}
+    </div>
 
     <!-- Main Content -->
     <main id="app-content" class="flex-grow flex flex-col items-center p-6 bg-gray-50">
@@ -134,82 +134,94 @@
         }
 
         function soundCallerLocal(data) {
-            // let arrNumberQ = data.number_queue.split("").map(Number);
-            // let front = [
-            //     "{{ asset('/sound/nomor_antrian.mp3') }}",
-            //     `{{ asset('/sound/${data.number_code}.mp3') }}`,
-            // ];
-            // let middle = [];
-            // arrNumberQ.forEach(element => {
-            //     middle.push(`{{ asset('/sound/${element}.mp3') }}`)
-            // });
-            // let end = [
-            //     `{{ asset('/sound/silahkan_menuju.mp3') }}`
-            // ]
-            // let allSound = [...front, ...middle, ...end];
-            // console.log(allSound);
-            // let index = 0;
-            // let audio = new Audio(allSound[index]);
-
-            // audio.onended = () => {
-            //     index++;
-            //     if (index < allSound.length) {
-            //         audio.src = allSound[index];
-            //         audio.play();
-            //     } else {
-            //         isSpeaking = false;
-            //     }
-            // };
-            // audio.play();
-
-            const utter = new SpeechSynthesisUtterance(
-                `Nomor antrian ${data.number_code}${String(data.number_queue).padStart(3,'0')}, silakan menuju  ${data.called_to}.`
-            );
-
-            utter.lang = "id-ID";
-            utter.rate = 0.9;
-            utter.onend = () => {
+            console.log(data);
+            let arrNumberQ = data.number_queue.split("").map(Number);
+            let front = [
+                "{{ asset('/sound/nomor_antrian.mp3') }}",
+                `{{ asset('/sound/${data.number_code}.mp3') }}`,
+            ];
+            let middle = [];
+            arrNumberQ.forEach(element => {
+                middle.push(`{{ asset('/sound/${element}.mp3') }}`)
+            });
+            let end = [
+                `{{ asset('/sound/silahkan_menuju.mp3') }}`
+            ]
+            let allSound = [...front, ...middle, ...end, ...data.sound];
+            // NEW
+            playSequential(allSound, () => {
                 closeCallOverlay();
-            };
-            speechSynthesis.speak(utter);
+            });
+
+            // const utter = new SpeechSynthesisUtterance(
+            //     `Nomor antrian ${data.number_code}${String(data.number_queue).padStart(3,'0')}, silakan menuju  ${data.called_to}.`
+            // );
+
+            // utter.lang = "id-ID";
+            // utter.rate = 0.9;
+            // utter.onend = () => {
+            //     closeCallOverlay();
+            // };
+            // speechSynthesis.speak(utter);
         }
 
-        // if ("serviceWorker" in navigator) {
-        //     navigator.serviceWorker.register(baseUrl + "/sound_cache.js?baseUrl=" + baseUrl, {
-        //             scope: './'
-        //         })
-        //         .then(reg => {
-        //             console.log("SW terdaftar", reg, navigator.serviceWorker.controller);
+        function playSequential(sounds, onFinish) {
+            let index = 0;
 
-        //             if (navigator.serviceWorker.controller) {
-        //                 navigator.serviceWorker.controller.postMessage({
-        //                     type: "CHECK_CACHE"
-        //                 });
-        //             } else {
-        //                 navigator.serviceWorker.addEventListener('controllerchange', () => {
-        //                     navigator.serviceWorker.controller?.postMessage({
-        //                         type: "CHECK_CACHE"
-        //                     });
-        //                 });
-        //             }
-        //         });
+            function playNext() {
+                if (index >= sounds.length) {
+                    if (onFinish) onFinish();
+                    return;
+                }
 
-        //     navigator.serviceWorker.addEventListener("message", event => {
-        //         if (event.data.type === "CACHE_PROGRESS") {
-        //             const {
-        //                 loaded,
-        //                 total
-        //             } = event.data;
-        //             const percent = Math.round((loaded / total) * 100);
-        //             document.getElementById("progress-bar").style.width = percent + "%";
-        //             document.getElementById("progress-text").innerText = percent + "%";
-        //         }
-        //         if (event.data.type === "CACHE_DONE") {
-        //             document.getElementById("loading-screen").style.display = "none";
-        //             document.getElementById("app-content").classList.remove("hidden");
-        //         }
-        //     });
-        // }
+                const audio = new Audio(sounds[index]);
+                index++;
+
+                audio.onended = playNext;
+                audio.onerror = playNext; // kalau file gagal, lanjut
+                audio.play();
+            }
+
+            playNext();
+        }
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register(baseUrl + "/sound_cache.js?baseUrl=" + baseUrl, {
+                    scope: './'
+                })
+                .then(reg => {
+                    console.log("SW terdaftar", reg, navigator.serviceWorker.controller);
+
+                    if (navigator.serviceWorker.controller) {
+                        navigator.serviceWorker.controller.postMessage({
+                            type: "CHECK_CACHE"
+                        });
+                    } else {
+                        navigator.serviceWorker.addEventListener('controllerchange', () => {
+                            navigator.serviceWorker.controller?.postMessage({
+                                type: "CHECK_CACHE"
+                            });
+                        });
+                    }
+                });
+
+            navigator.serviceWorker.addEventListener("message", event => {
+                if (event.data.type === "CACHE_PROGRESS") {
+                    const {
+                        loaded,
+                        total
+                    } = event.data;
+                    const percent = Math.round((loaded / total) * 100);
+                    document.getElementById("progress-bar").style.width = percent + "%";
+                    document.getElementById("progress-text").innerText = percent + "%";
+                }
+                if (event.data.type === "CACHE_DONE") {
+                    document.getElementById("loading-screen").style.display = "none";
+                    document.getElementById("app-content").classList.remove("hidden");
+                }
+                console.log(event.data.type);
+            });
+        }
 
         function showCallOverlay(numberText, destination) {
             const overlay = document.getElementById("call-overlay");
@@ -238,7 +250,7 @@
             setTimeout(() => {
                 isSpeaking = false;
                 overlay.classList.add("hidden");
-            }, 500); // tunggu animasi keluar
+            }, 3000); // tunggu animasi keluar
         }
     </script>
 @endsection

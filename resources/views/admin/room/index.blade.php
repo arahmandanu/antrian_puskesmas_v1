@@ -14,9 +14,9 @@
                 <div class="panel panel-default">
                     <div class="panel-heading d-flex align-items-center">
                         <span class="fw-bold me-auto">List</span>
-                        <a type="button" href="{{ route('admin.poli.create') }}" class="btn btn-success">
+                        {{-- <a type="button" href="{{ route('admin.poli.create') }}" class="btn btn-success">
                             Tambah Poli <i class="fa fa-plus"></i>
-                        </a>
+                        </a> --}}
                     </div>
                     <!-- /.panel-heading -->
                     <div class="panel-body">

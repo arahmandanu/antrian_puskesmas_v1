@@ -2,6 +2,7 @@
 
 namespace App\Services\Sound;
 
+use App\Http\Resources\TicketCallerResource;
 use App\Models\QueueCaller;
 use App\Models\Room;
 use App\Models\RoomQueue;
@@ -23,7 +24,7 @@ class GetNextCallByFloor extends \App\Services\AbstractService
         if ($existQueue = QueueCaller::nextCalledByLantai($this->lantai)->first()) {
             $existQueue->called = true;
             if ($existQueue->save()) {
-                $nextQueue = Result::success($existQueue, Lang::get('messages.success_retrive_data', [], 'id'));
+                $nextQueue = Result::success(new TicketCallerResource($existQueue), Lang::get('messages.success_retrive_data', [], 'id'));
             }
         }
 
