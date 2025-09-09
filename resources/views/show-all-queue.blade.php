@@ -134,7 +134,6 @@
         }
 
         function soundCallerLocal(data) {
-            console.log(data);
             let arrNumberQ = data.number_queue.split("").map(Number);
             let front = [
                 "{{ asset('/sound/nomor_antrian.mp3') }}",
