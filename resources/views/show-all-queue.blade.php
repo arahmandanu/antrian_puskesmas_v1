@@ -250,7 +250,7 @@
             setTimeout(() => {
                 isSpeaking = false;
                 overlay.classList.add("hidden");
-            }, 3000); // tunggu animasi keluar
+            }, 500); // tunggu animasi keluar
         }
     </script>
 @endsection
