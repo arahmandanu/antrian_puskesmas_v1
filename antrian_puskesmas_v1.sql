@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Waktu pembuatan: 31 Agu 2025 pada 07.28
+-- Waktu pembuatan: 09 Sep 2025 pada 06.57
 -- Versi server: 8.2.0
 -- Versi PHP: 8.2.13
 
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `company` (
 --
 
 INSERT INTO `company` (`id`, `name`, `address`, `active`, `logo`, `printer`, `created_at`, `updated_at`) VALUES
-(1, 'KCP Ciawi', '1437', 1, NULL, NULL, '2025-08-26 17:45:48', '2025-08-26 17:45:48');
+(1, 'KCP Ciawi', '1437', 1, NULL, NULL, '2025-09-09 06:22:43', '2025-09-09 06:22:43');
 
 -- --------------------------------------------------------
 
@@ -102,7 +102,18 @@ CREATE TABLE IF NOT EXISTS `locket_history_call` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `locket_history_call`
+--
+
+INSERT INTO `locket_history_call` (`id`, `locket_code`, `locket_number`, `locket_staff_name`, `number_queue`, `process_time_queue_locket`, `created_at`, `updated_at`) VALUES
+(1, 'A', 1, 'Staff 1', '001', 28, '2025-09-09 06:24:48', '2025-09-09 06:24:48'),
+(2, 'A', 1, 'Staff 1', '002', 1643, '2025-09-09 06:51:48', '2025-09-09 06:51:48'),
+(3, 'A', 1, 'Staff 1', '003', 48, '2025-09-09 06:52:34', '2025-09-09 06:52:34'),
+(4, 'C', 1, 'Staff 1', '001', 1733, '2025-09-09 06:53:15', '2025-09-09 06:53:15'),
+(5, 'B', 1, 'Staff 1', '001', 1746, '2025-09-09 06:53:30', '2025-09-09 06:53:30');
 
 -- --------------------------------------------------------
 
@@ -122,7 +133,18 @@ CREATE TABLE IF NOT EXISTS `locket_queue` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `locket_queue_locket_code_created_at_unique` (`locket_code`,`created_at`),
   KEY `locket_queue_called_created_at_index` (`called`,`created_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `locket_queue`
+--
+
+INSERT INTO `locket_queue` (`id`, `locket_code`, `locket_number`, `number_queue`, `called`, `created_at`, `updated_at`) VALUES
+(1, 'A', 1, '001', 1, '2025-09-09 06:24:20', '2025-09-09 06:24:48'),
+(2, 'C', 1, '001', 1, '2025-09-09 06:24:22', '2025-09-09 06:53:15'),
+(3, 'B', 1, '001', 1, '2025-09-09 06:24:24', '2025-09-09 06:53:30'),
+(4, 'A', 1, '002', 1, '2025-09-09 06:24:25', '2025-09-09 06:51:48'),
+(5, 'A', 1, '003', 1, '2025-09-09 06:51:46', '2025-09-09 06:52:34');
 
 -- --------------------------------------------------------
 
@@ -139,7 +161,15 @@ CREATE TABLE IF NOT EXISTS `locket_staff` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `locket_staff`
+--
+
+INSERT INTO `locket_staff` (`id`, `staff_name`, `locket_number`, `lantai`, `created_at`, `updated_at`) VALUES
+(1, 'Staff 1', '1', 1, '2025-09-09 06:23:35', '2025-09-09 06:23:35'),
+(2, 'Staff 2', '2', 1, '2025-09-09 06:23:42', '2025-09-09 06:23:42');
 
 -- --------------------------------------------------------
 
@@ -290,7 +320,53 @@ CREATE TABLE IF NOT EXISTS `queue_callers` (
   UNIQUE KEY `queue_callers_number_code_created_at_unique` (`number_code`,`created_at`),
   KEY `queue_callers_called_created_at_index` (`called`,`created_at`),
   KEY `queue_callers_owner_id_type_called_created_at_index` (`owner_id`,`type`,`called`,`created_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `queue_callers`
+--
+
+INSERT INTO `queue_callers` (`id`, `owner_id`, `number_code`, `number_queue`, `initiator_name`, `called`, `called_to`, `type`, `lantai`, `created_at`, `updated_at`) VALUES
+(1, 1, 'A', '001', 'PENDAFTARAN', 1, 'loket 1', 'locket', 1, '2025-09-09 06:24:48', '2025-09-09 06:24:49'),
+(2, 1, 'D', '001', 'Poli', 1, 'TB', 'poli', 2, '2025-09-09 06:25:26', '2025-09-09 06:25:27'),
+(3, 1, 'D', '001', 'Poli', 1, 'TB', 'poli', 2, '2025-09-09 06:25:41', '2025-09-09 06:25:41'),
+(4, 1, 'D', '001', 'Poli', 1, 'TB', 'poli', 2, '2025-09-09 06:29:53', '2025-09-09 06:29:54'),
+(5, 1, 'D', '001', 'Poli', 1, 'TB', 'poli', 2, '2025-09-09 06:31:12', '2025-09-09 06:31:14'),
+(6, 1, 'D', '001', 'Poli', 1, 'TB', 'poli', 2, '2025-09-09 06:35:40', '2025-09-09 06:35:41'),
+(7, 2, 'E', '001', 'Poli', 1, 'IMS', 'poli', 2, '2025-09-09 06:36:43', '2025-09-09 06:36:45'),
+(8, 2, 'E', '001', 'Poli', 1, 'IMS', 'poli', 2, '2025-09-09 06:36:55', '2025-09-09 06:36:57'),
+(9, 2, 'E', '001', 'Poli', 1, 'IMS', 'poli', 2, '2025-09-09 06:37:19', '2025-09-09 06:37:21'),
+(10, 2, 'E', '001', 'Poli', 1, 'IMS', 'poli', 2, '2025-09-09 06:37:32', '2025-09-09 06:37:34'),
+(11, 3, 'F', '001', 'Poli', 1, 'FARMASI', 'poli', 2, '2025-09-09 06:37:45', '2025-09-09 06:37:46'),
+(12, 4, 'G', '001', 'Poli', 1, 'SURVEILANS', 'poli', 2, '2025-09-09 06:37:58', '2025-09-09 06:38:01'),
+(13, 5, 'H', '001', 'Poli', 1, 'BPU', 'poli', 2, '2025-09-09 06:38:12', '2025-09-09 06:38:13'),
+(14, 6, 'I', '001', 'Poli', 1, 'GIGI', 'poli', 2, '2025-09-09 06:38:24', '2025-09-09 06:38:25'),
+(15, 7, 'J', '001', 'Poli', 1, 'LAB', 'poli', 2, '2025-09-09 06:38:35', '2025-09-09 06:38:37'),
+(16, 8, 'K', '001', 'Poli', 1, 'LANSIA', 'poli', 2, '2025-09-09 06:38:52', '2025-09-09 06:38:55'),
+(17, 9, 'L', '001', 'Poli', 1, 'CATEN', 'poli', 2, '2025-09-09 06:39:00', '2025-09-09 06:39:01'),
+(18, 9, 'L', '001', 'Poli', 1, 'CATEN', 'poli', 2, '2025-09-09 06:39:58', '2025-09-09 06:39:58'),
+(19, 8, 'K', '001', 'Poli', 1, 'LANSIA', 'poli', 2, '2025-09-09 06:40:01', '2025-09-09 06:40:04'),
+(20, 7, 'J', '001', 'Poli', 1, 'LAB', 'poli', 2, '2025-09-09 06:40:03', '2025-09-09 06:40:07'),
+(21, 6, 'I', '001', 'Poli', 1, 'GIGI', 'poli', 2, '2025-09-09 06:40:41', '2025-09-09 06:40:43'),
+(22, 7, 'J', '001', 'Poli', 1, 'LAB', 'poli', 2, '2025-09-09 06:40:44', '2025-09-09 06:40:49'),
+(23, 8, 'K', '001', 'Poli', 1, 'LANSIA', 'poli', 2, '2025-09-09 06:40:46', '2025-09-09 06:40:52'),
+(24, 9, 'L', '001', 'Poli', 1, 'CATEN', 'poli', 2, '2025-09-09 06:40:49', '2025-09-09 06:40:55'),
+(25, 10, 'M', '001', 'Poli', 1, 'PSIKOLOG', 'poli', 2, '2025-09-09 06:40:53', '2025-09-09 06:40:58'),
+(26, 10, 'M', '001', 'Poli', 1, 'PSIKOLOG', 'poli', 2, '2025-09-09 06:43:36', '2025-09-09 06:43:37'),
+(27, 11, 'N', '001', 'Poli', 1, 'HAJI', 'poli', 2, '2025-09-09 06:43:40', '2025-09-09 06:43:52'),
+(28, 12, 'O', '001', 'Poli', 1, 'AKUPRESUR', 'poli', 2, '2025-09-09 06:43:42', '2025-09-09 06:44:07'),
+(29, 13, 'P', '001', 'Poli', 1, 'PTM', 'poli', 2, '2025-09-09 06:43:44', '2025-09-09 06:44:22'),
+(30, 15, 'R', '001', 'Poli', 1, 'PKPR', 'poli', 2, '2025-09-09 06:43:49', '2025-09-09 06:44:34'),
+(31, 13, 'P', '001', 'Poli', 1, 'PTM', 'poli', 2, '2025-09-09 06:44:49', '2025-09-09 06:44:52'),
+(32, 13, 'P', '001', 'Poli', 1, 'PTM', 'poli', 2, '2025-09-09 06:46:14', '2025-09-09 06:46:16'),
+(33, 14, 'Q', '001', 'Poli', 1, 'MTBS', 'poli', 2, '2025-09-09 06:46:29', '2025-09-09 06:46:31'),
+(34, 15, 'R', '001', 'Poli', 1, 'PKPR', 'poli', 2, '2025-09-09 06:46:49', '2025-09-09 06:46:49'),
+(35, 16, 'S', '001', 'Poli', 1, 'JIWA GIZI', 'poli', 2, '2025-09-09 06:46:52', '2025-09-09 06:47:04'),
+(36, 1, 'A', '002', 'PENDAFTARAN', 1, 'loket 1', 'locket', 1, '2025-09-09 06:51:48', '2025-09-09 06:51:52'),
+(37, 1, 'A', '003', 'PENDAFTARAN', 1, 'loket 1', 'locket', 1, '2025-09-09 06:52:34', '2025-09-09 06:52:34'),
+(38, 1, 'A', '003', 'PENDAFTARAN', 1, 'loket 1', 'locket', 1, '2025-09-09 06:52:46', '2025-09-09 06:52:47'),
+(39, 1, 'C', '001', 'LABORATE', 1, 'loket 1', 'locket', 1, '2025-09-09 06:53:15', '2025-09-09 06:53:18'),
+(40, 1, 'B', '001', 'LANSIA', 1, 'loket 1', 'locket', 1, '2025-09-09 06:53:30', '2025-09-09 06:53:33');
 
 -- --------------------------------------------------------
 
@@ -314,7 +390,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
 --
 
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'admin', 'web', '2025-08-26 17:43:25', '2025-08-26 17:43:25');
+(1, 'admin', 'web', '2025-09-09 06:22:40', '2025-09-09 06:22:40');
 
 -- --------------------------------------------------------
 
@@ -350,14 +426,29 @@ CREATE TABLE IF NOT EXISTS `rooms` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `rooms_code_unique` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data untuk tabel `rooms`
 --
 
 INSERT INTO `rooms` (`id`, `code`, `name`, `current_queue`, `show`, `lantai`, `last_call_queue`, `last_call_time`, `created_at`, `updated_at`) VALUES
-(1, 'D', 'Poli TB', NULL, 1, 1, NULL, NULL, '2025-08-26 17:56:55', '2025-08-30 12:47:47');
+(1, 'D', 'TB', '001', 1, 2, '001', '2025-09-09 13:25:26', '2025-09-09 06:22:40', '2025-09-09 06:25:26'),
+(2, 'E', 'IMS', '001', 1, 2, '001', '2025-09-09 13:36:43', '2025-09-09 06:22:40', '2025-09-09 06:36:43'),
+(3, 'F', 'FARMASI', '001', 1, 2, '001', '2025-09-09 13:37:45', '2025-09-09 06:22:40', '2025-09-09 06:37:45'),
+(4, 'G', 'SURVEILANS', '001', 1, 2, '001', '2025-09-09 13:37:58', '2025-09-09 06:22:40', '2025-09-09 06:37:58'),
+(5, 'H', 'BPU', '001', 1, 2, '001', '2025-09-09 13:38:12', '2025-09-09 06:22:40', '2025-09-09 06:38:12'),
+(6, 'I', 'GIGI', '001', 1, 2, '001', '2025-09-09 13:38:24', '2025-09-09 06:22:40', '2025-09-09 06:38:24'),
+(7, 'J', 'LAB', '001', 1, 2, '001', '2025-09-09 13:38:35', '2025-09-09 06:22:40', '2025-09-09 06:38:35'),
+(8, 'K', 'LANSIA', '001', 1, 2, '001', '2025-09-09 13:38:52', '2025-09-09 06:22:40', '2025-09-09 06:38:52'),
+(9, 'L', 'CATEN', '001', 1, 2, '001', '2025-09-09 13:39:00', '2025-09-09 06:22:40', '2025-09-09 06:39:00'),
+(10, 'M', 'PSIKOLOG', '001', 1, 2, '001', '2025-09-09 13:40:53', '2025-09-09 06:22:40', '2025-09-09 06:40:53'),
+(11, 'N', 'HAJI', '001', 1, 2, '001', '2025-09-09 13:43:40', '2025-09-09 06:22:40', '2025-09-09 06:43:40'),
+(12, 'O', 'AKUPRESUR', '001', 1, 2, '001', '2025-09-09 13:43:42', '2025-09-09 06:22:40', '2025-09-09 06:43:42'),
+(13, 'P', 'PTM', '001', 1, 2, '001', '2025-09-09 13:43:44', '2025-09-09 06:22:40', '2025-09-09 06:43:44'),
+(14, 'Q', 'MTBS', '001', 1, 2, '001', '2025-09-09 13:46:29', '2025-09-09 06:22:40', '2025-09-09 06:46:29'),
+(15, 'R', 'PKPR', '001', 1, 2, '001', '2025-09-09 13:43:49', '2025-09-09 06:22:40', '2025-09-09 06:43:49'),
+(16, 'S', 'JIWA GIZI', '001', 1, 2, '001', '2025-09-09 13:46:52', '2025-09-09 06:22:40', '2025-09-09 06:46:52');
 
 -- --------------------------------------------------------
 
@@ -376,7 +467,29 @@ CREATE TABLE IF NOT EXISTS `room_queues` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `room_queues_room_code_created_at_unique` (`room_code`,`created_at`),
   KEY `room_queues_called_created_at_index` (`called`,`created_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `room_queues`
+--
+
+INSERT INTO `room_queues` (`id`, `room_code`, `number_queue`, `called`, `created_at`, `updated_at`) VALUES
+(1, 'D', '001', 1, '2025-09-09 06:25:17', '2025-09-09 06:25:26'),
+(2, 'E', '001', 1, '2025-09-09 06:25:20', '2025-09-09 06:36:43'),
+(3, 'F', '001', 1, '2025-09-09 06:36:12', '2025-09-09 06:37:45'),
+(4, 'G', '001', 1, '2025-09-09 06:36:15', '2025-09-09 06:37:58'),
+(5, 'H', '001', 1, '2025-09-09 06:36:17', '2025-09-09 06:38:12'),
+(6, 'I', '001', 1, '2025-09-09 06:36:18', '2025-09-09 06:38:24'),
+(7, 'J', '001', 1, '2025-09-09 06:36:20', '2025-09-09 06:38:35'),
+(8, 'K', '001', 1, '2025-09-09 06:36:22', '2025-09-09 06:38:52'),
+(9, 'L', '001', 1, '2025-09-09 06:36:24', '2025-09-09 06:39:00'),
+(10, 'M', '001', 1, '2025-09-09 06:36:25', '2025-09-09 06:40:53'),
+(11, 'N', '001', 1, '2025-09-09 06:36:27', '2025-09-09 06:43:40'),
+(12, 'O', '001', 1, '2025-09-09 06:36:29', '2025-09-09 06:43:42'),
+(13, 'P', '001', 1, '2025-09-09 06:36:31', '2025-09-09 06:43:44'),
+(14, 'Q', '001', 1, '2025-09-09 06:36:33', '2025-09-09 06:46:29'),
+(15, 'R', '001', 1, '2025-09-09 06:36:35', '2025-09-09 06:43:49'),
+(16, 'S', '001', 1, '2025-09-09 06:36:37', '2025-09-09 06:46:52');
 
 -- --------------------------------------------------------
 
@@ -410,7 +523,29 @@ CREATE TABLE IF NOT EXISTS `room_queue_history_calls` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `room_queue_history_calls`
+--
+
+INSERT INTO `room_queue_history_calls` (`id`, `room_code`, `number_queue`, `process_time_queue_room`, `created_at`, `updated_at`) VALUES
+(1, 'D', NULL, 0, '2025-09-09 06:25:26', '2025-09-09 06:25:26'),
+(2, 'E', NULL, 0, '2025-09-09 06:36:43', '2025-09-09 06:36:43'),
+(3, 'F', NULL, 0, '2025-09-09 06:37:45', '2025-09-09 06:37:45'),
+(4, 'G', NULL, 0, '2025-09-09 06:37:58', '2025-09-09 06:37:58'),
+(5, 'H', NULL, 0, '2025-09-09 06:38:12', '2025-09-09 06:38:12'),
+(6, 'I', NULL, 0, '2025-09-09 06:38:24', '2025-09-09 06:38:24'),
+(7, 'J', NULL, 0, '2025-09-09 06:38:35', '2025-09-09 06:38:35'),
+(8, 'K', NULL, 0, '2025-09-09 06:38:52', '2025-09-09 06:38:52'),
+(9, 'L', NULL, 0, '2025-09-09 06:39:00', '2025-09-09 06:39:00'),
+(10, 'M', NULL, 0, '2025-09-09 06:40:53', '2025-09-09 06:40:53'),
+(11, 'N', NULL, 0, '2025-09-09 06:43:40', '2025-09-09 06:43:40'),
+(12, 'O', NULL, 0, '2025-09-09 06:43:42', '2025-09-09 06:43:42'),
+(13, 'P', NULL, 0, '2025-09-09 06:43:44', '2025-09-09 06:43:44'),
+(14, 'R', NULL, 0, '2025-09-09 06:43:49', '2025-09-09 06:43:49'),
+(15, 'Q', NULL, 0, '2025-09-09 06:46:29', '2025-09-09 06:46:29'),
+(16, 'S', NULL, 0, '2025-09-09 06:46:52', '2025-09-09 06:46:52');
 
 -- --------------------------------------------------------
 
@@ -434,7 +569,7 @@ CREATE TABLE IF NOT EXISTS `stat_consoles` (
 --
 
 INSERT INTO `stat_consoles` (`id`, `tanggal`, `Status`, `ActiveDate`, `created_at`, `updated_at`) VALUES
-(1, '20250830', 'active', '20250830', '2025-08-26 17:45:48', '2025-08-30 12:47:47');
+(1, '20250909', 'active', '20250909', '2025-09-09 06:22:43', '2025-09-09 06:22:43');
 
 -- --------------------------------------------------------
 
@@ -461,7 +596,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Admin', 'admin@admin.com', NULL, '$2y$10$CPc4XL4woEVhGa94O9yHBuvj8aPrl8KVVnIGmIrgiYkn/98NpDtta', NULL, '2025-08-26 17:43:26', '2025-08-26 17:43:26');
+(1, 'Admin', 'admin@admin.com', NULL, '$2y$10$rIXgr1irfcZ0yKpc1u0ubeiK86h0BoT7OBLoIiUjep7nXLSgnZxWG', NULL, '2025-09-09 06:22:40', '2025-09-09 06:22:40');
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)

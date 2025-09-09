@@ -2,6 +2,10 @@
 
 @php($noHeader = true)
 
+@php($noFooter = true)
+
+@php($walkFooter = true)
+
 @section('content')
     <input type="hidden" id='lantai' value="{{ $lantai }}">
 
@@ -17,7 +21,7 @@
     <!-- Main Content -->
     <main id="app-content" class="flex-grow flex flex-col items-center p-6 bg-gray-50">
 
-        <h2 class="text-2xl font-semibold text-gray-600 mb-8 text-center">
+        <h2 class="text-2xl font-semibold text-gray-600 mb-2 text-center">
             Nomor Terpanggil
         </h2>
 
@@ -31,7 +35,7 @@
 
         <!-- Grid semua poli -->
         <section id="grid-all"
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 w-full p-3">
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 w-full p-3">
             @forelse ($calledList as $queue)
                 @include('components.queue-card', ['queue' => $queue])
             @empty

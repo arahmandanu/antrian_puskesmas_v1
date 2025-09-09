@@ -322,6 +322,12 @@
   .right-2 {
     right: calc(var(--spacing) * 2);
   }
+  .bottom-0 {
+    bottom: calc(var(--spacing) * 0);
+  }
+  .left-0 {
+    left: calc(var(--spacing) * 0);
+  }
   .z-0 {
     z-index: 0;
   }
@@ -552,6 +558,9 @@
   .max-w-xl {
     max-width: var(--container-xl);
   }
+  .min-w-\[250px\] {
+    min-width: 250px;
+  }
   .flex-1 {
     flex: 1;
   }
@@ -623,9 +632,6 @@
   }
   .justify-items-center {
     justify-items: center;
-  }
-  .gap-1 {
-    gap: calc(var(--spacing) * 1);
   }
   .gap-2 {
     gap: calc(var(--spacing) * 2);
@@ -1114,6 +1120,9 @@
   }
   .break-words {
     overflow-wrap: break-word;
+  }
+  .whitespace-nowrap {
+    white-space: nowrap;
   }
   .text-blue-600 {
     color: var(--color-blue-600);
