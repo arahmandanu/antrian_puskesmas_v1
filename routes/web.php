@@ -18,6 +18,22 @@ Route::middleware(['ValidApps'])->group(function () {
         return view('welcome');
     });
 
+    Route::get('/close/app/killit', function () {
+        $commands = [
+            'powershell Stop-Process -Name "msedge" -Force',
+            'powershell Stop-Process -Name "firefox" -Force'
+        ];
+
+        foreach ($commands as $command) {
+            exec($command, $output, $return_var);
+            if ($return_var === 0) {
+                echo "Perintah berhasil: $command\n";
+            } else {
+                echo "Gagal menjalankan: $command\n";
+            }
+        }
+    })->name('master.CloseApp');
+
     Route::get('/refresh-csrf', function () {
         return response()->json(['csrf_token' => csrf_token()]);
     })->name('refreshToken');

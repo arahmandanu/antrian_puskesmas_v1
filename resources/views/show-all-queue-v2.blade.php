@@ -26,7 +26,7 @@
                         <div class="swiper-wrapper">
                             @forelse ($iklanVideos as $video)
                                 <div class="swiper-slide w-full h-full flex items-center justify-center">
-                                    <video class="object-cover" playsinline muted controls autoplay loop>
+                                    <video class="object-contain" playsinline muted controls autoplay loop>
                                         <source
                                             src="{{ url('/') }}/{{ $video->getPath() }}/{{ $video->getFilename() }}"
                                             type="video/mp4">
@@ -42,7 +42,7 @@
                 <div class="grid grid-cols-1 gap-4 content-start">
                     @foreach ($calledListright as $queue)
                         <div id="{{ $queue['type'] }}-{{ $queue['staff']['id'] }}"
-                            class="bg-green-500 text-center text-white rounded-2xl p-4 flex flex-col justify-center"
+                            class="bg-green-900 text-center text-white rounded-2xl p-4 flex flex-col justify-center"
                             style="width:330px; height:160px;">
 
                             <h3
@@ -56,7 +56,7 @@
                                         value="{{ $queue['queue']['number_code'] }}{{ $queue['queue']['number_queue'] }}">
                                     <span id="current-call">
                                         <span
-                                            class="text-yellow-700">{{ $queue['queue']['number_code'] }}</span><span>{{ $queue['queue']['number_queue'] }}</span>
+                                            class="text-yellow-500">{{ $queue['queue']['number_code'] }}</span><span>{{ $queue['queue']['number_queue'] }}</span>
                                     </span>
                                 @else
                                     <input type="hidden" id="nomor-antrian" value="">
@@ -74,7 +74,7 @@
             <div class="flex flex-wrap gap-4">
                 @foreach ($calledListbottom as $queue)
                     <div id="{{ $queue['type'] }}-{{ $queue['staff']['id'] }}"
-                        class="bg-green-500 text-center text-white rounded-2xl p-4 flex flex-col justify-center"
+                        class="bg-green-900 text-center text-white rounded-2xl p-4 flex flex-col justify-center"
                         style="width:330px; height:160px;">
 
                         <h3
@@ -88,7 +88,7 @@
 
                                 <span id="current-call">
                                     <span
-                                        class="text-yellow-700">{{ $queue['queue']['number_code'] }}</span><span>{{ $queue['queue']['number_queue'] }}</span>
+                                        class="text-yellow-500">{{ $queue['queue']['number_code'] }}</span><span>{{ $queue['queue']['number_queue'] }}</span>
                                 </span>
                             @else
                                 <input type="hidden" id="nomor-antrian" value="">
@@ -147,8 +147,10 @@
         window.addEventListener('resize', resizeVideosImages);
 
         document.addEventListener("DOMContentLoaded", function() {
+            const slides = document.querySelectorAll(".swiper-slide");
+            const loopEnabled = slides.length > 1;
             swiper = new Swiper(".swiper", {
-                loop: true,
+                loop: loopEnabled,
                 autoplay: {
                     delay: 4000, // 4 detik untuk gambar
                     disableOnInteraction: false,

@@ -1016,6 +1016,9 @@
   .bg-green-800 {
     background-color: var(--color-green-800);
   }
+  .bg-green-900 {
+    background-color: var(--color-green-900);
+  }
   .bg-green-900\/70 {
     background-color: color-mix(in srgb, oklch(39.3% 0.095 152.535) 70%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
