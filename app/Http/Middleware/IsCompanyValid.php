@@ -30,10 +30,11 @@ class IsCompanyValid
             $ciphertext = file_get_contents(base_path("cipher.txt"));
             $message = $key->Unlock($ciphertext);
             $registered = json_decode($message, true);
-            if (empty($registered['company_name']) || empty($registered['company_code'])) return $this->out();
+            if (empty($registered['company_name']) || empty($registered['alamat'])) return $this->out();
 
             $validated = true;
         } catch (\Throwable | \Exception | \ErrorException  $th) {
+
             $validated = false;
         }
         if (!$validated) return $this->out();
@@ -51,7 +52,7 @@ class IsCompanyValid
 
         $this->fillTodayStat($data);
         Config::set('mysite.company_name', $registered['company_name']);
-        Config::set('mysite.company_adress', $registered['company_code']);
+        Config::set('mysite.company_adress', $registered['alamat']);
         return $next($request);
     }
 
@@ -86,14 +87,14 @@ class IsCompanyValid
     private function validatCompany($registered)
     {
         $name = $registered['company_name'];
-        $address = $registered['company_code'];
+        $address = $registered['alamat'];
 
         if ($current = Company::first()) {
-            if ($current->name !== $name) {
-                $current->active = false;
-                $current->save();
-                return false;
-            }
+            $current->update([
+                'name' => $name,
+                'address' => $address,
+                'active' => true
+            ]);
         } else {
             Company::create([
                 'name' => $name,

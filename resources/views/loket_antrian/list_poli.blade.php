@@ -147,7 +147,6 @@
             const menit = now.getMinutes().toString().padStart(2, '0');
             const detik = now.getSeconds().toString().padStart(2, '0');
             const tanggalWaktu = `${jam}:${menit}:${detik}`;
-            const printWindow = window.open('', '_blank');
 
             const content = `
         <!DOCTYPE html>
@@ -156,78 +155,74 @@
             <meta charset="UTF-8">
             <title>Nomor Antrian</title>
             <style>
-                * {
-                    box-sizing: border-box;
-                    font-family: 'Times New Roman';
-                }
-                body {
-                    margin:10px;
-                    padding:0;
-                    width:74mm; /* sesuaikan lebar printer 76mm */
-                    font-family: monospace;
-                }
+                * { box-sizing: border-box; font-family: 'Times New Roman'; }
+                body { margin:0; padding:0; width:74mm; font-family: monospace; }
+                h1, p { margin:0; line-height:1; padding:0; }
+                h1 { font-size: 9vw; }
                 #container {
-                    display:inline-block;
-                    width:100%;
-                    text-align:center;
-                    padding:0;
-                    margin:0;
+                    width: 100%;
+                    text-align: center; /* hanya untuk teks, separator tetap full */
                 }
-                h1 {
-                    margin:2px 0;
-                    font-size:6vw;
-                }
-                p.poli-name {
-                    margin:2px 0;
-                    font-weight:bold;
-                    font-size:9vw;
-                }
-                p.queue-number {
-                    margin:2px 0;
-                    font-weight:bold;
-                    font-size:9vw;
-                }
-                p.header-name {
-                    margin:2px 0;
-                    font-size:5vw;
-                }
-                .separator {
-                    border-top:1px solid #000;
-                    margin:2px 0;
-                }
-                #jam-sekarang{
-                    font-size: 5vw;
-                }
+                p.poli-name, p.queue-number { font-weight:bold; font-size:11vw; }
+                p.header-name { font-size:5vw; }
+                #jam-sekarang { font-size:4vw; }
+                .separator { border-top:1px solid #000; margin:2px 0; }
                 @media print {
-                    @page {
-                        size:76mm auto;
-                        margin:0;
-                    }
-                    body { width:76mm; }
+                    @page { size:76mm auto; margin:0; }
+                    body {
+                        margin: 0;
+                        padding: 0;
+                        width: 76mm;
+                        height: auto;             /* atau fixed height kalau pakai struk */
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;  /* center vertical */
+                        align-items: center;      /* center horizontal */
+                        text-align: center;
+                        }
                 }
             </style>
         </head>
         <body>
             <div id="container">
-                <h1>${companyName}</h1>
+                <h1 id="title">${companyName}</h1>
                 <div class="separator"></div>
                 <p class="header-name">Antrian</p>
                 <p class="poli-name">${poliName}</p>
-                </br></br>
                 <p class="queue-number">${queueNumber}</p>
                 <div class="separator"></div>
                 <p id="jam-sekarang">Jam: ${tanggalWaktu}</p>
             </div>
             <script>
-                window.onload = function(){ window.print(); };
+                const el = document.getElementById("title");
+                const words = el.textContent.trim().split(" ");
+                if (words.length > 1) {
+                    el.innerHTML = words[0] + "<br>" + words.slice(1).join(" ");
+                }
             <\/script>
         </body>
         </html>
     `;
 
-            printWindow.document.write(content);
-            printWindow.document.close();
-            printWindow.focus();
+            // buat iframe tersembunyi
+            let iframe = document.createElement('iframe');
+            iframe.style.position = 'absolute';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.border = '0';
+            document.body.appendChild(iframe);
+
+            // tulis konten ke iframe
+            iframe.contentDocument.open();
+            iframe.contentDocument.write(content);
+            iframe.contentDocument.close();
+
+            // print setelah load
+            iframe.onload = function() {
+                iframe.contentWindow.print();
+                // optional: hapus iframe setelah print
+                setTimeout(() => document.body.removeChild(iframe), 1000);
+            };
         }
     </script>
 @endsection
