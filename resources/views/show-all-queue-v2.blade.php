@@ -16,7 +16,7 @@
     </div>
 
     <div id="app-content" class="flex flex-col h-full">
-        <div class="flex-grow grid grid-rows-[76%_19%] gap-4 p-6">
+        <div class="flex-grow grid grid-rows-[75%_20%] gap-4 p-6">
 
             <!-- Baris 1: Video (70%) + Loket kanan -->
             <div class="grid grid-cols-[80%_20%] gap-4">
@@ -46,9 +46,10 @@
                             style="width:330px; height:160px;">
 
                             <h3
-                                class="bg-white text-green-700 rounded px-2 py-1 mx-auto mb-2 text-[clamp(1rem,1.4vw,2.2rem)] font-black">
+                                class="bg-white text-green-700 rounded px-1 mx-auto mb-1 text-[clamp(1rem,1.4vw,2.2rem)] font-black">
                                 {{ $queue['name'] }}
                             </h3>
+
                             <p class="text-[clamp(3rem,4vw,5rem)] font-extrabold">
                                 @if (isset($queue['queue']))
                                     <input type="hidden" id="nomor-antrian"
@@ -77,7 +78,7 @@
                         style="width:330px; height:160px;">
 
                         <h3
-                            class="bg-white text-green-700 rounded px-2 py-1 mx-auto mb-2 text-[clamp(1rem,1.4vw,2.2rem)] font-black">
+                            class="bg-white text-green-700 rounded px-1 mx-auto mb-1 text-[clamp(1rem,1.4vw,2.2rem)] font-black">
                             {{ $queue['name'] }}
                         </h3>
                         <p class="text-[clamp(3rem,4vw,5rem)] font-extrabold">
