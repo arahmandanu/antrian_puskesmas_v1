@@ -12,7 +12,9 @@ class PlaySoundController extends Controller
 {
     public function start(Request $request)
     {
-        return view('play_suara.index');
+        return view(
+            'play_suara.index'
+        );
     }
 
     public function index(Request $request, $lantai)

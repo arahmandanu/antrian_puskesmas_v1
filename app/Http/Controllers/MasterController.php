@@ -110,7 +110,8 @@ class MasterController extends Controller
         }
 
         return view('show-all-queue-v2', [
-            'calledList' => $allList,
+            'calledListright' => array_slice($allList, 0, 4),
+            'calledListbottom' => array_slice($allList, 4, 7),
             'lantai' => $lantai,
             'iklanVideos' => $mp4Files,
             'iklanImages' => $images

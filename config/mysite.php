@@ -8,7 +8,7 @@ return [
     // Total Lantai yang ada
     'total_lantai' => '3',
     // total loket yang ada
-    'total_loket' => '5',
+    'total_loket' => '10',
     // enable disable printer
     'printer_on' => false,
 ];

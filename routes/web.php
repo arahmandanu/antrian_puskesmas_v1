@@ -28,7 +28,7 @@ Route::middleware(['ValidApps'])->group(function () {
         Route::get('/', [App\Http\Controllers\PlaySoundController::class, 'start'])->name('play_suara');
         // Route::get('/choosed_lantai/{lantai}', [App\Http\Controllers\PlaySoundController::class, 'index'])->name('play_suara.choosedLantai');
         Route::get('/choosed_lantai/{lantai}',  [App\Http\Controllers\MasterController::class, 'showAllQueueByLantai'])->name('play_suara.choosedLantai');
-        Route::get('/choosed_lantai_V2/{lantai}',  [App\Http\Controllers\MasterController::class, 'showAllQueueByLantaiV2'])->name('play_suara.choosedLantaiV2');
+        Route::get('/choosed_lantai_v2/{lantai}',  [App\Http\Controllers\MasterController::class, 'showAllQueueByLantaiV2'])->name('play_suara.choosedLantaiV2');
         Route::get('/get_next_call/{lantai}', [App\Http\Controllers\PlaySoundController::class, 'getNextCall'])->name('play_suara.getNextCall');
     });
 

@@ -26,19 +26,11 @@
                         <div class="swiper-wrapper">
                             @forelse ($iklanVideos as $video)
                                 <div class="swiper-slide w-full h-full flex items-center justify-center">
-                                    <video class="object-cover" muted autoplay loop>
+                                    <video class="object-cover" playsinline muted controls autoplay loop>
                                         <source
                                             src="{{ url('/') }}/{{ $video->getPath() }}/{{ $video->getFilename() }}"
                                             type="video/mp4">
                                     </video>
-                                </div>
-                            @empty
-                            @endforelse
-
-                            @forelse ($iklanImages as $image)
-                                <div class="swiper-slide">
-                                    <img src="{{ url('/') }}/{{ $image->getPath() }}/{{ $image->getFilename() }}"
-                                        class="object-cover" alt="iklan 1">
                                 </div>
                             @empty
                             @endforelse
@@ -48,15 +40,29 @@
 
                 <!-- Right: Loket utama -->
                 <div class="grid grid-cols-1 gap-4 content-start">
-                    @foreach (range(1, 4) as $i)
-                        <div class="bg-green-500 text-center text-white rounded-2xl p-4 flex flex-col justify-center"
+                    @foreach ($calledListright as $queue)
+                        <div id="{{ $queue['type'] }}-{{ $queue['staff']['id'] }}"
+                            class="bg-green-500 text-center text-white rounded-2xl p-4 flex flex-col justify-center"
                             style="width:330px; height:160px;">
+
                             <h3
-                                class="bg-white text-green-700 rounded px-2 py-1 mx-auto mb-2 text-[clamp(0.8rem,1.2vw,2rem)] font-bold">
-                                Loket {{ $i }}
+                                class="bg-white text-green-700 rounded px-2 py-1 mx-auto mb-2 text-[clamp(1rem,1.4vw,2.2rem)] font-black">
+                                {{ $queue['name'] }}
                             </h3>
                             <p class="text-[clamp(3rem,4vw,5rem)] font-extrabold">
-                                <span class="text-yellow-700">A</span><span class="text-white">999</span>
+                                @if (isset($queue['queue']))
+                                    <input type="hidden" id="nomor-antrian"
+                                        value="{{ $queue['queue']['number_code'] }}{{ $queue['queue']['number_queue'] }}">
+                                    <span id="current-call">
+                                        <span
+                                            class="text-yellow-700">{{ $queue['queue']['number_code'] }}</span><span>{{ $queue['queue']['number_queue'] }}</span>
+                                    </span>
+                                @else
+                                    <input type="hidden" id="nomor-antrian" value="">
+                                    <span id="current-call">
+                                        --
+                                    </span>
+                                @endif
                             </p>
                         </div>
                     @endforeach
@@ -65,15 +71,30 @@
 
             <!-- Baris 2: Loket tambahan -->
             <div class="flex flex-wrap gap-4">
-                @foreach (range(4, 8) as $i)
-                    <div class="bg-green-500 text-center text-white rounded-2xl p-4 flex flex-col justify-center"
+                @foreach ($calledListbottom as $queue)
+                    <div id="{{ $queue['type'] }}-{{ $queue['staff']['id'] }}"
+                        class="bg-green-500 text-center text-white rounded-2xl p-4 flex flex-col justify-center"
                         style="width:330px; height:160px;">
+
                         <h3
-                            class="bg-white text-green-700 rounded px-2 py-1 mx-auto mb-2 text-[clamp(0.8rem,1.2vw,2rem)] font-bold">
-                            Loket {{ $i }}
+                            class="bg-white text-green-700 rounded px-2 py-1 mx-auto mb-2 text-[clamp(1rem,1.4vw,2.2rem)] font-black">
+                            {{ $queue['name'] }}
                         </h3>
                         <p class="text-[clamp(3rem,4vw,5rem)] font-extrabold">
-                            <span class="text-yellow-700">B</span><span class="text-white">999</span>
+                            @if (isset($queue['queue']))
+                                <input type="hidden" id="nomor-antrian"
+                                    value="{{ $queue['queue']['number_code'] }}{{ $queue['queue']['number_queue'] }}">
+
+                                <span id="current-call">
+                                    <span
+                                        class="text-yellow-700">{{ $queue['queue']['number_code'] }}</span><span>{{ $queue['queue']['number_queue'] }}</span>
+                                </span>
+                            @else
+                                <input type="hidden" id="nomor-antrian" value="">
+                                <span id="current-call">
+                                    --
+                                </span>
+                            @endif
                         </p>
                     </div>
                 @endforeach
@@ -83,8 +104,24 @@
     </div>
 
     <script>
+        window.addEventListener("resize", resizeContent);
+        window.addEventListener("load", resizeContent);
+
+        let isRequesting = false; // flag untuk API
+        let isSpeaking = false; // flag untuk suara
+        let lastCallId = null;
+        let lantai = document.getElementById('lantai').value;
+        let swiper;
+        const audioCache = {};
+        // let soundEnabled = false;
+        let baseUrl = document
+            .querySelector('meta[name="base-url"]')
+            .getAttribute('content');
+
+        setInterval(updateAntrian, 3000);
+
         function resizeVideosImages() {
-            const container = document.getElementById('container_adds');
+            container = document.getElementById('container_adds');
             if (!container) return;
 
             const videos = container.querySelectorAll('video');
@@ -99,7 +136,6 @@
             });
 
             images.forEach(image => {
-                console.log(image);
                 image.style.width = width + 'px';
                 image.style.height = height + 'px';
             });
@@ -110,7 +146,7 @@
         window.addEventListener('resize', resizeVideosImages);
 
         document.addEventListener("DOMContentLoaded", function() {
-            const swiper = new Swiper(".swiper", {
+            swiper = new Swiper(".swiper", {
                 loop: true,
                 autoplay: {
                     delay: 4000, // 4 detik untuk gambar
@@ -126,8 +162,8 @@
                 if (video) {
                     swiper.autoplay.stop(); // hentikan autoplay swiper
                     video.currentTime = 0; // mulai dari awal
+                    video.muted = false; // atur volume sesuai kebutuhan
                     video.play();
-
                     // Hapus event sebelumnya biar tidak numpuk
                     video.onended = null;
 
@@ -140,7 +176,33 @@
                     swiper.autoplay.start();
                 }
             });
+
+            let initVideo = getCurrentVideo();
+            if (initVideo) {
+                try {
+                    initVideo.muted = false; // if you want sound
+                    initVideo.volume = 0.9;
+                    initVideo.play().catch(err => {
+                        console.warn("Autoplay prevented:", err);
+                        // fallback: mute and play
+                        initVideo.muted = true;
+                        initVideo.play().catch(err2 => console.error("Still can't play:", err2));
+                    });
+                } catch (err) {
+                    console.error("Video play error:", err);
+                }
+            }
         });
+
+        function getCurrentVideo() {
+            if (!swiper) {
+                console.warn("Swiper is not initialized yet!");
+                return null;
+            }
+            const activeSlide = swiper.slides[swiper.activeIndex];
+            if (!activeSlide) return null;
+            return activeSlide.querySelector("video") || null;
+        }
 
         function resizeContent() {
             const header = document.querySelector('header');
@@ -157,36 +219,7 @@
             content.style.minHeight = availableHeight + "px";
         }
 
-        window.addEventListener("resize", resizeContent);
-        window.addEventListener("load", resizeContent);
-
-        let isRequesting = false; // flag untuk API
-        let isSpeaking = false; // flag untuk suara
-        let lastCallId = null;
-        let lantai = document.getElementById('lantai').value;
-        const audioCache = {};
-        // let soundEnabled = false;
-        let baseUrl = document
-            .querySelector('meta[name="base-url"]')
-            .getAttribute('content');
-
-        setInterval(updateAntrian, 3000);
-
-        // document.getElementById('enable-sound').addEventListener('click', () => {
-        //     soundEnabled = true;
-
-        // Test suara awal (agar browser mengizinkan speechSynthesis)
-        // const testUtter = new SpeechSynthesisUtterance("Suara berhasil diaktifkan");
-        // testUtter.lang = "id-ID";
-        // speechSynthesis.speak(testUtter);
-
-        // Hilangkan tombol setelah diklik
-        // document.getElementById('sound-container').style.display = "none";
-        // });
-
         function updateAntrian() {
-            // Jika sedang request atau sedang speaking, skip
-            // if (!soundEnabled) return;
             if (isRequesting || isSpeaking) return;
 
             isRequesting = true;
@@ -206,29 +239,30 @@
                             // lastCallId = data.id;
 
                             // Update current call
-                            let box;
+                            let input;
                             if (data.type == 'locket') {
-                                box = document.querySelector(
-                                    `#${data.type}-${data.owner_id} .nomor-antrian`);
+                                input = document.querySelector(
+                                    `#${data.type}-${data.owner_id} #nomor-antrian`);
                             } else {
-                                box = document.querySelector(`#poli-${data.owner_id} .nomor-antrian`);
+                                input = document.querySelector(`#poli-${data.owner_id} #nomor-antrian`);
                             }
 
-                            if (!box) return;
-                            // if (box.textContent == data.number_code + data.number_queue) return;
-
-                            box.textContent = data.number_code + data.number_queue ?? "-";
-                            // animasi
-                            box.classList.add("animate-pulse");
-                            box.classList.remove("animate-pulse");
-
-                            showCallOverlay(data.number_code + String(data.number_queue).padStart(3, '0'), data
-                                .called_to);
-
-                            // if (soundEnabled) {
+                            if (!input) return;
+                            const currentVideo = getCurrentVideo();
+                            if (currentVideo) {
+                                console.log("Current video:", currentVideo);
+                                // Optional: play it or mute
+                                currentVideo.muted = true;
+                                currentVideo.play();
+                            }
+                            const parent = input.parentElement; // ambil parent container
+                            const spanFromParent = parent.querySelector("#current-call");
+                            spanFromParent.innerHTML =
+                                `<span
+                                        class="text-yellow-700">${data.number_code}</span><span>${data.number_queue}</span>`;
+                            input.value = data.number_code + data.number_queue ?? "-";
                             isSpeaking = true;
                             soundCallerLocal(data);
-                            // }
                         }
                     }
                 },
@@ -257,7 +291,14 @@
             let allSound = [...front, ...middle, ...end, ...data.sound];
             // NEW
             playSequential(allSound, () => {
-                closeCallOverlay();
+                const currentVideo = getCurrentVideo();
+                if (currentVideo) {
+                    console.log("Current video:", currentVideo.src);
+                    // Optional: play it or mute
+                    currentVideo.muted = false;
+                    currentVideo.play();
+                }
+                isSpeaking = false;
             });
 
             // const utter = new SpeechSynthesisUtterance(
@@ -349,36 +390,6 @@
                     document.getElementById("app-content").classList.remove("hidden");
                 }
             });
-        }
-
-        function showCallOverlay(numberText, destination) {
-            const overlay = document.getElementById("call-overlay");
-            const popup = document.getElementById("call-popup");
-            const numberEl = document.getElementById("call-number");
-            const destEl = document.getElementById("call-destination");
-
-            numberEl.textContent = numberText;
-            destEl.textContent = destination;
-
-            overlay.classList.remove("hidden");
-
-            requestAnimationFrame(() => {
-                popup.classList.remove("opacity-0", "scale-90");
-                popup.classList.add("opacity-100", "scale-100");
-            });
-        }
-
-        function closeCallOverlay() {
-            const overlay = document.getElementById("call-overlay");
-            const popup = document.getElementById("call-popup");
-
-            popup.classList.remove("opacity-100", "scale-100");
-            popup.classList.add("opacity-0", "scale-90");
-
-            setTimeout(() => {
-                isSpeaking = false;
-                overlay.classList.add("hidden");
-            }, 500); // tunggu animasi keluar
         }
     </script>
 @endsection
