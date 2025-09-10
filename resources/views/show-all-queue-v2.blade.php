@@ -1,14 +1,11 @@
 @extends('shared.main')
 
 @php($noHeader = false)
-
 @php($noFooter = true)
-
 @php($walkFooter = true)
 
 @section('content')
     <input type="hidden" id='lantai' value="{{ $lantai }}">
-
     <!-- Loading Screen -->
     <div id="loading-screen" class="fixed inset-0 bg-white flex flex-col items-center justify-center z-50">
         <div class="w-80 bg-gray-200 rounded-full h-4 overflow-hidden">
@@ -18,32 +15,151 @@
         <p class="text-sm text-gray-400 mt-2">Memuat asset...</p>
     </div>
 
-    <!-- Main Content -->
-    <main id="app-content" class="flex-grow flex flex-col items-center p-6">
-        <!-- Grid semua poli -->
-        <section id="grid-all"
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 w-full p-3">
-            @forelse ($calledList as $queue)
-                @include('components.queue-card', ['queue' => $queue])
-            @empty
-                <div class="col-span-full text-center text-gray-400 py-8">Tidak ada antrian yang sedang dipanggil.</div>
-            @endforelse
-        </section>
-    </main>
+    <div id="app-content" class="flex flex-col h-full">
+        <div class="flex-grow grid grid-rows-[76%_19%] gap-4 p-6">
 
-    <!-- Overlay popup panggilan -->
-    <div id="call-overlay"
-        class="hidden fixed inset-0 backdrop-blur-md bg-green-500/30 flex items-center justify-center z-50">
-        <div id="call-popup"
-            class="bg-white/90 text-green-700 font-extrabold rounded-2xl
-                shadow-xl px-16 py-12 opacity-0 scale-90 transition-all duration-500 text-center">
-            <div id="call-number" class="text-[12vw] leading-none">A001</div>
-            <div id="call-destination" class="mt-6 text-[4vw] text-gray-800 font-bold tracking-tight leading-tight">Menuju
-                Poli Umum</div>
+            <!-- Baris 1: Video (70%) + Loket kanan -->
+            <div class="grid grid-cols-[80%_20%] gap-4">
+                <!-- Left: Video -->
+                <div id="container_adds" class="rounded-2xl overflow-hidden">
+                    <div class="swiper swiper absolute inset-0 w-full h-full">
+                        <div class="swiper-wrapper">
+                            @forelse ($iklanVideos as $video)
+                                <div class="swiper-slide w-full h-full flex items-center justify-center">
+                                    <video class="object-cover" muted autoplay loop>
+                                        <source
+                                            src="{{ url('/') }}/{{ $video->getPath() }}/{{ $video->getFilename() }}"
+                                            type="video/mp4">
+                                    </video>
+                                </div>
+                            @empty
+                            @endforelse
+
+                            @forelse ($iklanImages as $image)
+                                <div class="swiper-slide">
+                                    <img src="{{ url('/') }}/{{ $image->getPath() }}/{{ $image->getFilename() }}"
+                                        class="object-cover" alt="iklan 1">
+                                </div>
+                            @empty
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Loket utama -->
+                <div class="grid grid-cols-1 gap-4 content-start">
+                    @foreach (range(1, 4) as $i)
+                        <div class="bg-green-500 text-center text-white rounded-2xl p-4 flex flex-col justify-center"
+                            style="width:330px; height:160px;">
+                            <h3
+                                class="bg-white text-green-700 rounded px-2 py-1 mx-auto mb-2 text-[clamp(0.8rem,1.2vw,2rem)] font-bold">
+                                Loket {{ $i }}
+                            </h3>
+                            <p class="text-[clamp(3rem,4vw,5rem)] font-extrabold">
+                                <span class="text-yellow-700">A</span><span class="text-white">999</span>
+                            </p>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Baris 2: Loket tambahan -->
+            <div class="flex flex-wrap gap-4">
+                @foreach (range(4, 8) as $i)
+                    <div class="bg-green-500 text-center text-white rounded-2xl p-4 flex flex-col justify-center"
+                        style="width:330px; height:160px;">
+                        <h3
+                            class="bg-white text-green-700 rounded px-2 py-1 mx-auto mb-2 text-[clamp(0.8rem,1.2vw,2rem)] font-bold">
+                            Loket {{ $i }}
+                        </h3>
+                        <p class="text-[clamp(3rem,4vw,5rem)] font-extrabold">
+                            <span class="text-yellow-700">B</span><span class="text-white">999</span>
+                        </p>
+                    </div>
+                @endforeach
+            </div>
+
         </div>
     </div>
 
     <script>
+        function resizeVideosImages() {
+            const container = document.getElementById('container_adds');
+            if (!container) return;
+
+            const videos = container.querySelectorAll('video');
+            const images = container.querySelectorAll('img');
+
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            videos.forEach(video => {
+                video.style.width = width + 'px';
+                video.style.height = height + 'px';
+            });
+
+            images.forEach(image => {
+                console.log(image);
+                image.style.width = width + 'px';
+                image.style.height = height + 'px';
+            });
+        }
+
+        // Jalankan saat load & resize
+        window.addEventListener('load', resizeVideosImages);
+        window.addEventListener('resize', resizeVideosImages);
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const swiper = new Swiper(".swiper", {
+                loop: true,
+                autoplay: {
+                    delay: 4000, // 4 detik untuk gambar
+                    disableOnInteraction: false,
+                },
+            });
+
+            swiper.on("slideChangeTransitionEnd", function() {
+                const activeSlide = swiper.slides[swiper.activeIndex];
+                const video = activeSlide.querySelector("video");
+
+                // Jika slide ada video
+                if (video) {
+                    swiper.autoplay.stop(); // hentikan autoplay swiper
+                    video.currentTime = 0; // mulai dari awal
+                    video.play();
+
+                    // Hapus event sebelumnya biar tidak numpuk
+                    video.onended = null;
+
+                    video.onended = () => {
+                        swiper.slideNext(); // pindah slide setelah video selesai
+                        swiper.autoplay.start(); // aktifkan autoplay lagi
+                    };
+                } else {
+                    // Kalau slide bukan video, pastikan autoplay tetap berjalan
+                    swiper.autoplay.start();
+                }
+            });
+        });
+
+        function resizeContent() {
+            const header = document.querySelector('header');
+            const footer = document.querySelector('footer');
+            const marque = document.getElementById('marque'); // kalau ada running text
+
+            const content = document.querySelector('#app-content'); // kasih id di yield content
+
+            const headerHeight = header ? header.offsetHeight : 0;
+            const footerHeight = footer ? footer.offsetHeight : 0;
+            const marqueHeight = marque ? marque.offsetHeight : 0;
+
+            const availableHeight = window.innerHeight - (headerHeight + footerHeight + marqueHeight);
+            content.style.minHeight = availableHeight + "px";
+        }
+
+        window.addEventListener("resize", resizeContent);
+        window.addEventListener("load", resizeContent);
+
         let isRequesting = false; // flag untuk API
         let isSpeaking = false; // flag untuk suara
         let lastCallId = null;

@@ -17,9 +17,21 @@
     <meta name="base-url" content="{{ url('/') }}">
     <meta name="company-name" content="{{ Config::get('mysite.company_name', 'KOSONG') }}">
     <meta name="address-name" content="{{ Config::get('mysite.company_adress', 'KOSONG') }}">
+    <style>
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url('{{ asset('images/bg.png') }}');
+            background-size: cover;
+            background-position: center;
+            filter: blur(90px);
+            z-index: -1;
+        }
+    </style>
 </head>
 
-<body class="bg-gray-100 flex flex-col min-h-screen">
+<body class="bg-green-200 flex flex-col min-h-screen">
 
     @if (!isset($noHeader) || $noHeader === false)
         @include('shared.header')
@@ -34,14 +46,7 @@
 
     @if (isset($walkFooter))
         @if ($walkFooter === true)
-            <!-- Marquee Text (Fixed at Bottom) -->
-            <div class="fixed bottom-0 left-0 w-full bg-green-600 text-white py-2 overflow-hidden z-50">
-                <div class="marquee whitespace-nowrap text-lg font-semibold">
-                    Selamat datang di Puskesmas • Tetap jaga kesehatan Anda • Mohon menunggu panggilan nomor antrian
-                    dengan
-                    tertib • Terima kasih atas kerjasamanya
-                </div>
-            </div>
+            @include('shared.marque')
         @endif
     @endif
     <script>
