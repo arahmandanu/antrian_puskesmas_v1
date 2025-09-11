@@ -253,7 +253,6 @@
                             if (!input) return;
                             const currentVideo = getCurrentVideo();
                             if (currentVideo) {
-                                console.log("Current video:", currentVideo);
                                 // Optional: play it or mute
                                 currentVideo.muted = true;
                                 currentVideo.play();
@@ -264,8 +263,10 @@
                                 `<span
                                         class="text-yellow-700">${data.number_code}</span><span>${data.number_queue}</span>`;
                             input.value = data.number_code + data.number_queue ?? "-";
+                            const parentDiv = input.parentElement.parentElement;
+                            parentDiv.classList.add("animate-infinite-pulse-glow");
                             isSpeaking = true;
-                            soundCallerLocal(data);
+                            soundCallerLocal(data, parentDiv);
                         }
                     }
                 },
@@ -278,7 +279,7 @@
             });
         }
 
-        function soundCallerLocal(data) {
+        function soundCallerLocal(data, objectToAnimate) {
             let arrNumberQ = data.number_queue.split("").map(Number);
             let front = [
                 "{{ asset('/sound/nomor_antrian.mp3') }}",
@@ -302,6 +303,7 @@
                     currentVideo.play();
                 }
                 isSpeaking = false;
+                objectToAnimate.classList.remove("animate-infinite-pulse-glow");
             });
 
             // const utter = new SpeechSynthesisUtterance(

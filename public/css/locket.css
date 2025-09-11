@@ -70,3 +70,34 @@
         }
     }
 
+    @keyframes infinitePulseGlow {
+
+        0%,
+        100% {
+            transform: scale(1) rotate(0deg);
+            box-shadow: 0 0 0 rgba(255, 255, 0, 0);
+            opacity: 1;
+        }
+
+        25% {
+            transform: scale(1.05) rotate(-1deg);
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.7);
+            opacity: 0.9;
+        }
+
+        50% {
+            transform: scale(1.1) rotate(1deg);
+            box-shadow: 0 0 30px rgba(255, 255, 0, 0.9);
+            opacity: 1;
+        }
+
+        75% {
+            transform: scale(1.05) rotate(-1deg);
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.7);
+            opacity: 0.9;
+        }
+    }
+
+    .animate-infinite-pulse-glow {
+        animation: infinitePulseGlow 1.5s ease-in-out infinite;
+    }
