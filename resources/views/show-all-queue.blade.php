@@ -239,7 +239,6 @@
         }
 
         function showCallOverlay(code, number, destination) {
-            console.log(code, number)
             const overlay = document.getElementById("call-overlay");
             const popup = document.getElementById("call-popup");
             // const numberEl = document.getElementById("call-number");
