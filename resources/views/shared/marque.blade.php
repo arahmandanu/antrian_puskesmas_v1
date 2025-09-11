@@ -1,5 +1,5 @@
 <!-- Marquee Text (Fixed at Bottom) -->
-<div id="marque" class="fixed bottom-0 left-0 w-full h-16 overflow-hidden z-50 bg-green-800 bg-opacity-70">
+<div id="marque" class="fixed bottom-0 left-0 w-full h-16 overflow-hidden z-50 bg-green-600 bg-opacity-70">
     <!-- Background hitam di sisi kiri untuk jam, lebih stylish -->
     <div id="footer-time-bg" onclick="closeApp()"
         class="absolute left-0 top-0 h-full w-40 bg-gradient-to-b from-gray-900 via-black to-gray-800 z-20
