@@ -1,18 +1,49 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Aplikasi Antrian Puskesmas
 
-## About App
+**Dibuat oleh: Adrian Rahmandanu**
+[GitHub Saya](https://github.com/USERNAME)  <!-- Ganti USERNAME dengan username GitHub-mu -->
 
-Aplikasi ini di buat untuk antrian puskesmas, dimana free bisa di gunakan oleh siapa saja :).
+---
 
+## Deskripsi
 
-## Code of Conduct
+Aplikasi Antrian Puskesmas adalah sistem yang dirancang untuk mempermudah manajemen antrian pasien di Puskesmas. Dengan aplikasi ini, pasien dapat melihat nomor antrian secara real-time, sedangkan petugas dapat memanggil pasien dengan lebih efisien. Tujuan utama aplikasi ini adalah mengurangi waktu tunggu dan meningkatkan pengalaman pasien di layanan kesehatan.
 
-Iseng-iseng buat antrian.
+---
 
-## Security Vulnerabilities
+## Fitur
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **Pendaftaran Antrian**: Pasien dapat mendaftar dan mendapatkan nomor antrian secara online.
+- **Pemanggilan Antrian**: Petugas dapat memanggil nomor antrian dengan suara dan tampilan digital.
+- **Dashboard Real-time**: Monitoring antrian secara langsung untuk petugas dan pasien.
+- **Riwayat Antrian**: Menyimpan data antrian sebelumnya untuk keperluan laporan.
+- **Responsif & User-friendly**: Tampilan yang mudah digunakan di berbagai perangkat.
 
-## License
+---
 
-By Adrian Rahmandanu.
+## Teknologi yang Digunakan
+
+- **Frontend**: HTML, CSS, Tailwind CSS, JavaScript
+- **Backend**: PHP / Laravel (sesuaikan dengan implementasi)
+- **Database**: MySQL / PostgreSQL
+- **Realtime**: WebSocket / Pusher (jika ada fitur notifikasi real-time)
+
+---
+
+## Cara Menjalankan Aplikasi
+
+1. Clone repository ini
+   ```bash
+   git clone https://github.com/USERNAME/nama-repo.git
+
+2. Install dependensi
+    ```bash composer install
+    npm install
+3. Konfigurasi .env sesuai kebutuhan (database, API, dll.)
+4. Jalankan server lokal
+    php artisan serve
+5. Buka aplikasi melalui browser di http://localhost:8000
+
+Lisensi
+
+MIT License © Adrian Rahmandanu
