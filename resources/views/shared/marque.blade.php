@@ -10,7 +10,8 @@
     <!-- Marquee Text berjalan di belakang background jam -->
     <div
         class="marquee absolute top-1/2 left-0 transform -translate-y-1/2 whitespace-nowrap text-2xl font-thin z-10 pl-44 text-white">
-        Selamat datang di Puskesmas • Tetap jaga kesehatan Anda • Mohon menunggu panggilan nomor antrian dengan tertib •
+        Selamat datang di {{ Config::get('mysite.company_name', 'KOSONG') }} • Tetap jaga kesehatan Anda • Mohon
+        menunggu panggilan nomor antrian dengan tertib •
         Terima kasih atas kerjasamanya
     </div>
 </div>
