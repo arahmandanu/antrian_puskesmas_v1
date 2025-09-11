@@ -34,7 +34,7 @@ Aplikasi Antrian Puskesmas adalah sistem yang dirancang untuk mempermudah manaje
 
 1. Clone repository ini
    ```bash
-   git clone https://github.com/USERNAME/nama-repo.git
+   git clone https://github.com/arahmandanu/antrian_puskesmas_v1.git
 
 2. Install dependensi
     ```bash composer install
