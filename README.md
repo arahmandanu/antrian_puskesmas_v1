@@ -1,7 +1,7 @@
 # Aplikasi Antrian Puskesmas
 
 **Dibuat oleh: Adrian Rahmandanu**
-[GitHub Saya](https://github.com/USERNAME)  <!-- Ganti USERNAME dengan username GitHub-mu -->
+[GitHub Saya](https://github.com/arahmandanu)  <!-- Ganti USERNAME dengan username GitHub-mu -->
 
 ---
 
