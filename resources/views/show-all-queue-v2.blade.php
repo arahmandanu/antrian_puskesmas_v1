@@ -25,13 +25,23 @@
                     <div class="swiper swiper absolute inset-0 w-full h-full">
                         <div class="swiper-wrapper">
                             @forelse ($iklanVideos as $video)
-                                <div class="swiper-slide w-full h-full flex items-center justify-center">
-                                    <video class="object-contain" playsinline muted controls autoplay loop>
-                                        <source
-                                            src="{{ url('/') }}/{{ $video->getPath() }}/{{ $video->getFilename() }}"
-                                            type="video/mp4">
-                                    </video>
-                                </div>
+                                @if ($loop->first)
+                                    <div class="swiper-slide w-full h-full flex items-center justify-center">
+                                        <video class="object-contain" playsinline muted controls>
+                                            <source
+                                                src="{{ url('/') }}/{{ $video->getPath() }}/{{ $video->getFilename() }}"
+                                                type="video/mp4">
+                                        </video>
+                                    </div>
+                                @else
+                                    <div class="swiper-slide w-full h-full flex items-center justify-center">
+                                        <video class="object-contain" playsinline muted controls>
+                                            <source
+                                                src="{{ url('/') }}/{{ $video->getPath() }}/{{ $video->getFilename() }}"
+                                                type="video/mp4">
+                                        </video>
+                                    </div>
+                                @endif
                             @empty
                             @endforelse
                         </div>
@@ -147,55 +157,41 @@
         window.addEventListener('resize', resizeVideosImages);
 
         document.addEventListener("DOMContentLoaded", function() {
+            const allVideos = document.querySelectorAll(".swiper-slide video");
+            allVideos.forEach(v => {
+                v.pause();
+                v.currentTime = 0;
+                v.muted = true; // optional
+            });
+
             const slides = document.querySelectorAll(".swiper-slide");
             const loopEnabled = slides.length > 1;
             swiper = new Swiper(".swiper", {
                 loop: loopEnabled,
-                autoplay: {
-                    delay: 4000, // 4 detik untuk gambar
-                    disableOnInteraction: false,
-                },
             });
 
-            swiper.on("slideChangeTransitionEnd", function() {
-                const activeSlide = swiper.slides[swiper.activeIndex];
-                const video = activeSlide.querySelector("video");
-
-                // Jika slide ada video
-                if (video) {
-                    swiper.autoplay.stop(); // hentikan autoplay swiper
-                    video.currentTime = 0; // mulai dari awal
-                    video.muted = false; // atur volume sesuai kebutuhan
-                    video.play();
-                    // Hapus event sebelumnya biar tidak numpuk
-                    video.onended = null;
-
-                    video.onended = () => {
-                        swiper.slideNext(); // pindah slide setelah video selesai
-                        swiper.autoplay.start(); // aktifkan autoplay lagi
-                    };
-                } else {
-                    // Kalau slide bukan video, pastikan autoplay tetap berjalan
-                    swiper.autoplay.start();
-                }
-            });
-
-            let initVideo = getCurrentVideo();
-            if (initVideo) {
-                try {
-                    initVideo.muted = false; // if you want sound
-                    initVideo.volume = 0.9;
-                    initVideo.play().catch(err => {
-                        console.warn("Autoplay prevented:", err);
-                        // fallback: mute and play
-                        initVideo.muted = true;
-                        initVideo.play().catch(err2 => console.error("Still can't play:", err2));
-                    });
-                } catch (err) {
-                    console.error("Video play error:", err);
-                }
-            }
+            playActiveSlideVideo();
+            swiper.on("slideChangeTransitionEnd", playActiveSlideVideo);
         });
+
+        function playActiveSlideVideo() {
+            const activeSlide = swiper.slides[swiper.activeIndex];
+            const video = activeSlide.querySelector("video");
+            // Pause all others
+            const allVideos = document.querySelectorAll(".swiper-slide video");
+            allVideos.forEach(v => {
+                if (v !== video) v.pause();
+            });
+            if (video) {
+                video.currentTime = 0;
+                video.muted = false; // optional for sound
+                video.play().catch(err => console.warn("Play error", err));
+                video.onended = () => {
+                    swiper.slideNext();
+                };
+            }
+        }
+
 
         function getCurrentVideo() {
             if (!swiper) {
