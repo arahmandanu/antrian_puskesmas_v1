@@ -298,8 +298,10 @@
                     currentVideo.muted = false;
                     currentVideo.play();
                 }
-                isSpeaking = false;
                 objectToAnimate.classList.remove("animate-infinite-pulse-glow");
+                setTimeout(() => {
+                    isSpeaking = false;
+                }, 2000);
             });
 
             // const utter = new SpeechSynthesisUtterance(
