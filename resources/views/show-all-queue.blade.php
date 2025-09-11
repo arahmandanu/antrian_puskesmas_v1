@@ -37,7 +37,10 @@
         <div id="call-popup"
             class="bg-white/90 text-green-700 font-extrabold rounded-2xl
                 shadow-xl px-16 py-12 opacity-0 scale-90 transition-all duration-500 text-center">
-            <div id="call-number" class="text-[12vw] leading-none">A001</div>
+            <div id="call-number" class=" leading-none">
+                <span class="text-[12vw] text-yellow-500" id="call-number-code"></span>
+                <span class="text-[12vw]" id="call-number-queue"></span>
+            </div>
             <div id="call-destination" class="mt-6 text-[4vw] text-gray-800 font-bold tracking-tight leading-tight">Menuju
                 Poli Umum</div>
         </div>
@@ -106,7 +109,7 @@
                             box.classList.add("animate-pulse");
                             box.classList.remove("animate-pulse");
 
-                            showCallOverlay(data.number_code + String(data.number_queue).padStart(3, '0'), data
+                            showCallOverlay(data.number_code, String(data.number_queue).padStart(3, '0'), data
                                 .called_to);
 
                             // if (soundEnabled) {
@@ -235,13 +238,18 @@
             });
         }
 
-        function showCallOverlay(numberText, destination) {
+        function showCallOverlay(code, number, destination) {
+            console.log(code, number)
             const overlay = document.getElementById("call-overlay");
             const popup = document.getElementById("call-popup");
-            const numberEl = document.getElementById("call-number");
-            const destEl = document.getElementById("call-destination");
+            // const numberEl = document.getElementById("call-number");
+            const numberElCode = document.getElementById("call-number-code");
+            const numberElNumber = document.getElementById("call-number-queue");
 
-            numberEl.textContent = numberText;
+            const destEl = document.getElementById("call-destination");
+            numberElCode.innerText = code;
+            numberElNumber.innerText = number;
+            // numberEl.textContent = numberText;
             destEl.textContent = destination;
 
             overlay.classList.remove("hidden");
