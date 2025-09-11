@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enum\LocketList;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class QueueController extends Controller
 {
@@ -14,7 +16,7 @@ class QueueController extends Controller
      */
     public function currentQueue($code)
     {
-        dd($code);
+        return $this->customResponse((new \App\Services\Locket\GetLastCallByCode($code))->handle());
     }
 
     /**

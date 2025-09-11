@@ -45,6 +45,16 @@ class QueueCaller extends Model
             ->orderBy('id', 'asc');
     }
 
+    public function scopeLastCallByCode($query, $code, $limit = 10)
+    {
+        return $query
+            ->where('number_code', $code)
+            ->where('called', true)
+            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->limit($limit)
+            ->orderBy('id', 'desc');
+    }
+
     public function scopeLastCalled($query, $lantai, $limit = 10)
     {
         return $query
