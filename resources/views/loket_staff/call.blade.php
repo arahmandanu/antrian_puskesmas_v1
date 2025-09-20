@@ -226,7 +226,7 @@
                 data: {},
                 dataType: "JSON",
                 success: function(response) {
-                    console.log(response);
+                    // console.log(response);
                 },
                 error: function(response) {
                     Swal.fire({

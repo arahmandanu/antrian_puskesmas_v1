@@ -1,4 +1,6 @@
 const CACHE_NAME = "sound-cache";
+let cachingFinished = false; // track if caching is done
+let cachingPromise = null;   // track install process
 const urlParams = new URL(self.location).searchParams;
 const BASE_URL = urlParams.get("baseUrl");
 const AUDIO_BASE_URL = `${BASE_URL}/sound/`;
@@ -21,7 +23,7 @@ function sendMessageToClients(msg) {
 }
 
 self.addEventListener("install", (event) => {
-    event.waitUntil((async () => {
+    cachingPromise = (async () => {
         const cache = await caches.open(CACHE_NAME);
         let loaded = 0;
 
@@ -46,9 +48,11 @@ self.addEventListener("install", (event) => {
         }
 
         // Apapun hasilnya, tetap kirim selesai
+        cachingFinished = true;
         sendMessageToClients({ type: "CACHE_DONE" });
-    })());
+    })();
 
+    event.waitUntil(cachingPromise);
     self.skipWaiting();
 });
 
@@ -60,7 +64,22 @@ self.addEventListener("message", async (event) => {
     if (event.data?.type === "CHECK_CACHE") {
         const cache = await caches.open(CACHE_NAME);
         const keys = await cache.keys();
-        sendMessageToClients({ type: "CACHE_PROGRESS", loaded: keys.length, total: ASSETS_TO_CACHE.length });
-        sendMessageToClients({ type: "CACHE_DONE" });
+
+        // Always report progress
+        sendMessageToClients({
+            type: "CACHE_PROGRESS",
+            loaded: keys.length,
+            total: ASSETS_TO_CACHE.length
+        });
+
+        if (cachingFinished) {
+            // already done → safe to send done
+            sendMessageToClients({ type: "CACHE_DONE" });
+        } else if (cachingPromise) {
+            // wait until cachingPromise resolves
+            cachingPromise.then(() => {
+                sendMessageToClients({ type: "CACHE_DONE" });
+            });
+        }
     }
 });

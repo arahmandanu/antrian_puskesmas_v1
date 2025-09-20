@@ -10,6 +10,8 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 var CACHE_NAME = "sound-cache";
+var cachingFinished = false; // track if caching is done
+var cachingPromise = null; // track install process
 var urlParams = new URL(self.location).searchParams;
 var BASE_URL = urlParams.get("baseUrl");
 var AUDIO_BASE_URL = "".concat(BASE_URL, "/sound/");
@@ -44,7 +46,7 @@ function sendMessageToClients(msg) {
   });
 }
 self.addEventListener("install", function (event) {
-  event.waitUntil(_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+  cachingPromise = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
     var cache, loaded, _iterator, _step, file, match, response, _t, _t2;
     return _regenerator().w(function (_context) {
       while (1) switch (_context.p = _context.n) {
@@ -120,6 +122,7 @@ self.addEventListener("install", function (event) {
           return _context.f(15);
         case 16:
           // Apapun hasilnya, tetap kirim selesai
+          cachingFinished = true;
           sendMessageToClients({
             type: "CACHE_DONE"
           });
@@ -127,7 +130,8 @@ self.addEventListener("install", function (event) {
           return _context.a(2);
       }
     }, _callee, null, [[4, 10], [2, 14, 15, 16]]);
-  }))());
+  }))();
+  event.waitUntil(cachingPromise);
   self.skipWaiting();
 });
 self.addEventListener("activate", function (event) {
@@ -152,14 +156,25 @@ self.addEventListener("message", /*#__PURE__*/function () {
           return cache.keys();
         case 2:
           keys = _context2.v;
+          // Always report progress
           sendMessageToClients({
             type: "CACHE_PROGRESS",
             loaded: keys.length,
             total: ASSETS_TO_CACHE.length
           });
-          sendMessageToClients({
-            type: "CACHE_DONE"
-          });
+          if (cachingFinished) {
+            // already done → safe to send done
+            sendMessageToClients({
+              type: "CACHE_DONE"
+            });
+          } else if (cachingPromise) {
+            // wait until cachingPromise resolves
+            cachingPromise.then(function () {
+              sendMessageToClients({
+                type: "CACHE_DONE"
+              });
+            });
+          }
         case 3:
           return _context2.a(2);
       }
