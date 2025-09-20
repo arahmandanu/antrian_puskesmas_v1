@@ -18,18 +18,21 @@ class MasterController extends Controller
         $allLocketLantai = LocketStaff::where('lantai', $lantai)->get()->toArray();
 
         $sub = DB::table('queue_callers')
-            ->selectRaw('number_code, MAX(id) as max_id')
+            ->selectRaw('owner_id, MAX(id) as max_id')
             ->where('called', true)
+            ->where('lantai', $lantai)
             ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
-            ->groupBy('number_code');
+            ->groupBy('owner_id');
 
         $latestCalled = DB::table('queue_callers as q')
             ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
             ->joinSub($sub, 't', function ($join) {
                 $join->on('q.id', '=', 't.max_id');
-            })->get();
-
+            })
+            ->where('q.lantai', $lantai)
+            ->get();
         $allList = [];
+
         foreach (array_merge($allLocketLantai, $allRoomLantai) as $staff) {
             $collect = ['staff' => $staff];
             foreach ($latestCalled as $calledQueue) {
@@ -76,16 +79,19 @@ class MasterController extends Controller
         $allLocketLantai = LocketStaff::where('lantai', $lantai)->get()->toArray();
 
         $sub = DB::table('queue_callers')
-            ->selectRaw('number_code, MAX(id) as max_id')
+            ->selectRaw('owner_id, MAX(id) as max_id')
             ->where('called', true)
+            ->where('lantai', $lantai)
             ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
-            ->groupBy('number_code');
+            ->groupBy('owner_id');
 
         $latestCalled = DB::table('queue_callers as q')
             ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
             ->joinSub($sub, 't', function ($join) {
                 $join->on('q.id', '=', 't.max_id');
-            })->get();
+            })
+            ->where('q.lantai', $lantai)
+            ->get();
 
         $allList = [];
         foreach (array_merge($allLocketLantai, $allRoomLantai) as $staff) {
