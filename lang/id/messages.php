@@ -19,5 +19,6 @@ return [
     'empty_queue' => 'Antrian anda kosong',
     'already_called' => 'Antrian sudah dipanggil, silahkan klik recall.',
     'success_call' => 'Berhasil memanggil antrian',
-    'next_queue_is_empty' => 'Antrial selanjutnya kosong'
+    'next_queue_is_empty' => 'Antrial selanjutnya kosong',
+    'locket_not_found' => 'Loket tidak ditemukan',
 ];

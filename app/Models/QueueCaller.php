@@ -36,6 +36,16 @@ class QueueCaller extends Model
             ->first();
     }
 
+    public function scopeLastCallByOwnerid($query, $ownerId, $type, $limit = 10)
+    {
+        return $query->where('owner_id', $ownerId)
+            ->where('type', $type)
+            ->where('called', true)
+            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->limit($limit)
+            ->orderBy('id', 'desc');
+    }
+
     public function scopeNextCalledByLantai($query, $lantai)
     {
         return $query
