@@ -232,7 +232,6 @@
                     document.getElementById("progress-text").innerText = percent + "%";
                 }
                 if (event.data.type === "CACHE_DONE") {
-                    console.log("tes");
                     document.getElementById("loading-screen").style.display = "none";
                     document.getElementById("app-content").classList.remove("hidden");
                 }
