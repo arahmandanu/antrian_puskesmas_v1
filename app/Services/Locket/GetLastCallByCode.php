@@ -17,7 +17,7 @@ class GetLastCallByCode extends \App\Services\AbstractService
 {
     protected $code;
     protected bool $isLocket;
-    protected int $locketCode;
+    protected string $locketCode;
     public function __construct($code)
     {
         $this->code = $code;
@@ -30,7 +30,7 @@ class GetLastCallByCode extends \App\Services\AbstractService
         try {
             $data = null;
             if ($this->isLocket) {
-                $locket = LocketStaff::where('locket_number', $this->locketCode)->first();
+                $locket = LocketStaff::where('locket_number', $this->letterToNumber($this->locketCode))->first();
                 if (!$locket) {
                     return Result::failure(Lang::get('messages.locket_not_found', [], 'id'), null);
                 }

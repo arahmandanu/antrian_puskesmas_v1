@@ -9,7 +9,11 @@ const AUDIO_BASE_URL = `${BASE_URL}/sound/`;
 const letters = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
 // Angka 0-9
 const numbers = Array.from({ length: 10 }, (_, i) => String(i));
-const custom = ['akupresur', 'bpu', 'caten', 'farmasi', 'gigi', 'haji', 'ims', 'jiwa gizi', 'lab', 'lansia', 'loket', 'mtbs', 'nomor_antrian', 'pkpr', 'poli', 'polijiwagizi', 'psikolog', 'ptm', 'ruang', 'silahkan_menuju', 'surveilans']
+const custom = [
+    'akupresur', 'bpu', 'caten', 'farmasi', 'gigi', 'haji', 'ims', 'jiwa gizi',
+    'lab', 'lansia', 'loket', 'mtbs', 'nomor_antrian', 'pkpr', 'poli',
+    'polijiwagizi', 'psikolog', 'ptm', 'ruang', 'silahkan_menuju', 'surveilans'
+];
 // Gabungkan
 const alphanumeric = [...letters, ...numbers, ...custom];
 
@@ -25,9 +29,9 @@ function sendMessageToClients(msg) {
 self.addEventListener("install", (event) => {
     cachingPromise = (async () => {
         const cache = await caches.open(CACHE_NAME);
-        let loaded = 0;
 
-        for (let file of ASSETS_TO_CACHE) {
+        for (let i = 0; i < ASSETS_TO_CACHE.length; i++) {
+            const file = ASSETS_TO_CACHE[i];
             try {
                 const match = await cache.match(file);
                 if (!match) {
@@ -43,8 +47,12 @@ self.addEventListener("install", (event) => {
                 console.error("❌ Error cache:", file, err);
             }
 
-            loaded++;
-            sendMessageToClients({ type: "CACHE_PROGRESS", loaded, total: ASSETS_TO_CACHE.length });
+            // report based on index, so max = total
+            sendMessageToClients({
+                type: "CACHE_PROGRESS",
+                loaded: i + 1,
+                total: ASSETS_TO_CACHE.length
+            });
         }
 
         // Apapun hasilnya, tetap kirim selesai
@@ -68,15 +76,13 @@ self.addEventListener("message", async (event) => {
         // Always report progress
         sendMessageToClients({
             type: "CACHE_PROGRESS",
-            loaded: keys.length,
+            loaded: Math.min(keys.length, ASSETS_TO_CACHE.length),
             total: ASSETS_TO_CACHE.length
         });
 
         if (cachingFinished) {
-            // already done → safe to send done
             sendMessageToClients({ type: "CACHE_DONE" });
         } else if (cachingPromise) {
-            // wait until cachingPromise resolves
             cachingPromise.then(() => {
                 sendMessageToClients({ type: "CACHE_DONE" });
             });
