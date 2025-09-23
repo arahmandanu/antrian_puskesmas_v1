@@ -11,4 +11,6 @@ return [
     'total_loket' => '6',
     // enable disable printer
     'printer_on' => false,
+    // all video volume
+    'video_volume' => 0.5,
 ];

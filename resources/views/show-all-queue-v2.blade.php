@@ -123,6 +123,7 @@
         let lastCallId = null;
         let lantai = document.getElementById('lantai').value;
         let swiper;
+        const volume = {{ config('mysite.video_volume', 7) }};
         const audioCache = {};
         // let soundEnabled = false;
         let baseUrl = document
@@ -185,6 +186,7 @@
             if (video) {
                 video.currentTime = 0;
                 video.muted = false; // optional for sound
+                video.volume = volume;
                 video.play().catch(err => console.warn("Play error", err));
                 video.onended = () => {
                     swiper.slideNext();
