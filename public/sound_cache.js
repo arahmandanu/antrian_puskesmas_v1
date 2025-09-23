@@ -146,17 +146,9 @@ self.addEventListener("message", /*#__PURE__*/function () {
             loaded: Math.min(keys.length, ASSETS_TO_CACHE.length),
             total: ASSETS_TO_CACHE.length
           });
-          if (cachingFinished) {
-            sendMessageToClients({
-              type: "CACHE_DONE"
-            });
-          } else if (cachingPromise) {
-            cachingPromise.then(function () {
-              sendMessageToClients({
-                type: "CACHE_DONE"
-              });
-            });
-          }
+          sendMessageToClients({
+            type: "CACHE_DONE"
+          });
         case 3:
           return _context2.a(2);
       }

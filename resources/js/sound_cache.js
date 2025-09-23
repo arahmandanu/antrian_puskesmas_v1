@@ -80,12 +80,6 @@ self.addEventListener("message", async (event) => {
             total: ASSETS_TO_CACHE.length
         });
 
-        if (cachingFinished) {
-            sendMessageToClients({ type: "CACHE_DONE" });
-        } else if (cachingPromise) {
-            cachingPromise.then(() => {
-                sendMessageToClients({ type: "CACHE_DONE" });
-            });
-        }
+        sendMessageToClients({ type: "CACHE_DONE" });
     }
 });
