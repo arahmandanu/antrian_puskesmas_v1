@@ -13,4 +13,7 @@ return [
     'printer_on' => false,
     // all video volume
     'video_volume' => 0.5,
+    // Sound Call version
+    // isi v1 atau v2
+    'sound_version' => 'v2',
 ];

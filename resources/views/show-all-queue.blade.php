@@ -51,29 +51,16 @@
         let isSpeaking = false; // flag untuk suara
         let lastCallId = null;
         let lantai = document.getElementById('lantai').value;
+        let callVersion = "{{ config('mysite.sound_version', 'v2') }}";
         const audioCache = {};
-        // let soundEnabled = false;
+
         let baseUrl = document
             .querySelector('meta[name="base-url"]')
             .getAttribute('content');
 
         setInterval(updateAntrian, 3000);
 
-        // document.getElementById('enable-sound').addEventListener('click', () => {
-        //     soundEnabled = true;
-
-        // Test suara awal (agar browser mengizinkan speechSynthesis)
-        // const testUtter = new SpeechSynthesisUtterance("Suara berhasil diaktifkan");
-        // testUtter.lang = "id-ID";
-        // speechSynthesis.speak(testUtter);
-
-        // Hilangkan tombol setelah diklik
-        // document.getElementById('sound-container').style.display = "none";
-        // });
-
         function updateAntrian() {
-            // Jika sedang request atau sedang speaking, skip
-            // if (!soundEnabled) return;
             if (isRequesting || isSpeaking) return;
 
             isRequesting = true;
@@ -134,10 +121,16 @@
                 "{{ asset('/sound/nomor_antrian.mp3') }}",
                 `{{ asset('/sound/${data.number_code}.mp3') }}`,
             ];
+
             let middle = [];
-            arrNumberQ.forEach(element => {
-                middle.push(`{{ asset('/sound/${element}.mp3') }}`)
-            });
+            if (data.hasOwnProperty('middle_sound') && callVersion === 'v2') {
+                middle = data.middle_sound;
+            } else {
+                arrNumberQ.forEach(element => {
+                    middle.push(`{{ asset('/sound/${element}.mp3') }}`)
+                });
+            }
+
             let end = [
                 `{{ asset('/sound/silahkan_menuju.mp3') }}`
             ]

@@ -125,7 +125,8 @@
         let swiper;
         const volume = {{ config('mysite.video_volume', 7) }};
         const audioCache = {};
-        // let soundEnabled = false;
+        let callVersion = "{{ config('mysite.sound_version', 'v2') }}";
+
         let baseUrl = document
             .querySelector('meta[name="base-url"]')
             .getAttribute('content');
@@ -283,10 +284,16 @@
                 "{{ asset('/sound/nomor_antrian.mp3') }}",
                 `{{ asset('/sound/${data.number_code}.mp3') }}`,
             ];
+
             let middle = [];
-            arrNumberQ.forEach(element => {
-                middle.push(`{{ asset('/sound/${element}.mp3') }}`)
-            });
+            if (data.hasOwnProperty('middle_sound') && callVersion === 'v2') {
+                middle = data.middle_sound;
+            } else {
+                arrNumberQ.forEach(element => {
+                    middle.push(`{{ asset('/sound/${element}.mp3') }}`)
+                });
+            }
+
             let end = [
                 `{{ asset('/sound/silahkan_menuju.mp3') }}`
             ]
