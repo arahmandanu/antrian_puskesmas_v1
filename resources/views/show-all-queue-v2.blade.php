@@ -27,7 +27,7 @@
                             @forelse ($iklanVideos as $video)
                                 @if ($loop->first)
                                     <div class="swiper-slide w-full h-full flex items-center justify-center">
-                                        <video class="object-contain" playsinline muted controls>
+                                        <video class="object-contain" autoplay playsinline muted controls>
                                             <source
                                                 src="{{ url('/') }}/{{ $video->getPath() }}/{{ $video->getFilename() }}"
                                                 type="video/mp4">
@@ -172,8 +172,28 @@
                 loop: loopEnabled,
             });
 
-            playActiveSlideVideo();
-            swiper.on("slideChangeTransitionEnd", playActiveSlideVideo);
+
+            if (slides.length > 1) {
+                // Multiple videos → slider logic
+                playActiveSlideVideo();
+                swiper.on("slideChangeTransitionEnd", playActiveSlideVideo);
+            } else if (slides.length === 1) {
+                // Single video → just autoplay and loop
+                const video = slides[0].querySelector("video");
+                if (video) {
+                    video.currentTime = 0;
+                    video.muted = true; // must start muted
+                    video.loop = true; // loop forever
+                    video.volume = volume;
+
+                    video.play().then(() => {
+                        // unmute AFTER autoplay succeeds
+                        setTimeout(() => {
+                            video.muted = false;
+                        }, 1000);
+                    }).catch(err => console.warn("Play error", err));
+                }
+            }
         });
 
         function playActiveSlideVideo() {
@@ -186,7 +206,7 @@
             });
             if (video) {
                 video.currentTime = 0;
-                video.muted = false; // optional for sound
+                video.muted = isSpeaking ? true : false; // optional for sound
                 video.volume = volume;
                 video.play().catch(err => console.warn("Play error", err));
                 video.onended = () => {
@@ -250,12 +270,17 @@
                             }
 
                             if (!input) return;
-                            const currentVideo = getCurrentVideo();
-                            if (currentVideo) {
-                                // Optional: play it or mute
-                                currentVideo.muted = true;
-                                currentVideo.play();
-                            }
+                            isSpeaking = true;
+                            document.querySelectorAll(".swiper-slide video").forEach(v => {
+                                v.muted = true;
+                            });
+
+                            // const currentVideo = getCurrentVideo();
+                            // if (currentVideo) {
+                            //     // Optional: play it or mute
+                            //     currentVideo.muted = true;
+                            //     currentVideo.play();
+                            // }
                             const parent = input.parentElement; // ambil parent container
                             const spanFromParent = parent.querySelector("#current-call");
                             spanFromParent.innerHTML =
@@ -264,7 +289,6 @@
                             input.value = data.number_code + data.number_queue ?? "-";
                             const parentDiv = input.parentElement.parentElement;
                             parentDiv.classList.add("animate-infinite-pulse-glow");
-                            isSpeaking = true;
                             soundCallerLocal(data, parentDiv);
                         }
                     }
@@ -302,7 +326,6 @@
             playSequential(allSound, () => {
                 const currentVideo = getCurrentVideo();
                 if (currentVideo) {
-                    console.log("Current video:", currentVideo.src);
                     // Optional: play it or mute
                     currentVideo.muted = false;
                     currentVideo.play();
