@@ -10,7 +10,7 @@
                     @forelse ($iklanVideos as $video)
                         <div class="swiper-slide flex items-center justify-center bg-grey">
                             <video class="w-full h-full" muted autoplay loop>
-                                <source src="{{ $video->getPath() }}/{{ $video->getFilename() }}" type="video/mp4">
+                                <source src="{{ asset('asset_loket/' . $video->getFilename()) }}" type="video/mp4">
                             </video>
                         </div>
                     @empty
@@ -18,7 +18,7 @@
 
                     @forelse ($iklanImages as $image)
                         <div class="swiper-slide">
-                            <img src="{{ $image->getPath() }}/{{ $image->getFilename() }}"
+                            <img src="{{ asset('asset_loket/' . $image->getFilename()) }}"
                                 class="w-full h-full object-cover" alt="iklan 1">
                         </div>
                     @empty

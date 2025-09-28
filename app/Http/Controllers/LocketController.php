@@ -17,12 +17,12 @@ class LocketController extends Controller
 {
     public function index()
     {
-        $videos = File::files('public/asset_loket');
+        $videos = File::files(public_path('asset_loket'));
         $mp4Files = array_filter($videos, function ($file) {
             return $file->getExtension() === 'mp4';
         });
 
-        $filesImage = File::files('public/asset_loket');
+        $filesImage = File::files(public_path('asset_loket'));
         $images = array_filter($filesImage, function ($file) {
             $ext = strtolower($file->getExtension());
             return in_array($ext, ['jpg', 'jpeg', 'webp']);

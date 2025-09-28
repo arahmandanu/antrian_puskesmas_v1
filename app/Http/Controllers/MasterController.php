@@ -64,12 +64,13 @@ class MasterController extends Controller
     {
         if (!in_array($lantai, range(1, config('mysite.total_lantai')))) return abort(404);
 
-        $videos = File::files('public/iklan_videos');
+
+        $videos = File::files(public_path('iklan_videos'));
         $mp4Files = array_filter($videos, function ($file) {
             return $file->getExtension() === 'mp4';
         });
 
-        $filesImage = File::files('public/iklan_images');
+        $filesImage = File::files(public_path('iklan_images'));
         $images = array_filter($filesImage, function ($file) {
             $ext = strtolower($file->getExtension());
             return in_array($ext, ['jpg', 'jpeg', 'webp']);
