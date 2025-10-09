@@ -1,7 +1,8 @@
 <!-- Navigation -->
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="navbar-header">
-        <a class="navbar-brand" href="{{ route('admin.dashboard') }}">Puskesman Sehat Sentosa</a>
+        <a class="navbar-brand"
+            href="{{ route('admin.dashboard') }}">{{ Config::get('mysite.company_name', 'KOSONG') }}</a>
     </div>
 
     <ul class="nav navbar-right navbar-top-links">

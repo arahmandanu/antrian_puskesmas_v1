@@ -91,7 +91,6 @@ class TicketCallerResource extends JsonResource
             $sound[] = $this->listSound['puluh'];
 
             $remainder = $number % 10;
-            // dd($remainder);
             if ($remainder > 0) {
                 $sound = array_merge($sound, $this->numberToSound($remainder));
             }
