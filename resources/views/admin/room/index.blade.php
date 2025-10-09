@@ -28,6 +28,7 @@
                                         <th>Nama</th>
                                         <th>Tampilkan</th>
                                         <th>Lantai</th>
+                                        <th>Depedensi</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -40,15 +41,17 @@
                                                 {!! $room->show ? '<i class="fa fa-check">' : '<i class="fa  fa-close">' !!}
                                             </td>
                                             <td>{{ $room->lantai }}</td>
+                                            <td>
+                                                @forelse ($room->dependencies as $item)
+                                                    <label for="">{{ $item->name }}</label>
+                                                @empty
+                                                    -
+                                                @endforelse
+                                            </td>
                                             <td class="center">
                                                 <a type="button" href="{{ route('admin.poli.edit', $room->id) }}"
                                                     class="btn btn-success btn-circle"><i class="fa fa-pencil"></i>
                                                 </a>
-
-                                                {{-- @if (Auth()->user()->hasRole('admin'))
-                                                    <button type="button" class="btn btn-danger btn-circle"><i
-                                                            class="fa fa-trash"></i></button>
-                                                @endif --}}
                                             </td>
                                         </tr>
                                     @endforeach

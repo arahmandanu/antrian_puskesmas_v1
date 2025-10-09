@@ -90,4 +90,40 @@ class Room extends Model
     {
         return $query->where('show', '=', true);
     }
+
+    public function scopeCanAddAsRequired($query, $currentRoomId)
+    {
+        return $query->where('id', '!=', $currentRoomId)
+            ->where(function ($q) use ($currentRoomId) {
+                $q->where(function ($sub) {
+                    // Room yang bebas (tidak punya dependency, dan tidak dibutuhkan)
+                    $sub->whereDoesntHave('dependencies')
+                        ->whereDoesntHave('requiredBy');
+                })
+                    ->orWhereHas('requiredBy', function ($sub) use ($currentRoomId) {
+                        // Room yang sudah jadi dependency dari room yang sedang diedit
+                        $sub->where('room_id', $currentRoomId);
+                    });
+            });
+    }
+
+    public function dependencies()
+    {
+        return $this->belongsToMany(
+            Room::class,
+            'room_dependencies',
+            'room_id',
+            'required_room_id'
+        )->withTimestamps();
+    }
+
+    public function requiredBy()
+    {
+        return $this->belongsToMany(
+            Room::class,
+            'room_dependencies',
+            'required_room_id',
+            'room_id'
+        )->withTimestamps();
+    }
 }

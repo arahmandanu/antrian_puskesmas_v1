@@ -67,8 +67,23 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-success">Submit</button>
+                            <div class="form-group">
+                                <label>Dependensi</label>
+                                <div class="radio">
 
+                                    @forelse ($roomsNoDepedency as $item)
+                                        <label>
+                                            <input type="checkbox" name="dependencies[]" value="{{ $item->id }}"
+                                                {{ in_array($item->id, $poli->dependencies->pluck('id')->toArray()) ? 'checked' : '' }}>
+                                            {{ $item->name }} ({{ $item->code }})
+                                        </label>
+                                        <br>
+                                    @empty
+                                    @endforelse
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-success">Submit</button>
                             <button type="reset" class="btn btn-warning">Reset</button>
                         </form>
                     </div>

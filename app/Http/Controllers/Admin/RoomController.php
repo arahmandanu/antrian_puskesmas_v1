@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateRoomRequest;
 use App\Models\Room;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,7 @@ class RoomController extends Controller
     {
         return view('admin.room.index', [
             'rooms' => Room::all(),
+            'roomsNoDepedency' => Room::whereDoesntHave('requiredBy')->get(),
         ]);
     }
 
@@ -78,7 +80,8 @@ class RoomController extends Controller
         return view('admin.room.edit', [
             'poli' => $poli,
             'availableCodes' => (new Room)->availableCodes($poli->code),
-            'lantaiOptions' => range(1, config('mysite.total_lantai'))
+            'lantaiOptions' => range(1, config('mysite.total_lantai')),
+            'roomsNoDepedency' =>   Room::CanAddAsRequired($poli->id)->get(),
         ]);
     }
 
@@ -89,16 +92,16 @@ class RoomController extends Controller
      * @param  \App\Models\Room  $room
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Room $poli)
+    public function update(UpdateRoomRequest $request, Room $poli)
     {
-        $validatedData = $request->validate([
-            'code' => 'required|string|max:1|unique:rooms,code,' . $poli->id,
-            'name' => 'required|string|max:255',
-            'lantai' => 'required|integer|in:' . implode(',', range(1, config('mysite.total_lantai'))),
-            'show' => 'required|boolean',
-        ]);
+        $validatedData = $request->validated();
 
         if ($poli->update($validatedData)) {
+            if (isset($validatedData['dependencies'])) {
+                $poli->dependencies()->sync($validatedData['dependencies']);
+            } else {
+                $poli->dependencies()->detach();
+            }
             flash()->success('Poli berhasil diperbarui.');
             return redirect()->route('admin.poli.edit', ['poli' => $poli->id]);
         } else {
