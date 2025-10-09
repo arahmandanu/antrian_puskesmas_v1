@@ -31,6 +31,19 @@ class CallQueue extends \App\Services\AbstractService
         $error = false;
         DB::beginTransaction();
         try {
+            if ($this->room->requiredBy()->exists()) {
+                $roomRequired = $this->room->requiredBy;
+                if ($exist = RoomQueue::whereIn('room_code', $roomRequired->pluck('code')->toArray())
+                    ->where('called', true)
+                    ->where('status', \App\Enum\RoomQueueStatus::WAITING->value)
+                    ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                    ->first()
+                ) {
+                    DB::rollBack();
+                    return Result::failure(Lang::get('messages.have_unfinished_queue', ['queue' => $exist->formatAsQueueNumber()], 'id'), null);
+                }
+            }
+
             $pendingExist = (new QueueCaller)->isExistPendingByOwnerid($this->room->id, 'poli');
             if ($pendingExist) {
                 DB::rollBack();

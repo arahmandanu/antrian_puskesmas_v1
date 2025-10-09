@@ -27,6 +27,12 @@
                 class="btn-touch flex items-center gap-3 bg-yellow-500 text-white text-2xl px-8 py-4 rounded-xl shadow-lg hover:bg-yellow-600 transition gap-x-3">
                 <i class="fa fa-refresh"></i> Recall
             </button>
+            @if (!$showHistory)
+                <button id="btn-selesai"
+                    class="btn-touch flex items-center gap-3 bg-red-600 text-white text-2xl px-8 py-4 rounded-xl shadow-lg hover:bg-red-700 transition gap-x-3">
+                    <i class="fa fa-check"></i> Selesai
+                </button>
+            @endif
         </div>
 
         <!-- Daftar antrian belum dipanggil -->
@@ -40,15 +46,17 @@
             </div>
         </div>
 
-        <!-- Riwayat panggilan -->
-        <div class="mt-10 w-full max-w-xl">
-            <h3 class="text-lg font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                <i class="fa fa-history text-gray-600"></i> Riwayat Panggilan:
-            </h3>
-            <ul id="riwayat-panggilan" class="space-y-2 text-lg text-gray-800">
-                <!-- Riwayat akan muncul di sini -->
-            </ul>
-        </div>
+        @if ($showHistory)
+            <!-- Riwayat panggilan -->
+            <div class="mt-10 w-full max-w-xl">
+                <h3 class="text-lg font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                    <i class="fa fa-history text-gray-600"></i> Riwayat Panggilan:
+                </h3>
+                <ul id="riwayat-panggilan" class="space-y-2 text-lg text-gray-800">
+                    <!-- Riwayat akan muncul di sini -->
+                </ul>
+            </div>
+        @endif
     </main>
 
     <script>
@@ -64,6 +72,7 @@
 
         const btnPanggil = document.getElementById("btn-panggil");
         const btnRecall = document.getElementById("btn-recall");
+        const btnSelesai = document.getElementById("btn-selesai");
         let poliId = document.getElementById("poli_id").value;
         let poliCode = document.getElementById("poli_code").value;
         let poliName = document.getElementById("poli_name").value;
@@ -130,6 +139,7 @@
         }
 
         function renderHistory() {
+            if (!riwayatEl) return; // jika elemen riwayat tidak ada, keluar dari fungsi
             riwayatEl.innerHTML = "";
             historyList.slice().forEach(num => {
                 const li = document.createElement("li");
@@ -161,6 +171,56 @@
                             renderWaitingList();
                         }
                     }
+                }
+            });
+        }
+
+        if (btnSelesai) {
+            btnSelesai.addEventListener("click", () => {
+                console.log(lastCalled);
+                if (lastCalled) {
+                    isBusy = true;
+                    setButtonsDisabled(true);
+                    stopPolling();
+                    safeAjax({
+                        type: "POST",
+                        url: "{{ route('poli.finishQueueByRoom', '') }}/" + poliId,
+                        data: {
+                            number_queue: lastCalled
+                        },
+                        dataType: "JSON",
+                        success: function(response) {
+                            // console.log(response);
+                        },
+                        error: function(response) {
+                            Swal.fire({
+                                title: response.responseJSON.message,
+                                icon: "error",
+                                didOpen: () => {
+                                    document.body.removeAttribute('style');
+                                    document.body.classList.remove('swal2-height-auto');
+                                }
+                            });
+                        },
+                        complete: function() {
+                            isBusy = false;
+                            lastCalled = null;
+                            nomorEl.textContent = "-";
+                            renderWaitingList();
+                            renderHistory();
+                            startPolling();
+                            setButtonsDisabled(false);
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Tidak ada nomor yang sedang dipanggil",
+                        icon: "error",
+                        didOpen: () => {
+                            document.body.removeAttribute('style');
+                            document.body.classList.remove('swal2-height-auto');
+                        }
+                    });
                 }
             });
         }

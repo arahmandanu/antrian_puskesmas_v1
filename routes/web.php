@@ -74,14 +74,15 @@ Route::middleware(['ValidApps'])->group(function () {
             Route::get('/next-queue/{room}', [App\Http\Controllers\PoliController::class, 'getNextQueueByRoom'])->name('poli.getNextQueueByRoom');
             Route::post('/call-queue/{room}', [App\Http\Controllers\PoliController::class, 'callQueueByRoom'])->name('poli.callQueueByRoom');
             Route::post('/recall-queue/{room}', [App\Http\Controllers\PoliController::class, 'recallQueueByRoom'])->name('poli.recallQueueByRoom');
+            Route::post('/finish-queue/{room}', [App\Http\Controllers\PoliController::class, 'finishQueueByRoom'])->name('poli.finishQueueByRoom');
         });
     });
 
+    # ADMIN AREA
     Route::group(['prefix' => '/admin', 'middleware' => ['AlreadyLogin']], function () {
         Route::get('login', [App\Http\Controllers\AuthenticationController::class, 'index'])->name('admin.login');
         Route::post('login', [App\Http\Controllers\AuthenticationController::class, 'login'])->name('admin.login.submit');
     });
-
 
     Route::group(['prefix' => '/admin_dashboard', 'middleware' => ['auth:web']], function () {
         route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');

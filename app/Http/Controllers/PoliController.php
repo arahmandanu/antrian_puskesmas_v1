@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use App\Models\RoomQueue;
 use App\Services\Room\CallQueue;
 use App\Services\Room\GetNextQueueCustomerView;
 use App\Services\Room\GetQueueByRoom;
@@ -27,24 +28,54 @@ class PoliController extends Controller
 
     public function generateView(Request $request, Room $room)
     {
-        $queueCalled = $room->queuesCalled()
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
-            ->take(5)->get()->map(function ($queue) {
-                return $queue->room_code . $queue->number_queue;
-            });
+        if ($room->requiredBy()->exists()) {
+            $roomRequired = $room->requiredBy;
+            $showHistory = false;
+            $roomIds = $roomRequired->pluck('code')->toArray();
+            $queueCalled = RoomQueue::whereIn('room_code', $roomIds)
+                ->where('called', true)
+                ->where('status', \App\Enum\RoomQueueStatus::WAITING->value)
+                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                ->orderByDesc('id')
+                ->take(5)
+                ->get()
+                ->map(fn($q) => $q->room_code . $q->number_queue);
 
-        $resultsNotCalled =  $room->queuesNotCalled()
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
-            ->take(5)->get()->map(function ($queue) {
-                return $queue->room_code . $queue->number_queue;
-            });
+            $resultsNotCalled =  RoomQueue::whereIn('room_code', $roomIds)
+                ->where('called', false)
+                ->where('status', \App\Enum\RoomQueueStatus::WAITING->value)
+                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                ->orderBy('id', 'asc')
+                ->take(5)
+                ->get()
+                ->map(fn($q) => $q->room_code . $q->number_queue);
 
-        $lastDataCall = null;
-        if ($lastCalled = $room->queuesCalled()
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->take(1)->first()
-        ) {
-            $lastDataCall = $lastCalled->room_code . $lastCalled->number_queue;
+            $lastDataCall = null;
+            if ($lastCalled = $queueCalled) {
+                $lastDataCall = $lastCalled->first();
+            }
+        } else {
+            $showHistory = true;
+            $queueCalled = $room->queuesCalled()
+                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                ->take(5)->get()->map(function ($queue) {
+                    return $queue->room_code . $queue->number_queue;
+                });
+
+            $resultsNotCalled =  $room->queuesNotCalled()
+                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                ->take(5)->get()->map(function ($queue) {
+                    return $queue->room_code . $queue->number_queue;
+                });
+
+            $lastDataCall = null;
+            if ($lastCalled = $room->queuesCalled()
+                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->take(1)->first()
+            ) {
+                $lastDataCall = $lastCalled->room_code . $lastCalled->number_queue;
+            }
         }
+
 
         return view('loket_staff.call', [
             'poli' => $room,
@@ -52,7 +83,8 @@ class PoliController extends Controller
             'queueNotCalled' => $resultsNotCalled,
             'totalQueueNotCalled' => $room->queuesNotCalled()
                 ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->count(),
-            'lastCalled' => $lastDataCall
+            'lastCalled' => $lastDataCall,
+            'showHistory' => $showHistory
         ]);
     }
 
@@ -90,6 +122,42 @@ class PoliController extends Controller
         return $this->customResponse((new ReCallQueue($room))->handle());
     }
 
+    public function finishQueueByRoom(Request $request, Room $room)
+    {
+        $numberCode = $request->input('number_queue');
+        $roomCode = substr($numberCode, 0, 1);
+        $numberCode  = substr($numberCode, 1);
+
+        $queue = RoomQueue::where('room_code', '=', $roomCode)
+            ->where('number_queue', '=', $numberCode)
+            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->first();
+
+        if (!$queue) {
+            return $this->customResponse(Result::failure(Lang::get('messages.empty_queue', [], 'id'), null));
+        }
+
+        if ($queue->called == false) {
+            return $this->customResponse(Result::failure(Lang::get('messages.queue_not_called_yet', [], 'id'), null));
+        }
+
+        if ($queue->status == \App\Enum\RoomQueueStatus::COMPLETED->value) {
+            return $this->customResponse(Result::failure(Lang::get('messages.queue_already_completed', [], 'id'), null));
+        }
+
+        $queue->status = \App\Enum\RoomQueueStatus::COMPLETED->value;
+        $queue->called = false;
+        $error = false;
+        $message = Lang::get('messages.success_retrive_data', [], 'id');
+        try {
+            $queue->save();
+        } catch (\Throwable $th) {
+            $error = true;
+            $message = $th->getMessage();
+        }
+
+        return $this->customResponse(Result::take($error, $queue, $message));
+    }
 
     public function getNextQueueByRoom(Request $request, Room $room)
     {

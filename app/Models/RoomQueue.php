@@ -20,7 +20,8 @@ class RoomQueue extends Model
         'number_queue',
         'called',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'status'
     ];
 
     public function isExistByCode($roomCode, $numberQueue)
@@ -35,5 +36,10 @@ class RoomQueue extends Model
     public function room()
     {
         return $this->belongsTo(Room::class, 'room_code', 'code');
+    }
+
+    public function formatAsQueueNumber()
+    {
+        return $this->room_code . $this->number_queue;
     }
 }

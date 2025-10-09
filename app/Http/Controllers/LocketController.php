@@ -80,7 +80,7 @@ class LocketController extends Controller
 
     public function loketGetPoli(Request $request, $locket_number)
     {
-        $allRoom = Room::show()->get();
+        $allRoom = Room::show()->doesntHave('requiredBy')->get();
         $list = $allRoom->map(function ($room) {
             return [
                 'nama' => Str::upper($room['name']),

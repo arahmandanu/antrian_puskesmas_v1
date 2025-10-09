@@ -2,6 +2,7 @@
 
 namespace App\Services\Room;
 
+use App\Enum\RoomQueueStatus;
 use App\Models\Room;
 use App\Models\RoomQueue;
 use App\Utils\Result;
@@ -24,7 +25,8 @@ class CreateQueue extends \App\Services\AbstractService
             DB::beginTransaction();
             $newQueue = RoomQueue::create([
                 'room_code' => $this->room->code,
-                'number_queue' => self::generateNumberQueue()
+                'number_queue' => self::generateNumberQueue(),
+                'status' => $this->room->dependencies()->exists() ? RoomQueueStatus::WAITING->value : RoomQueueStatus::COMPLETED->value,
             ]);
 
             $this->room->current_queue = $newQueue->number_queue;

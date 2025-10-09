@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('room_code')->nullable(false);
             $table->string('number_queue')->nullable();
             $table->boolean('called')->nullable(false)->default(false);
+            $table->string('status')->nullable(false)->default('waiting'); // waiting, completed
             $table->timestamps();
 
             // composite index

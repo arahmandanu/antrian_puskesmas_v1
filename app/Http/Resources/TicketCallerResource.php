@@ -45,6 +45,10 @@ class TicketCallerResource extends JsonResource
         $data = parent::toArray($ticket);
         if ($this->type == 'poli') {
             $owner = Room::where('code', $this->number_code)->first();
+            if ($owner->id != $data['owner_id']) {
+                $owner = Room::where('id', $data['owner_id'])->first();
+            }
+
             $data['sound'] = [
                 asset('sound/ruang.mp3'),
                 asset('sound/' .  Str::lower($owner->name) . '.mp3'),

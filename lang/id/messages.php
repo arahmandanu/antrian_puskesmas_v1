@@ -21,4 +21,7 @@ return [
     'success_call' => 'Berhasil memanggil antrian',
     'next_queue_is_empty' => 'Antrial selanjutnya kosong',
     'locket_not_found' => 'Loket tidak ditemukan',
+    'queue_not_called_yet' => 'Antrian belum dipanggil',
+    'queue_already_completed' => 'Antrian sudah selesai',
+    'have_unfinished_queue' => 'Masih ada antrian yang belum selesai :queue',
 ];

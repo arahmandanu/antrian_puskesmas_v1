@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\RoomQueueStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -78,12 +79,12 @@ class Room extends Model
 
     public function queuesCalled()
     {
-        return $this->hasMany(RoomQueue::class, 'room_code', 'code')->where('called', true)->orderBy('id', 'desc');
+        return $this->hasMany(RoomQueue::class, 'room_code', 'code')->where('called', true)->where('status', RoomQueueStatus::COMPLETED)->orderBy('id', 'desc');
     }
 
     public function queuesNotCalled()
     {
-        return $this->hasMany(RoomQueue::class, 'room_code', 'code')->where('called', false);
+        return $this->hasMany(RoomQueue::class, 'room_code', 'code')->where('status', RoomQueueStatus::COMPLETED)->where('called', false);
     }
 
     public function scopeShow($query)
