@@ -32,6 +32,7 @@ class LocketController extends Controller
             'pendaftaran' => LocketList::PENDAFTARAN,
             'laborate' => LocketList::LABORATE,
             'lansia' => LocketList::LANSIA,
+            'farmasi' => LocketList::FARMASI,
             'iklanVideos' => $mp4Files,
             'iklanImages' => $images
         ]);

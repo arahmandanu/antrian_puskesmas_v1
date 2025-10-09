@@ -36,7 +36,7 @@
                 📝 Pendaftaran
             </button>
 
-            <button onclick="panggilAntrian('LABORATE',  '{{ $laborate }}')"
+            {{-- <button onclick="panggilAntrian('LABORATE',  '{{ $laborate }}')"
                 class="w-full py-8 rounded-2xl shadow-xl text-white text-3xl font-extrabold tracking-wide
                bg-gradient-to-r from-blue-400 to-blue-500
                hover:from-blue-500 hover:to-blue-400">
@@ -48,6 +48,14 @@
                bg-gradient-to-r from-pink-400 to-pink-500
                hover:from-pink-500 hover:to-pink-400">
                 👵 Lansia
+            </button> --}}
+
+            <!-- Tombol Farmasi -->
+            <button onclick="panggilAntrian('FARMASI', '{{ $farmasi }}')"
+                class="w-full py-8 rounded-2xl shadow-xl text-white text-3xl font-extrabold tracking-wide
+               bg-gradient-to-r from-rose-400 to-rose-500
+               hover:from-rose-500 hover:to-rose-400">
+                💊 Farmasi
             </button>
 
             <!-- Loading overlay -->

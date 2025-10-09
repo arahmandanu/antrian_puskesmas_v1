@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Room extends Model
 {
     public const CODE = [
-        'D',
         'E',
         'F',
         'G',

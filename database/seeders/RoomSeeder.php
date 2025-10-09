@@ -18,7 +18,7 @@ class RoomSeeder extends Seeder
         $data =  [
             [
                 'name' => 'TB',
-                'code' => 'D',
+                'code' => 'T',
                 'lantai' => 2,
             ],
             [

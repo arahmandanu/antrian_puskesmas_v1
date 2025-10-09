@@ -7,6 +7,7 @@ enum LocketList: string
     case PENDAFTARAN = 'A';
     case LANSIA = 'B';
     case LABORATE = 'C';
+    case FARMASI = 'D';
 
     public static function toArray()
     {
