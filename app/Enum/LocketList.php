@@ -24,4 +24,20 @@ enum LocketList: string
     {
         return implode(',', self::toArray());
     }
+
+    public function soundCategory(): string
+    {
+        return match ($this) {
+            self::PENDAFTARAN, self::LANSIA, self::LABORATE => 'loket',
+            self::FARMASI => 'ruang_farmasi',
+        };
+    }
+
+    public function hasLocketCode(): bool
+    {
+        return match ($this) {
+            self::PENDAFTARAN, self::LANSIA, self::LABORATE => true,
+            self::FARMASI => false,
+        };
+    }
 }

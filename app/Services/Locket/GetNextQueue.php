@@ -51,7 +51,7 @@ class GetNextQueue extends \App\Services\AbstractService
                     'type' => 'locket',
                     'lantai' => $locketStaff->lantai,
                     'number_queue' => $next->number_queue,
-                    'called_to' => "loket {$this->locket_number}",
+                    'called_to' => $this->createCalledTo(),
                     'initiator_name' => LocketList::from($this->locket_code)->name
                 ]);
 
@@ -77,5 +77,15 @@ class GetNextQueue extends \App\Services\AbstractService
             DB::rollBack();
             return Result::failure('Terjadi kesalahan: ' . $e->getMessage(), null);
         }
+    }
+
+    private function createCalledTo()
+    {
+        $firstString = LocketList::from($this->locket_code)->soundCategory();
+        if (LocketList::from($this->locket_code)->hasLocketCode()) {
+            return "{$firstString} {$this->locket_number}";
+        }
+
+        return $firstString;
     }
 }

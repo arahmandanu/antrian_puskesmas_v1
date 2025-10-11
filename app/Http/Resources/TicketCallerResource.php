@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enum\LocketList;
 use App\Models\LocketStaff;
 use App\Models\Room;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -56,9 +57,12 @@ class TicketCallerResource extends JsonResource
         } else {
             $owner = LocketStaff::where('id', $this->owner_id)->first();
             $data['sound'] = [
-                asset('sound/loket.mp3'),
-                asset('sound/' . Str::lower($owner->locket_number) . '.mp3'),
+                asset("sound/" . LocketList::from($this->number_code)->soundCategory() . ".mp3"),
             ];
+
+            if (LocketList::from($this->number_code)->hasLocketCode()) {
+                array_push($data['sound'], asset('sound/' . Str::lower($owner->locket_number) . '.mp3'));
+            }
         }
 
         $data['middle_sound'] = $this->formatSoundArray($this->numberToSound($this->number_queue));

@@ -55,18 +55,28 @@ class LocketController extends Controller
                 'color' => 'yellow',
                 'icon' => '📝',
                 'title' => 'Pendaftaran',
+                'colorClasses' => 'bg-yellow-400 hover:bg-yellow-300 text-yellow-800',
             ],
             [
                 'type' => LocketList::LABORATE,
                 'color' => 'blue',
                 'icon' => '🔬',
                 'title' => 'Laborate',
+                'colorClasses' => 'bg-blue-400 hover:bg-blue-300 text-blue-800',
             ],
             [
                 'type' => LocketList::LANSIA,
                 'color' => 'pink',
                 'icon' => '👵',
                 'title' => 'Lansia',
+                'colorClasses' => 'bg-pink-400 hover:bg-pink-300 text-pink-800',
+            ],
+            [
+                'type' => LocketList::FARMASI,
+                'color' => 'green',
+                'icon' => '💊',
+                'title' => 'Farmasi',
+                'colorClasses' => 'bg-green-400 hover:bg-green-300 text-green-800',
             ],
         ];
 

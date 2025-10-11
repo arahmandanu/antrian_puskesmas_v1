@@ -4,9 +4,10 @@
     <main class="flex-grow overflow-y-auto h-screen custom-scrollbar relative p-6">
         <input type="hidden" id="locket_number" value="{{ $locket_number }}">
         <div>
-            <h1 class="text-2xl font-bold text-center mb-6">Daftar Poli</h1>
-            <p class="text-center text-gray-600 mb-10">Pilih poli untuk membuat nomor antrian baru</p>
+            <h1 class="text-2xl font-bold text-center">Daftar Poli</h1>
+            <p class="text-center text-gray-600 mb-5">Pilih poli untuk membuat nomor antrian baru</p>
         </div>
+
         <div id="poli-container"
             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 max-w-7xl mx-auto">
             <!-- Button poli akan di-generate oleh JS -->
