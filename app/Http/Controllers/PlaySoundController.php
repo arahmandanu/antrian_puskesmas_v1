@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\QueueCaller;
 use App\Services\Sound\GetNextCallByFloor;
-use App\Utils\Result;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Lang;
 
 class PlaySoundController extends Controller
 {

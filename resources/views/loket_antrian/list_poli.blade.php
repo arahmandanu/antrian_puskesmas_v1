@@ -24,8 +24,6 @@
         <!-- Modal Antrian -->
         <div id="queue-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white rounded-lg shadow-lg p-6 w-80 relative">
-                {{-- <button onclick="closeModal()"
-                    class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">&times;</button> --}}
                 <h2 class="text-xl font-bold mb-4" id="modal-poli-name">Poli XYZ</h2>
                 <p class="text-3xl font-bold mb-6 text-center" id="modal-queue-number">001</p>
                 <div class="flex gap-3">
@@ -125,15 +123,6 @@
                 }
             });
         }
-
-        // function closeModal() {
-        //     modal.classList.add("hidden");
-        //     // Enable buttons again
-        //     document.querySelectorAll(".poli-btn").forEach(btn => {
-        //         btn.disabled = false;
-        //         btn.classList.remove("opacity-50", "cursor-not-allowed");
-        //     });
-        // }
 
         function backToLoket() {
             window.location.href = "{{ route('loket_antrian.generateView', '') }}/" +

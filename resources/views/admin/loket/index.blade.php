@@ -27,6 +27,7 @@
                                     <tr>
                                         <th>Nomor Loket</th>
                                         <th>Nama Staff</th>
+                                        <th>Daftar Antrian</th>
                                         <th>Letak</th>
                                         <th>Action</th>
                                     </tr>
@@ -36,6 +37,17 @@
                                         <tr class="odd gradeX">
                                             <td>{{ $loket->locket_number }}</td>
                                             <td>{{ $loket->staff_name }}</td>
+                                            <td>
+                                                @if (is_array($loket->allowed_codes) && count($loket->allowed_codes) > 0)
+                                                    @foreach ($loket->allowed_codes as $code)
+                                                        <span
+                                                            class="btn btn-info btn-sm">{{ \App\Enum\LocketList::from($code)->name ?? $code }}
+                                                        </span>
+                                                    @endforeach
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
+                                            </td>
                                             <td>Lantai {{ $loket->lantai }}</td>
                                             <td class="center">
                                                 <a type="button" href="{{ route('admin.loket.edit', $loket->id) }}"
