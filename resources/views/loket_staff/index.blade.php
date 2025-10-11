@@ -92,7 +92,7 @@
 
         function updateSisaAntrian() {
             safeAjax({
-                url: "{{ route('loket_antrian.sisaAntrian') }}",
+                url: "{{ route('loket_antrian.sisaAntrian', '/') }}" + `/${locketNumber}`,
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {

@@ -57,7 +57,7 @@ Route::middleware(['ValidApps'])->group(function () {
 
         Route::group(['middleware' => ['jsonOnly']], function () {
             Route::post('/create-queue', [App\Http\Controllers\LocketController::class, 'createQueue'])->name('loket_antrian.createQueue');
-            Route::get('/sisa-antrian', [App\Http\Controllers\LocketController::class, 'getSisaAntrian'])->name('loket_antrian.sisaAntrian');
+            Route::get('/sisa-antrian/{staff}', [App\Http\Controllers\LocketController::class, 'getSisaAntrian'])->name('loket_antrian.sisaAntrian');
             Route::post('/call-queue', [App\Http\Controllers\LocketController::class, 'getNextQeueue'])->name('loket_antrian.nextQueue');
             Route::get('/queue-recall/{locket_code}/{locket_number}', [App\Http\Controllers\LocketController::class, 'getRecallQueue'])->name('loket_antrian.recall');
             Route::post('/create_poli_queue', [App\Http\Controllers\LocketController::class, 'loketCreatePoliQueue'])->name('loket_antrian.createPoliQueue');

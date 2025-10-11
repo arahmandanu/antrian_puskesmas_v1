@@ -44,10 +44,11 @@ class LocketQueue extends Model
             ->orderBy('id', 'desc');
     }
 
-    public function locketTotal()
+    public function locketTotal($allowedCodes = [])
     {
         return $this->select('locket_code', DB::raw('count(*) as total'))
             ->where('called', false)
+            ->whereIn('locket_code', $allowedCodes)
             ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->groupBy('locket_code')
             ->get();

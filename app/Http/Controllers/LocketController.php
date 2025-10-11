@@ -47,7 +47,7 @@ class LocketController extends Controller
 
     public function generateView(Request $request, LocketStaff $locket_number)
     {
-        $allTotal = (new LocketQueue())->locketTotal();
+        $allTotal = (new LocketQueue())->locketTotal($locket_number->allowed_codes);
         $result = $allTotal->pluck('total', 'locket_code')->toArray();
         $menus = [];
         foreach (LocketList::cases() as $case) {
@@ -96,9 +96,9 @@ class LocketController extends Controller
         return $this->customResponse((new \App\Services\Locket\GetNextQueue($request->input('locket_code'), $request->input('locket_number')))->handle());
     }
 
-    public function getSisaAntrian(Request $request)
+    public function getSisaAntrian(Request $request, LocketStaff $staff)
     {
-        return $this->customResponse((new GetRestQueue())->handle());
+        return $this->customResponse((new GetRestQueue($staff))->handle());
     }
 
     public function getRecallQueue(Request $request, $locket_code, LocketStaff $locket_number)
