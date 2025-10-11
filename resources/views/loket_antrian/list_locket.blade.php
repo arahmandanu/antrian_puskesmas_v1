@@ -13,13 +13,13 @@
 
                 @forelse ($lokets as $loket)
                     <!-- Loket 1 -->
-                    <a href="{{ route('loket_antrian.generateView', $loket->locket_number) }}"
+                    <a href="{{ route('loket_antrian.generateView', $loket->id) }}"
                         class="cursor-pointer bg-white border-2 border-green-600 rounded-xl shadow-lg
                  hover:shadow-2xl hover:scale-105 transform transition-all duration-300
                  flex flex-col items-center justify-center p-6">
                         <span class="text-5xl mb-3">🏢</span>
                         <h3 class="text-xl font-bold text-green-700">{{ $loket->staff_name }}</h3>
-                        <p class="text-gray-600 text-sm mt-1">Lantai: {{ $loket->locket_number }}</p>
+                        <p class="text-gray-600 text-sm mt-1">Lantai: {{ $loket->lantai }}</p>
                     </a>
                 @empty
                     <!-- Loket 1 -->

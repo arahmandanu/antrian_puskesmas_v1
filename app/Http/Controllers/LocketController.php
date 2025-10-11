@@ -41,7 +41,7 @@ class LocketController extends Controller
     public function locketList()
     {
         return view('loket_antrian.list_locket', [
-            'lokets' => \App\Models\LocketStaff::orderBy('locket_number', 'asc')->get(),
+            'lokets' => LocketStaff::orderBy('locket_number', 'asc')->get(),
         ]);
     }
 
@@ -64,7 +64,7 @@ class LocketController extends Controller
         ]);
     }
 
-    public function loketGetPoli(Request $request, $locket_number)
+    public function loketGetPoli(Request $request, LocketStaff $locket_number)
     {
         $allRoom = Room::show()->doesntHave('requiredBy')->get();
         $list = $allRoom->map(function ($room) {
@@ -77,7 +77,7 @@ class LocketController extends Controller
 
         return view('loket_antrian.list_poli', [
             'polis' => $list,
-            'locket_number' => $locket_number
+            'locket_number' => $locket_number,
         ]);
     }
 

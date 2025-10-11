@@ -2,10 +2,13 @@
 
 @section('content')
     <main class="flex-grow overflow-y-auto h-screen custom-scrollbar relative p-6">
-        <input type="hidden" id="locket_number" value="{{ $locket_number }}">
+        <input type="hidden" id="locket_number" value="{{ $locket_number->id }}">
         <div>
             <h1 class="text-2xl font-bold text-center">Daftar Poli</h1>
-            <p class="text-center text-gray-600 mb-5">Pilih poli untuk membuat nomor antrian baru</p>
+            <p class="text-center text-black-600 mb-5">Buat antrian pada poli yang diinginkan
+                <a href="{{ route('loket_antrian.generateView', $locket_number->id) }}"
+                    class="bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 p-2">Kembali</a>
+            </p>
         </div>
 
         <div id="poli-container"
@@ -14,7 +17,8 @@
         </div>
 
         <!-- Loading Overlay -->
-        <div id="loading-screen" class="hidden absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div id="loading-screen"
+            class="hidden absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
                 <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mb-4"></div>
                 <p class="text-gray-700 font-semibold">Loading, please wait...</p>
