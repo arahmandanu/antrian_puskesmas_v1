@@ -25,7 +25,7 @@ class GetRecallQueue extends \App\Services\AbstractService
     {
         DB::beginTransaction();
         try {
-            $locketStaff = LocketStaff::where('locket_number', $this->locketNumber)->first();
+            $locketStaff = LocketStaff::where('id', $this->locketNumber)->first();
             $pendingExist = ((new QueueCaller())->isExistPendingByOwnerid($locketStaff->id, 'locket'));
             if ($pendingExist) {
                 DB::rollBack();

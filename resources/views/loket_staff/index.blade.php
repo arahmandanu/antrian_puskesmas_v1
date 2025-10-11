@@ -3,6 +3,7 @@
 @section('content')
     <!-- Main Content -->
     <main class="flex flex-col flex-grow items-center p-6 overflow-y-auto h-screen custom-scrollbar">
+        @dd($loket)
         <input type="hidden" value="{{ $loket->locket_number }}" id="loket_number">
         <input type="hidden" value="{{ $loket->id }}" id="id">
 
@@ -174,7 +175,7 @@
         function recallAntrian(btn, prefix, poli) {
             const originalText = btn.textContent;
             btn.textContent = "Memanggil...";
-
+            console.log(btn, prefix, poli);
             let url = recallUrlTemplate
                 .replace(':code', prefix)
                 .replace(':number', locketNumber);

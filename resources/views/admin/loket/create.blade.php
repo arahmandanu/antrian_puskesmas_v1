@@ -36,7 +36,8 @@
 
                             <div class="form-group">
                                 <label>Nomor Loket</label>
-                                <select class="form-control" required name="locket_number">
+                                <select class="form-control" name="locket_number">
+                                    <option selected value="">Kosongkan jika tanpa nomor loket</option>
                                     @forelse ($availableLokets as $code)
                                         <option value="{{ $code }}">{{ $code }}</option>
                                     @empty

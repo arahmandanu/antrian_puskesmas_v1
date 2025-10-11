@@ -21,7 +21,7 @@ class UpdateLocketStaffRequest extends FormRequest
         return [
             'staff_name' => 'required|string|max:255',
             'lantai' => 'required|integer|in:' . implode(',', range(1, config('mysite.total_lantai'))),
-            'locket_number' => 'required|integer|in:' . implode(',', (new LocketStaff)->availableLocket($loket->locket_number)),
+            'locket_number' => 'nullable|integer|in:' . implode(',', (new LocketStaff)->availableLocket($loket->locket_number)),
             'allowed_codes' => 'required|array|min:1',
             'allowed_codes.*' => 'string|in:' . implode(',', array_map(fn($case) => $case->value, LocketList::cases())),
         ];

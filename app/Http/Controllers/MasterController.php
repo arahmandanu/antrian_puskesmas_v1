@@ -18,11 +18,11 @@ class MasterController extends Controller
         $allLocketLantai = LocketStaff::where('lantai', $lantai)->get()->toArray();
 
         $sub = DB::table('queue_callers')
-            ->selectRaw('owner_id, MAX(id) as max_id')
+            ->selectRaw('owner_id, type, MAX(id) as max_id')
             ->where('called', true)
             ->where('lantai', $lantai)
             ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
-            ->groupBy('owner_id');
+            ->groupBy('owner_id', 'type');
 
         $latestCalled = DB::table('queue_callers as q')
             ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
@@ -32,16 +32,15 @@ class MasterController extends Controller
             ->where('q.lantai', $lantai)
             ->get();
         $allList = [];
-
         foreach (array_merge($allLocketLantai, $allRoomLantai) as $staff) {
             $collect = ['staff' => $staff];
             foreach ($latestCalled as $calledQueue) {
                 if ($calledQueue->type == 'locket') {
-                    if ($calledQueue->owner_id == $staff['id'] && isset($staff['locket_number'])) {
+                    if ($calledQueue->owner_id == $staff['id'] && array_key_exists('locket_number', $staff)) {
                         $collect['queue'] =  (array) $calledQueue;
                     }
                 } else {
-                    if (!isset($staff['locket_number'])) {
+                    if (!array_key_exists('locket_number', $staff)) {
                         if ($staff['code'] == $calledQueue->number_code) {
                             $collect['queue'] =  (array) $calledQueue;
                         }
@@ -49,8 +48,8 @@ class MasterController extends Controller
                 }
             }
 
-            $collect['name'] = isset($staff['locket_number']) ? "Loket {$staff['locket_number']}" : $staff['name'];
-            $collect['type'] = isset($staff['locket_number']) ? "locket" : 'poli';
+            $collect['name'] = array_key_exists('locket_number', $staff) ? $staff['staff_name'] : $staff['name'];
+            $collect['type'] = array_key_exists('locket_number', $staff) ? "locket" : 'poli';
             $allList[] = $collect;
         }
 
@@ -80,11 +79,11 @@ class MasterController extends Controller
         $allLocketLantai = LocketStaff::where('lantai', $lantai)->get()->toArray();
 
         $sub = DB::table('queue_callers')
-            ->selectRaw('owner_id, MAX(id) as max_id')
+            ->selectRaw('owner_id,type, MAX(id) as max_id')
             ->where('called', true)
             ->where('lantai', $lantai)
             ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
-            ->groupBy('owner_id');
+            ->groupBy('owner_id', 'type');
 
         $latestCalled = DB::table('queue_callers as q')
             ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
@@ -99,11 +98,11 @@ class MasterController extends Controller
             $collect = ['staff' => $staff];
             foreach ($latestCalled as $calledQueue) {
                 if ($calledQueue->type == 'locket') {
-                    if ($calledQueue->owner_id == $staff['id'] && isset($staff['locket_number'])) {
+                    if ($calledQueue->owner_id == $staff['id'] && array_key_exists('locket_number', $staff)) {
                         $collect['queue'] =  (array) $calledQueue;
                     }
                 } else {
-                    if (!isset($staff['locket_number'])) {
+                    if (!array_key_exists('locket_number', $staff)) {
                         if ($staff['code'] == $calledQueue->number_code) {
                             $collect['queue'] =  (array) $calledQueue;
                         }
@@ -111,8 +110,8 @@ class MasterController extends Controller
                 }
             }
 
-            $collect['name'] = isset($staff['locket_number']) ? "Loket {$staff['locket_number']}" : $staff['name'];
-            $collect['type'] = isset($staff['locket_number']) ? "locket" : 'poli';
+            $collect['name'] = array_key_exists('locket_number', $staff) ? $staff['staff_name'] : $staff['name'];
+            $collect['type'] = array_key_exists('locket_number', $staff) ? "locket" : 'poli';
             $allList[] = $collect;
         }
 

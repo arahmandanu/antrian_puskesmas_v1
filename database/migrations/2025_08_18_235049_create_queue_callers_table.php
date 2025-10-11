@@ -25,20 +25,17 @@ return new class extends Migration
             $table->unsignedTinyInteger('lantai')->default(1)->nullable(false);
             $table->timestamps();
 
-            // composite index
-            $table->index(['called', 'created_at']);
-
-            // 🔹 index utama untuk scope antrian
+            // 🔹 index utama untuk antrian harian
             $table->index(['lantai', 'called', 'created_at']);
 
-            // unique index
-            $table->unique(['number_code', 'created_at']);
-
-            // 🔹 index sekunder untuk pencarian pending per owner
-            $table->index(['owner_id', 'type', 'called']);
-
-            // unique index for find exist pending
+            // 🔹 index untuk pencarian by owner dan type
             $table->index(['owner_id', 'type', 'called', 'created_at']);
+
+            // 🔹 index unik nomor antrian (gunakan number_code + number_queue, bukan created_at)
+            $table->unique(['number_code', 'number_queue']);
+
+            // (opsional) jika kamu sering cari berdasarkan tanggal saja
+            $table->index(['created_at']);
         });
     }
 

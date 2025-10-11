@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('locket_staff', function (Blueprint $table) {
             $table->id();
             $table->string('staff_name')->nullable(false);
-            $table->string('locket_number')->nullable(false);
+            $table->string('locket_number')->nullable(true);
             $table->json('allowed_codes')->nullable();
             $table->integer('lantai')->default(1)->nullable(false);
             $table->timestamps();
