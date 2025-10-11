@@ -13,47 +13,46 @@ use Illuminate\Support\Facades\DB;
 class GetRecallQueue extends \App\Services\AbstractService
 {
     protected $locketCode;
-    protected $locketNumber;
+    protected LocketStaff $locketStaff;
 
-    public function __construct($locketCode, $locketNumber)
+    public function __construct($locketCode, $locketStaff)
     {
         $this->locketCode = $locketCode;
-        $this->locketNumber = $locketNumber;
+        $this->locketStaff = $locketStaff;
     }
 
     public function handle()
     {
         DB::beginTransaction();
         try {
-            $locketStaff = LocketStaff::where('id', $this->locketNumber)->first();
-            $pendingExist = ((new QueueCaller())->isExistPendingByOwnerid($locketStaff->id, 'locket'));
+            $pendingExist = ((new QueueCaller())->isExistPendingByOwnerid($this->locketStaff->id, 'locket'));
             if ($pendingExist) {
                 DB::rollBack();
                 return Result::failure(Lang::get('messages.pending_queue', ['queue' => $pendingExist->formatAsQueueNumber()], 'id'), null);
             }
 
-            $lastCall = LocketQueue::lastCallByLocketCode($this->locketCode, $this->locketNumber)->first();
+            $lastCall = LocketQueue::lastCallByLocketCode($this->locketCode, $this->locketStaff->id)->first();
             if (!$lastCall) {
                 DB::rollBack();
                 return Result::failure(Lang::get('messages.empty_history', [], 'id'), null);
             }
 
             QueueCaller::create([
-                'owner_id' => $locketStaff->id,
+                'owner_id' => $this->locketStaff->id,
                 'number_code' =>  $this->locketCode,
                 'called' => false,
                 'type' => 'locket',
-                'lantai' => $locketStaff->lantai,
+                'lantai' => $this->locketStaff->lantai,
                 'number_queue' => $lastCall->number_queue,
                 'called_to' => $this->createCalledTo(),
-                'initiator_name' => $locketStaff->staff_name
+                'initiator_name' => $this->locketStaff->staff_name
             ]);
 
             DB::commit();
             return Result::success([
                 'locket_code' => $this->locketCode,
-                'number_queue' => $lastCall->number_queue,
-                'locket_number' => $this->locketNumber,
+                'number_queue' => $lastCall->formatAsQueueNumber(false),
+                'locket_number' => $this->locketStaff->locket_number,
                 'poli' => LocketList::from($this->locketCode)->name,
             ], Lang::get('messages.success_call', [], 'id'));
         } catch (\Exception $e) {
@@ -66,7 +65,7 @@ class GetRecallQueue extends \App\Services\AbstractService
     private function createCalledTo()
     {
         if (LocketList::from($this->locketCode)->hasLocketCode()) {
-            $name =  "Loket {$this->locketNumber}";
+            $name =  "Loket {$this->locketStaff->locket_number}";
         } else {
             $name =  LocketList::from($this->locketCode)->name;
         }

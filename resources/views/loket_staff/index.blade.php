@@ -3,14 +3,12 @@
 @section('content')
     <!-- Main Content -->
     <main class="flex flex-col flex-grow items-center p-6 overflow-y-auto h-screen custom-scrollbar">
-        @dd($loket)
-        <input type="hidden" value="{{ $loket->locket_number }}" id="loket_number">
-        <input type="hidden" value="{{ $loket->id }}" id="id">
+        <input type="hidden" value="{{ $loket->id }}" id="loket_number">
 
         <!-- Header -->
         <div class="w-full max-w-3xl mb-10 text-center">
             <h2 class="text-xl font-light">
-                Selamat datang <span class="font-semibold">{{ $loket->staff_name }}</span>
+                Selamat datang <span class="font-semibold">{{ $loket->staff_name }}</span> {{ $loket->locket_number ?? '' }}
             </h2>
             <p class="text-gray-600">Panel Panggilan Antrian Staff Loket</p>
         </div>
@@ -175,7 +173,6 @@
         function recallAntrian(btn, prefix, poli) {
             const originalText = btn.textContent;
             btn.textContent = "Memanggil...";
-            console.log(btn, prefix, poli);
             let url = recallUrlTemplate
                 .replace(':code', prefix)
                 .replace(':number', locketNumber);
@@ -186,12 +183,13 @@
                 dataType: "json",
                 success: function(response) {
                     if (response.hasOwnProperty('data')) {
-                        if (response.data?.number_queue && response.data?.locket_number && response.data
+                        if (response.data?.number_queue && response.data
                             ?.poli) {
                             tampilkanNomor(btn, response.data?.locket_code + response.data?.number_queue,
                                 response.data
                                 ?.poli, originalText, response.data?.locket_code, false);
                         } else {
+                            console.log(response);
                             alert('Data Antrian Kosong!');
                             allButtons.forEach(btn => btn.disabled = false);
                             btn.textContent = originalText;

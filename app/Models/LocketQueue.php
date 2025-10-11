@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\MyHelper;
 
 class LocketQueue extends Model
 {
@@ -14,11 +15,15 @@ class LocketQueue extends Model
 
     protected $fillable = [
         'locket_code',
-        'locket_number',
+        'locket_staff_id',
         'number_queue',
         'called',
         'created_at',
         'updated_at'
+    ];
+
+    protected $casts = [
+        'called' => 'boolean',
     ];
 
     public function scopeNextQueue($query, $locketCode)
@@ -29,10 +34,10 @@ class LocketQueue extends Model
             ->orderBy('id', 'asc');
     }
 
-    public function scopeLastCallByLocketCode($query, $locketCode, $locketNumber)
+    public function scopeLastCallByLocketCode($query, $locketCode, $locketStaffId)
     {
         return $query->where('locket_code', $locketCode)
-            ->where('locket_number', $locketNumber)
+            ->where('locket_staff_id', $locketStaffId)
             ->where('called', true)
             ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
             ->orderBy('id', 'desc');
@@ -47,13 +52,21 @@ class LocketQueue extends Model
             ->get();
     }
 
-    public function getHistoryBy($locketNumber)
+    public function getHistoryBy($locketStaffId)
     {
         return $this->where('called', true)
-            ->where('locket_number', $locketNumber)
+            ->where('locket_staff_id', $locketStaffId)
             ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
             ->limit(5)
             ->orderBy('updated_at', 'desc')
             ->get();
+    }
+
+    public function formatAsQueueNumber($withCode = true)
+    {
+        if (!$withCode) {
+            return MyHelper::formatNumberQueue($this->number_queue);
+        }
+        return $this->locket_code . MyHelper::formatNumberQueue($this->number_queue);
     }
 }

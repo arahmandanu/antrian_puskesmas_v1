@@ -6,4 +6,5 @@ class AbstractService
 {
     use \App\Helpers\ResponseHelper;
     use \App\Helpers\ValidateLocketHelper;
+    use \App\Helpers\MyHelper;
 }

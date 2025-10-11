@@ -31,9 +31,6 @@ return new class extends Migration
             // 🔹 index untuk pencarian by owner dan type
             $table->index(['owner_id', 'type', 'called', 'created_at']);
 
-            // 🔹 index unik nomor antrian (gunakan number_code + number_queue, bukan created_at)
-            $table->unique(['number_code', 'number_queue']);
-
             // (opsional) jika kamu sering cari berdasarkan tanggal saja
             $table->index(['created_at']);
         });

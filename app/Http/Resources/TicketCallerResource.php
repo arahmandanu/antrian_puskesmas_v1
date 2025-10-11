@@ -44,6 +44,9 @@ class TicketCallerResource extends JsonResource
     public function toArray($ticket)
     {
         $data = parent::toArray($ticket);
+        $digit = config('mysite.total_locket_queue', 4); // Default to 4 if not set
+        $data['number_queue'] = sprintf("%0{$digit}d", $data['number_queue']);
+
         if ($this->type == 'poli') {
             $owner = Room::where('code', $this->number_code)->first();
             if ($owner->id != $data['owner_id']) {
@@ -64,9 +67,7 @@ class TicketCallerResource extends JsonResource
                 array_push($data['sound'], asset('sound/' . Str::lower($owner->locket_number) . '.mp3'));
             }
         }
-
         $data['middle_sound'] = $this->formatSoundArray($this->numberToSound($this->number_queue));
-
         return $data;
     }
 

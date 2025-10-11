@@ -16,16 +16,19 @@ return new class extends Migration
         Schema::create('locket_queue', function (Blueprint $table) {
             $table->id();
             $table->string('locket_code')->nullable(false);
-            $table->integer('locket_number')->nullable(true);
-            $table->string('number_queue')->nullable(false);
+            $table->foreignId('locket_staff_id')
+                ->nullable()
+                ->constrained('locket_staff') // 👈 must match the $table property
+                ->cascadeOnDelete();
+            $table->unsignedSmallInteger('number_queue'); // lebih hemat dari string
             $table->boolean('called')->nullable(false)->default(false);
             $table->timestamps();
 
             // composite index
-            $table->index(['called', 'created_at']);
+            $table->index(['locket_code', 'called', 'created_at']);
 
             // unique index
-            $table->unique(['locket_code', 'created_at']);
+            $table->unique(['locket_code', 'number_queue', 'called'], 'uq_locket_queue_code_number_called');
         });
     }
 

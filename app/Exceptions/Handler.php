@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
+use App\Helpers\ResponseHelper as ResponseHelper;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use App\Utils\Result;
 
 class Handler extends ExceptionHandler
 {
@@ -34,8 +36,17 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (Throwable $e, $request) {
+            if ($request->expectsJson()) {
+                if (in_array(class_basename($e), ['NotFoundHttpException', 'ModelNotFoundException'])) {
+                    return $this->throwCustomErrorJson('Resource not found', null);
+                }
+            }
         });
+    }
+
+    private function throwCustomErrorJson($message, $data = null)
+    {
+        return ResponseHelper::customResponse(Result::take(true, $data, $message));
     }
 }

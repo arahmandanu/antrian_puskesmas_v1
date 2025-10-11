@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\MyHelper;
 
 class QueueCaller extends Model
 {
@@ -75,8 +76,11 @@ class QueueCaller extends Model
             ->orderBy('created_at', 'desc');
     }
 
-    public function formatAsQueueNumber()
+    public function formatAsQueueNumber($withCode = true)
     {
-        return $this->number_code . $this->number_queue;
+        if (!$withCode) {
+            return MyHelper::formatNumberQueue($this->number_queue);
+        }
+        return $this->number_code . MyHelper::formatNumberQueue($this->number_queue);
     }
 }

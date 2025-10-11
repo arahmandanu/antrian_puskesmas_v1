@@ -59,7 +59,7 @@ class LocketController extends Controller
         return view('loket_staff.index', [
             'loket' => $locket_number,
             'locket_totals' => $result,
-            'histories' => (new LocketQueue())->getHistoryBy($locket_number->locket_number),
+            'histories' => (new LocketQueue())->getHistoryBy($locket_number->id),
             'menus' => $menus
         ]);
     }
@@ -101,7 +101,7 @@ class LocketController extends Controller
         return $this->customResponse((new GetRestQueue())->handle());
     }
 
-    public function getRecallQueue(Request $request, $locket_code, $locket_number)
+    public function getRecallQueue(Request $request, $locket_code, LocketStaff $locket_number)
     {
         $result = (new GetRecallQueue($locket_code, $locket_number))->handle();
         return $this->customResponse($result);
