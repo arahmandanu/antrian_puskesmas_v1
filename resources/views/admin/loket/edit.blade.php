@@ -19,8 +19,8 @@
                             @method('PUT')
                             @csrf
                             <div class="form-group">
-                                <label>Nama Staff</label>
-                                <input class="form-control" name="staff_name" placeholder="Masukkan nama staff" required
+                                <label>Nama Loket</label>
+                                <input class="form-control" name="staff_name" placeholder="Masukkan nama loket" required
                                     value="{{ $loket->staff_name ?? '' }}">
                             </div>
 

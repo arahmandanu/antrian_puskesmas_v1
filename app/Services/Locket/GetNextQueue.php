@@ -52,7 +52,7 @@ class GetNextQueue extends \App\Services\AbstractService
                     'lantai' => $locketStaff->lantai,
                     'number_queue' => $next->number_queue,
                     'called_to' => $this->createCalledTo(),
-                    'initiator_name' => LocketList::from($this->locket_code)->name
+                    'initiator_name' => $locketStaff->staff_name
                 ]);
 
                 if ($lastCall = LocketQueue::lastCallByLocketCode($this->locket_code, $this->locket_number)->first()) {
@@ -81,11 +81,12 @@ class GetNextQueue extends \App\Services\AbstractService
 
     private function createCalledTo()
     {
-        $firstString = LocketList::from($this->locket_code)->soundCategory();
         if (LocketList::from($this->locket_code)->hasLocketCode()) {
-            return "{$firstString} {$this->locket_number}";
+            $name =  "Loket {$this->locket_number}";
+        } else {
+            $name =  LocketList::from($this->locket_code)->name;
         }
 
-        return $firstString;
+        return $name;
     }
 }

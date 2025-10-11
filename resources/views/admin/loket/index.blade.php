@@ -26,7 +26,7 @@
                                 <thead>
                                     <tr>
                                         <th>Nomor Loket</th>
-                                        <th>Nama Staff</th>
+                                        <th>Nama Loket</th>
                                         <th>Daftar Antrian</th>
                                         <th>Letak</th>
                                         <th>Action</th>

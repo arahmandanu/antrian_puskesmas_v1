@@ -22,14 +22,20 @@ return new class extends Migration
             $table->boolean('called')->nullable(false)->default(false);
             $table->string('called_to')->nullable(false);
             $table->string('type')->nullable(false);
-            $table->integer('lantai')->default(1)->nullable(false);
+            $table->unsignedTinyInteger('lantai')->default(1)->nullable(false);
             $table->timestamps();
 
             // composite index
             $table->index(['called', 'created_at']);
 
+            // 🔹 index utama untuk scope antrian
+            $table->index(['lantai', 'called', 'created_at']);
+
             // unique index
             $table->unique(['number_code', 'created_at']);
+
+            // 🔹 index sekunder untuk pencarian pending per owner
+            $table->index(['owner_id', 'type', 'called']);
 
             // unique index for find exist pending
             $table->index(['owner_id', 'type', 'called', 'created_at']);

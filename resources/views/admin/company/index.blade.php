@@ -22,7 +22,7 @@
                             <div class="form-group">
                                 <label>Puskesmas</label>
                                 <input class="form-control" disabled value="{{ $company->name ?? '-' }}"
-                                    placeholder="Masukkan nama staff">
+                                    placeholder="Masukkan nama loket">
                             </div>
 
                             <div class="form-group">

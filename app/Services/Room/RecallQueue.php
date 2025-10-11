@@ -62,7 +62,7 @@ class ReCallQueue extends \App\Services\AbstractService
                 'lantai' => $this->room->lantai,
                 'number_queue' => $result->number_queue,
                 'called_to' => $this->room->name,
-                'initiator_name' => "Poli"
+                'initiator_name' => $this->room->name
             ]);
 
             DB::commit();

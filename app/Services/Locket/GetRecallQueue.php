@@ -45,8 +45,8 @@ class GetRecallQueue extends \App\Services\AbstractService
                 'type' => 'locket',
                 'lantai' => $locketStaff->lantai,
                 'number_queue' => $lastCall->number_queue,
-                'called_to' => "loket {$this->locketNumber}",
-                'initiator_name' => LocketList::from($this->locketCode)->name
+                'called_to' => $this->createCalledTo(),
+                'initiator_name' => $locketStaff->staff_name
             ]);
 
             DB::commit();
@@ -60,5 +60,17 @@ class GetRecallQueue extends \App\Services\AbstractService
             DB::rollBack();
             return Result::failure('Terjadi kesalahan: ' . $e->getMessage(), null);
         }
+    }
+
+
+    private function createCalledTo()
+    {
+        if (LocketList::from($this->locketCode)->hasLocketCode()) {
+            $name =  "Loket {$this->locketNumber}";
+        } else {
+            $name =  LocketList::from($this->locketCode)->name;
+        }
+
+        return $name;
     }
 }

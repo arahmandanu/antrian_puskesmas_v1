@@ -9,8 +9,7 @@
         <!-- Header -->
         <div class="w-full max-w-3xl mb-10 text-center">
             <h2 class="text-xl font-light">
-                Selamat datang <span class="font-semibold">{{ $loket->staff_name }}</span>,
-                Anda berada di <span class="font-semibold">Loket {{ $loket->locket_number }}</span>
+                Selamat datang <span class="font-semibold">{{ $loket->staff_name }}</span>
             </h2>
             <p class="text-gray-600">Panel Panggilan Antrian Staff Loket</p>
         </div>

@@ -19,8 +19,8 @@
                         <form role="form" method="POST" action="{{ route('admin.loket.store') }}">
                             @csrf
                             <div class="form-group">
-                                <label>Nama Staff</label>
-                                <input class="form-control" name="staff_name" placeholder="Masukkan nama staff" required>
+                                <label>Nama Loket</label>
+                                <input class="form-control" name="staff_name" placeholder="Masukkan nama loket" required>
                             </div>
 
                             <div class="form-group">
