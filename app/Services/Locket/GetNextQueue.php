@@ -60,6 +60,7 @@ class GetNextQueue extends \App\Services\AbstractService
                     LocketHistoryCall::create([
                         'locket_code' => $this->locket_code,
                         'locket_number' =>  $locketStaff->locket_number,
+                        'locket_staff_id' =>  $locketStaff->id,
                         'locket_staff_name' => $locketStaff->staff_name,
                         'number_queue' => $lastCall->formatAsQueueNumber(),
                         'process_time_queue_locket' => now()->diffInSeconds($lastCall->created_at)

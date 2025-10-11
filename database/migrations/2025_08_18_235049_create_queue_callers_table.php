@@ -25,14 +25,20 @@ return new class extends Migration
             $table->unsignedTinyInteger('lantai')->default(1)->nullable(false);
             $table->timestamps();
 
-            // 🔹 index utama untuk antrian harian
-            $table->index(['lantai', 'called', 'created_at']);
+            // ✅ For lastCallByCode()  → filter by number_code, called, created_at + order by id
+            $table->index(['number_code', 'called', 'created_at', 'id'], 'idx_last_call_by_code');
 
-            // 🔹 index untuk pencarian by owner dan type
-            $table->index(['owner_id', 'type', 'called', 'created_at']);
+            // ✅ For isExistPendingByOwnerid()  → owner_id, type, called, created_at
+            $table->index(['owner_id', 'type', 'called', 'created_at'], 'idx_exist_pending_owner');
 
-            // (opsional) jika kamu sering cari berdasarkan tanggal saja
-            $table->index(['created_at']);
+            // ✅ For lastCallByOwnerid()  → same filter, add id for ORDER BY optimization
+            $table->index(['owner_id', 'type', 'called', 'created_at', 'id'], 'idx_last_call_by_owner');
+
+            // ✅ For dashboard / stats → lantai, called, created_at
+            $table->index(['lantai', 'called', 'created_at'], 'idx_lantai_called_created');
+
+            // ✅ Optional (keep if you sometimes query by created_at only)
+            $table->index(['created_at'], 'idx_created_at');
         });
     }
 

@@ -14,6 +14,7 @@ class LocketHistoryCall extends Model
     protected $fillable = [
         'locket_code',
         'locket_number',
+        'locket_staff_id',
         'locket_staff_name',
         'number_queue',
         'process_time_queue_locket',

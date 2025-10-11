@@ -17,10 +17,23 @@ return new class extends Migration
             $table->id();
             $table->string('locket_code')->nullable(false);
             $table->integer('locket_number')->nullable();
+            $table->integer('locket_staff_id')->nullable();
             $table->text('locket_staff_name')->nullable();
             $table->string('number_queue')->nullable();
             $table->integer('process_time_queue_locket')->nullable();
             $table->timestamps();
+
+
+            // ✅ 1. Main lookup — find by locket_code + date (used in dashboard)
+            $table->index(['locket_code', 'created_at'], 'idx_locket_code_created');
+
+            // ✅ 2. Find by staff + date
+            $table->index(['locket_staff_id', 'created_at'], 'idx_staff_created');
+
+            // ✅ 3. Find by locket number (fast lookup)
+            $table->index(['locket_number', 'created_at'], 'idx_locket_number_created');
+
+            $table->index(['created_at'], 'idx_created_at_only');
         });
     }
 
