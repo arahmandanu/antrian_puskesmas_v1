@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\DateRangeHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +31,7 @@ class LocketQueue extends Model
     {
         return $query->where('locket_code', $locketCode)
             ->where('called', false)
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->orderBy('id', 'asc');
     }
 
@@ -39,7 +40,7 @@ class LocketQueue extends Model
         return $query->where('locket_code', $locketCode)
             ->where('locket_staff_id', $locketStaffId)
             ->where('called', true)
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->orderBy('id', 'desc');
     }
 
@@ -47,7 +48,7 @@ class LocketQueue extends Model
     {
         return $this->select('locket_code', DB::raw('count(*) as total'))
             ->where('called', false)
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->groupBy('locket_code')
             ->get();
     }
@@ -56,7 +57,7 @@ class LocketQueue extends Model
     {
         return $this->where('called', true)
             ->where('locket_staff_id', $locketStaffId)
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->limit(5)
             ->orderBy('updated_at', 'desc')
             ->get();

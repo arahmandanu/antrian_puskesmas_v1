@@ -59,8 +59,10 @@
             <h3 class="text-xl font-semibold mb-4">Riwayat Panggilan</h3>
             <ul id="riwayat" class="space-y-2 text-lg text-gray-800">
                 @forelse ($histories as $history)
-                    <li>{{ $history->locket_code . $history->number_queue }} -
-                        {{ \App\Enum\LocketList::from($history->locket_code)->name }}</li>
+                    <li>
+                        {{ $history->formatAsQueueNumber() }} -
+                        {{ \App\Enum\LocketList::from($history->locket_code)->name }}
+                    </li>
                 @empty
                     <li class="text-gray-500">Belum ada panggilan</li>
                 @endforelse

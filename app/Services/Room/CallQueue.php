@@ -2,6 +2,7 @@
 
 namespace App\Services\Room;
 
+use App\Helpers\DateRangeHelper;
 use App\Models\QueueCaller;
 use App\Models\Room;
 use App\Models\RoomQueue;
@@ -36,7 +37,7 @@ class CallQueue extends \App\Services\AbstractService
                 if ($exist = RoomQueue::whereIn('room_code', $roomRequired->pluck('code')->toArray())
                     ->where('called', true)
                     ->where('status', \App\Enum\RoomQueueStatus::WAITING->value)
-                    ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                    ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
                     ->first()
                 ) {
                     DB::rollBack();

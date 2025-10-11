@@ -3,6 +3,7 @@
 namespace App\Services\Locket;
 
 use App\Enum\LocketList;
+use App\Helpers\DateRangeHelper;
 use App\Models\Company;
 use App\Models\LocketQueue;
 use App\Services\Printer\LocketPrint;
@@ -56,7 +57,7 @@ class CreateQueue extends \App\Services\AbstractService
     public function generateQueueNumber()
     {
         $current = LocketQueue::where('locket_code', $this->code)
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->orderBy('id', 'desc')
             ->first();
 

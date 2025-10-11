@@ -2,6 +2,7 @@
 
 namespace App\Services\Room;
 
+use App\Helpers\DateRangeHelper;
 use App\Models\Room;
 use App\Models\RoomQueue;
 use App\Utils\Result;
@@ -23,7 +24,7 @@ class GetQueueByRoom extends \App\Services\AbstractService
             $resultsNotCalled =  RoomQueue::whereIn('room_code', $roomIds)
                 ->where('called', false)
                 ->where('status', \App\Enum\RoomQueueStatus::WAITING->value)
-                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
                 ->orderBy('id', 'asc')
                 ->take(5)
                 ->get()
@@ -32,20 +33,20 @@ class GetQueueByRoom extends \App\Services\AbstractService
             $totalNotCalled = RoomQueue::whereIn('room_code', $roomIds)
                 ->where('called', false)
                 ->where('status', \App\Enum\RoomQueueStatus::WAITING->value)
-                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
                 ->orderBy('id', 'asc')
                 ->take(5)
                 ->count();
         } else {
             $resultsNotCalled =  $this->room->queuesNotCalled()
-                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
                 ->take(5)
                 ->get()->map(function ($queue) {
                     return $queue->room_code . $queue->number_queue;
                 });
 
             $totalNotCalled =  $this->room->queuesNotCalled()
-                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
                 ->count();
         }
 

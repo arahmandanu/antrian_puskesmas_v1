@@ -3,6 +3,7 @@
 namespace App\Services\Room;
 
 use App\Enum\RoomQueueStatus;
+use App\Helpers\DateRangeHelper;
 use App\Models\Room;
 use App\Models\RoomQueue;
 use App\Utils\Result;
@@ -46,7 +47,7 @@ class CreateQueue extends \App\Services\AbstractService
     public function generateNumberQueue()
     {
         $current = RoomQueue::where('room_code', $this->room->code)
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->orderBy('id', 'desc')
             ->first();
 

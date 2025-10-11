@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\DateRangeHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\MyHelper;
@@ -32,7 +33,7 @@ class QueueCaller extends Model
         return $this->where('owner_id', $ownerId)
             ->where('type', $type)
             ->where('called', false)
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->limit(1)
             ->first();
     }
@@ -42,7 +43,7 @@ class QueueCaller extends Model
         return $query->where('owner_id', $ownerId)
             ->where('type', $type)
             ->where('called', true)
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->limit($limit)
             ->orderBy('id', 'desc');
     }
@@ -51,7 +52,7 @@ class QueueCaller extends Model
     {
         return $query
             ->where('lantai', $lantai)
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->where('called', false)
             ->orderBy('id', 'asc');
     }
@@ -61,7 +62,7 @@ class QueueCaller extends Model
         return $query
             ->where('number_code', $code)
             ->where('called', true)
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->limit($limit)
             ->orderBy('id', 'desc');
     }
@@ -70,7 +71,7 @@ class QueueCaller extends Model
     {
         return $query
             ->where('lantai', $lantai)
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->where('called', true)
             ->limit($limit)
             ->orderBy('created_at', 'desc');

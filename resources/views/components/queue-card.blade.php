@@ -1,4 +1,3 @@
-{{-- resources/views/components/queue-card.blade.php --}}
 <div id="{{ $queue['type'] }}-{{ $queue['staff']['id'] }}"
     class="min-w-[340px] bg-white rounded-3xl shadow-2xl border border-gray-200 flex flex-col items-center justify-between text-center px-8 py-6 w-fit h-fit mx-auto">
     <!-- Header Poli -->
@@ -10,7 +9,7 @@
     <span
         class="font-extrabold text-green-700 drop-shadow-xl nomor-antrian text-[clamp(3rem,4vw,5rem)] leading-tight tracking-tighter text-center break-words">
         @if (isset($queue['queue']))
-            {{ $queue['queue']['number_code'] }}{{ $queue['queue']['number_queue'] }}
+            {{ $queue['queue']['number_code'] }}{{ \App\Helpers\MyHelper::formatNumberQueue($queue['queue']['number_queue']) }}
         @else
             -
         @endif

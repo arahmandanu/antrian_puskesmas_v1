@@ -64,7 +64,7 @@
                                         value="{{ $queue['queue']['number_code'] }}{{ $queue['queue']['number_queue'] }}">
                                     <span id="current-call">
                                         <span
-                                            class="text-yellow-500">{{ $queue['queue']['number_code'] }}</span><span>{{ $queue['queue']['number_queue'] }}</span>
+                                            class="text-yellow-500">{{ $queue['queue']['number_code'] }}</span><span>{{ App\Helpers\MyHelper::formatNumberQueue($queue['queue']['number_queue']) }}</span>
                                     </span>
                                 @else
                                     <input type="hidden" id="nomor-antrian" value="">
@@ -96,7 +96,7 @@
 
                                 <span id="current-call">
                                     <span
-                                        class="text-yellow-500">{{ $queue['queue']['number_code'] }}</span><span>{{ $queue['queue']['number_queue'] }}</span>
+                                        class="text-yellow-500">{{ $queue['queue']['number_code'] }}</span><span>{{ App\Helpers\MyHelper::formatNumberQueue($queue['queue']['number_queue']) }}</span>
                                 </span>
                             @else
                                 <input type="hidden" id="nomor-antrian" value="">

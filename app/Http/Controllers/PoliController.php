@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\DateRangeHelper;
 use App\Models\Room;
 use App\Models\RoomQueue;
 use App\Services\Room\CallQueue;
@@ -35,7 +36,7 @@ class PoliController extends Controller
             $queueCalled = RoomQueue::whereIn('room_code', $roomIds)
                 ->where('called', true)
                 ->where('status', \App\Enum\RoomQueueStatus::WAITING->value)
-                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
                 ->orderByDesc('id')
                 ->take(5)
                 ->get()
@@ -44,7 +45,7 @@ class PoliController extends Controller
             $resultsNotCalled =  RoomQueue::whereIn('room_code', $roomIds)
                 ->where('called', false)
                 ->where('status', \App\Enum\RoomQueueStatus::WAITING->value)
-                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
                 ->orderBy('id', 'asc')
                 ->take(5)
                 ->get()
@@ -57,20 +58,20 @@ class PoliController extends Controller
         } else {
             $showHistory = true;
             $queueCalled = $room->queuesCalled()
-                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
                 ->take(5)->get()->map(function ($queue) {
                     return $queue->room_code . $queue->number_queue;
                 });
 
             $resultsNotCalled =  $room->queuesNotCalled()
-                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
                 ->take(5)->get()->map(function ($queue) {
                     return $queue->room_code . $queue->number_queue;
                 });
 
             $lastDataCall = null;
             if ($lastCalled = $room->queuesCalled()
-                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->take(1)->first()
+                ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())->take(1)->first()
             ) {
                 $lastDataCall = $lastCalled->room_code . $lastCalled->number_queue;
             }
@@ -82,7 +83,7 @@ class PoliController extends Controller
             'queuesCalled' => $queueCalled,
             'queueNotCalled' => $resultsNotCalled,
             'totalQueueNotCalled' => $room->queuesNotCalled()
-                ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->count(),
+                ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())->count(),
             'lastCalled' => $lastDataCall,
             'showHistory' => $showHistory
         ]);
@@ -130,7 +131,7 @@ class PoliController extends Controller
 
         $queue = RoomQueue::where('room_code', '=', $roomCode)
             ->where('number_queue', '=', $numberCode)
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->first();
 
         if (!$queue) {

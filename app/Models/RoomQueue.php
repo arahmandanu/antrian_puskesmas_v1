@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\DateRangeHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,7 +30,7 @@ class RoomQueue extends Model
         return $this
             ->where('room_code', '=', $roomCode)
             ->where('number_queue', $numberQueue)
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->first();
     }
 

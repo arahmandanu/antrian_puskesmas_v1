@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\DateRangeHelper;
 use App\Models\LocketStaff;
 use App\Models\Room;
 use Illuminate\Http\Request;
@@ -21,11 +22,11 @@ class MasterController extends Controller
             ->selectRaw('owner_id, type, MAX(id) as max_id')
             ->where('called', true)
             ->where('lantai', $lantai)
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->groupBy('owner_id', 'type');
 
         $latestCalled = DB::table('queue_callers as q')
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->joinSub($sub, 't', function ($join) {
                 $join->on('q.id', '=', 't.max_id');
             })
@@ -48,7 +49,12 @@ class MasterController extends Controller
                 }
             }
 
-            $collect['name'] = array_key_exists('locket_number', $staff) ? $staff['staff_name'] : $staff['name'];
+            $collect['name'] = array_key_exists('locket_number', $staff)
+                ? (isset($staff['locket_number'])
+                    ? "{$staff['staff_name']} {$staff['locket_number']}"
+                    : $staff['staff_name'])
+                : $staff['name'];
+            $collect['type'] = array_key_exists('locket_number', $staff) ? "locket" : 'poli';
             $collect['type'] = array_key_exists('locket_number', $staff) ? "locket" : 'poli';
             $allList[] = $collect;
         }
@@ -82,11 +88,11 @@ class MasterController extends Controller
             ->selectRaw('owner_id,type, MAX(id) as max_id')
             ->where('called', true)
             ->where('lantai', $lantai)
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->groupBy('owner_id', 'type');
 
         $latestCalled = DB::table('queue_callers as q')
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
             ->joinSub($sub, 't', function ($join) {
                 $join->on('q.id', '=', 't.max_id');
             })
@@ -110,7 +116,11 @@ class MasterController extends Controller
                 }
             }
 
-            $collect['name'] = array_key_exists('locket_number', $staff) ? $staff['staff_name'] : $staff['name'];
+            $collect['name'] = array_key_exists('locket_number', $staff)
+                ? (isset($staff['locket_number'])
+                    ? "{$staff['staff_name']} {$staff['locket_number']}"
+                    : $staff['staff_name'])
+                : $staff['name'];
             $collect['type'] = array_key_exists('locket_number', $staff) ? "locket" : 'poli';
             $allList[] = $collect;
         }

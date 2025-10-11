@@ -2,6 +2,7 @@
 
 namespace App\Services\Room;
 
+use App\Helpers\DateRangeHelper;
 use App\Models\QueueCaller;
 use App\Models\Room;
 use App\Models\RoomQueue;
@@ -34,7 +35,7 @@ class ReCallQueue extends \App\Services\AbstractService
                 $result = RoomQueue::whereIn('room_code', $roomIds)
                     ->where('called', true)
                     ->where('status', \App\Enum\RoomQueueStatus::WAITING->value)
-                    ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                    ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
                     ->orderByDesc('id')
                     ->take(1)->first();
             } else {
@@ -45,7 +46,7 @@ class ReCallQueue extends \App\Services\AbstractService
                 }
 
                 $result = $this->room->queuesCalled()
-                    ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                    ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
                     ->take(1)->first();
             }
 
