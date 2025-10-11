@@ -49,36 +49,12 @@ class LocketController extends Controller
     {
         $allTotal = (new LocketQueue())->locketTotal();
         $result = $allTotal->pluck('total', 'locket_code')->toArray();
-        $menus = [
-            [
-                'type' => LocketList::PENDAFTARAN,
-                'color' => 'yellow',
-                'icon' => '📝',
-                'title' => 'Pendaftaran',
-                'colorClasses' => 'bg-yellow-400 hover:bg-yellow-300 text-yellow-800',
-            ],
-            [
-                'type' => LocketList::LABORATE,
-                'color' => 'blue',
-                'icon' => '🔬',
-                'title' => 'Laborate',
-                'colorClasses' => 'bg-blue-400 hover:bg-blue-300 text-blue-800',
-            ],
-            [
-                'type' => LocketList::LANSIA,
-                'color' => 'pink',
-                'icon' => '👵',
-                'title' => 'Lansia',
-                'colorClasses' => 'bg-pink-400 hover:bg-pink-300 text-pink-800',
-            ],
-            [
-                'type' => LocketList::FARMASI,
-                'color' => 'green',
-                'icon' => '💊',
-                'title' => 'Farmasi',
-                'colorClasses' => 'bg-green-400 hover:bg-green-300 text-green-800',
-            ],
-        ];
+        $menus = [];
+        foreach (LocketList::cases() as $case) {
+            if ($locket_number->canHandle($case->value)) {
+                $menus[] = LocketList::from($case->value)->asMenuList();
+            }
+        }
 
         return view('loket_staff.index', [
             'loket' => $locket_number,

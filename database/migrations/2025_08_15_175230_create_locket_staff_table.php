@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('staff_name')->nullable(false);
             $table->string('locket_number')->nullable(false);
+            $table->json('allowed_codes')->nullable();
             $table->integer('lantai')->default(1)->nullable(false);
             $table->timestamps();
         });

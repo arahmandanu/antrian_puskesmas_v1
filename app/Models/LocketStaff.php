@@ -15,8 +15,13 @@ class LocketStaff extends Model
         'staff_name',
         'locket_number',
         'lantai',
+        'allowed_codes',
         'created_at',
         'updated_at'
+    ];
+
+    protected $casts = [
+        'allowed_codes' => 'array', // otomatis ubah JSON <-> array
     ];
 
     public function canCreateLocket()
@@ -34,5 +39,10 @@ class LocketStaff extends Model
 
         $usedLocket = $this->all()->pluck('locket_number')->toArray();
         return array_diff(range(1, config('mysite.total_loket')), $usedLocket);
+    }
+
+    public function canHandle(string $code): bool
+    {
+        return in_array($code, $this->allowed_codes ?? []);
     }
 }

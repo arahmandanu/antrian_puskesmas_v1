@@ -50,6 +50,20 @@
                                 </select>
                             </div>
 
+                            <div class="form-group">
+                                <label>Kode Antrian yang dapat dilayani</label>
+                                @foreach ($allowedCodes as $code)
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="allowed_codes[]"
+                                            value="{{ $code->value }}" id="code_{{ $code->value }}"
+                                            {{ in_array($code->value, $loket->allowed_codes ?? []) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="code_{{ $code->value }}">
+                                            {{ $code->value }} - {{ $code->name }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+
                             <button type="submit" class="btn btn-success">Submit</button>
                             <button type="reset" class="btn btn-warning">Reset</button>
                         </form>

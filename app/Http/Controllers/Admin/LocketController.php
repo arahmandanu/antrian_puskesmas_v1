@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enum\LocketList;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreLocketStaffRequest;
+use App\Http\Requests\UpdateLocketStaffRequest;
 use Illuminate\Http\Request;
 use \App\Models\LocketStaff;
+use Illuminate\Contracts\Cache\Store;
 
 class LocketController extends Controller
 {
@@ -35,6 +39,7 @@ class LocketController extends Controller
         return view('admin.loket.create', [
             'availableLokets' => (new LocketStaff)->availableLocket(),
             'lantaiOptions' => range(1, config('mysite.total_lantai')),
+            'allowedCodes' => \App\Enum\LocketList::cases(),
         ]);
     }
 
@@ -44,13 +49,9 @@ class LocketController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreLocketStaffRequest $request)
     {
-        $validatedData = $request->validate([
-            'staff_name' => 'required|string|max:255',
-            'lantai' => 'required|integer|in:' . implode(',', range(1, config('mysite.total_lantai'))),
-            'locket_number' => 'required|unique:locket_staff,locket_number|integer|in:' . implode(',', (new LocketStaff)->availableLocket()),
-        ]);
+        $validatedData = $request->validated();
 
         if ($loket = LocketStaff::create($validatedData)) {
             flash()->success('Loket baru berhasil dibuat.');
@@ -84,6 +85,7 @@ class LocketController extends Controller
             'loket' => $loket,
             'availableLokets' => (new LocketStaff)->availableLocket($loket->locket_number),
             'lantaiOptions' => range(1, config('mysite.total_lantai')),
+            'allowedCodes' => \App\Enum\LocketList::cases(),
         ]);
     }
 
@@ -94,14 +96,9 @@ class LocketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, LocketStaff $loket)
+    public function update(UpdateLocketStaffRequest $request, LocketStaff $loket)
     {
-        $validatedData = $request->validate([
-            'staff_name' => 'required|string|max:255',
-            'lantai' => 'required|integer|in:' . implode(',', range(1, config('mysite.total_lantai'))),
-            'locket_number' => 'required|integer|in:' . implode(',', (new LocketStaff)->availableLocket($loket->locket_number)),
-        ]);
-
+        $validatedData = $request->validated();
         if ($loket->update($validatedData)) {
             flash()->success('Loket berhasil diperbarui.');
             return redirect()->route('admin.loket.edit', $loket->id);
