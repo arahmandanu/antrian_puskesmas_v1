@@ -149,7 +149,8 @@ class PoliController extends Controller
         $queue->status = \App\Enum\RoomQueueStatus::COMPLETED->value;
         $queue->called = false;
         $error = false;
-        $message = Lang::get('messages.success_retrive_data', [], 'id');
+
+        $message = Lang::get('messages.success_finish_queue', ['queue' => $queue->formatAsQueueNumber()], 'id');
         try {
             $queue->save();
         } catch (\Throwable $th) {

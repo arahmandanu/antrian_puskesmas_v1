@@ -3,16 +3,14 @@
 namespace App\Http\Middleware;
 
 use App\Models\Company;
-use App\Models\LocketCall;
 use App\Models\LocketQueue;
-use App\Models\Room;
-use App\Models\RoomQeueueCall;
 use App\Models\RoomQueue;
 use App\Models\StatConsole;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use starekrow\Lockbox\CryptoKey;
+use Carbon\Carbon;
 
 class IsCompanyValid
 {
@@ -58,14 +56,15 @@ class IsCompanyValid
 
     private function initiateTable()
     {
-        // empty queue
-        RoomQueue::truncate();
-        RoomQeueueCall::truncate();
-        LocketQueue::truncate();
-        LocketCall::truncate();
+        // Delete from RoomQueue
+        RoomQueue::where('called', true) // or whatever column indicates "already called"
+            ->where('created_at', '<', Carbon::now()->subDays(2))
+            ->delete();
 
-        // Reset to 0 again
-        Room::query()->update(['current_queue' => null, 'last_call_queue' => null, 'last_call_time' => null]);
+        // Delete from LocketQueue
+        LocketQueue::where('called', true)
+            ->where('created_at', '<', Carbon::now()->subDays(2))
+            ->delete();
     }
 
     private function fillTodayStat($stat)

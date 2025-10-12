@@ -121,9 +121,10 @@
                     dataType: "JSON"
                 })
                 .fail(function(data, textStatus, xhr) {
+                    const message = data?.responseJSON?.message || 'Something went wrong!';
                     Swal.fire({
                         title: 'Error!',
-                        text: data.responseJSON.message,
+                        text: message,
                         icon: 'error',
                         confirmButtonText: 'Cool',
                         didOpen: () => {

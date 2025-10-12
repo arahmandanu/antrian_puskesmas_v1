@@ -15,6 +15,7 @@ class RoomQueueHistoryCall extends Model
         'room_code',
         'number_queue',
         'process_time_queue_room',
+        'number_code',
         'created_at',
         'updated_at'
     ];

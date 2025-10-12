@@ -95,10 +95,11 @@ class CallQueue extends \App\Services\AbstractService
                 ]);
 
                 // 7️⃣ Save call history
-                if ($this->room->last_call_time && $this->room->last_call_queue) {
+                if ($this->room->last_call_time && $this->room->lastQueue) {
                     RoomQueueHistoryCall::create([
                         'room_code'               => $this->room->code,
-                        'number_queue'            => $this->room->last_call_queue,
+                        'number_queue'            => $this->room->lastQueue->number_queue,
+                        'number_code'          => $this->room->lastQueue->room_code,
                         'process_time_queue_room' => $this->currentTime->diffInSeconds($this->room->last_call_time),
                     ]);
                 }

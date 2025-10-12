@@ -24,4 +24,5 @@ return [
     'queue_not_called_yet' => 'Antrian belum dipanggil',
     'queue_already_completed' => 'Antrian sudah selesai',
     'have_unfinished_queue' => 'Masih ada antrian yang belum selesai :queue',
+    'success_finish_queue' => 'Berhasil menyelesaikan antrian :queue',
 ];

@@ -190,7 +190,11 @@
                         },
                         dataType: "JSON",
                         success: function(response) {
-                            // console.log(response);
+                            Swal.fire({
+                                title: "Berhasil!",
+                                text: response.message,
+                                icon: "success"
+                            });
                         },
                         error: function(response) {
                             Swal.fire({
