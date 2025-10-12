@@ -1,4 +1,3 @@
-{{-- @dd($queue) --}}
 <div id="{{ $queue['type'] }}-{{ $queue['id'] }}"
     class="min-w-[340px] bg-white rounded-3xl shadow-2xl border border-gray-200 flex flex-col items-center justify-between text-center px-8 py-6 w-fit h-fit mx-auto">
     <!-- Header Poli -->
