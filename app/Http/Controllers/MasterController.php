@@ -34,6 +34,7 @@ class MasterController extends Controller
             $ext = strtolower($file->getExtension());
             return in_array($ext, ['jpg', 'jpeg', 'webp']);
         });
+
         $allList = $this->listQueue($lantai);
         return view('show-all-queue-v2', [
             'calledListright' => array_slice($allList, 0, 4),
@@ -46,8 +47,8 @@ class MasterController extends Controller
 
     private function listQueue($lantai)
     {
-        $allRoomLantai = Room::where('lantai', $lantai)->where('show', true)->get()->toArray();
-        $allLocketLantai = LocketStaff::where('lantai', $lantai)->get()->toArray();
+        $allRoomLantai = Room::with('lastQueue')->where('lantai', $lantai)->where('show', true)->get()->toArray();
+        $allLocketLantai = LocketStaff::with('lastCalledQueue')->where('lantai', $lantai)->get()->toArray();
 
         $sub = DB::table('queue_callers')
             ->selectRaw('owner_id, type, MAX(id) as max_id')
@@ -65,6 +66,7 @@ class MasterController extends Controller
             ->get();
 
         $allList = [];
+        dd(array_merge($allLocketLantai, $allRoomLantai));
         foreach (array_merge($allLocketLantai, $allRoomLantai) as $staff) {
             $collect = ['staff' => $staff];
             foreach ($latestCalled as $calledQueue) {
