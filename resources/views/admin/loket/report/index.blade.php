@@ -40,7 +40,7 @@
                                         <th>Staff ID</th>
                                         <th>Nama Staff</th>
                                         <th>Total Antrian Terpanggil</th>
-                                        <th>Average Process Time</th>
+                                        <th>Rata-Rata Antrian Terpanggil</th>
                                     </tr>
                                 </thead>
                                 <tbody>

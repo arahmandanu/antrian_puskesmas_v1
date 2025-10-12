@@ -13,11 +13,11 @@
                         class="fa fa-bar-chart fa-fw"></i> Report Loket</a>
             </li>
 
-            <li>
+            {{-- <li>
                 <a href="{{ route('admin.loket.report.index') }}"
                     class="{{ request()->is('admin_dashboard/report/loket*') ? 'active' : '' }}"><i
                         class="fa fa-bar-chart fa-fw"></i> Report Poli</a>
-            </li>
+            </li> --}}
 
             <li>
                 <a href="{{ route('admin.users.index') }}"
