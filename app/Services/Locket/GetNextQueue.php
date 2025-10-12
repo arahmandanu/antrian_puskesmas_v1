@@ -24,71 +24,74 @@ class GetNextQueue extends \App\Services\AbstractService
 
     public function handle()
     {
-        DB::beginTransaction();
         try {
-            $locketStaff = LocketStaff::where('id', $this->locket_number)->first();
-            $pendingExist = ((new QueueCaller)->isExistPendingByOwnerid($locketStaff->id, 'locket'));
-            if ($pendingExist) {
-                DB::rollBack();
-                return Result::failure(Lang::get('messages.pending_queue', ['queue' => $pendingExist->formatAsQueueNumber()], 'id'), null);
-            }
+            return DB::transaction(function () {
+                $locketStaff = LocketStaff::findOrFail($this->locket_number);
 
-            $next = LocketQueue::nextQueue($this->locket_code)->first();
-            if (!$next) {
-                DB::rollBack();
-                return Result::failure(Lang::get('messages.next_queue_is_empty', [], 'id'), null);
-            }
+                // Check if pending queue exists
+                $pendingExist = (new QueueCaller)->isExistPendingByOwnerid($locketStaff->id, 'locket');
+                if ($pendingExist) {
+                    return Result::failure(Lang::get('messages.pending_queue', [
+                        'queue' => $pendingExist->formatAsQueueNumber(),
+                    ], 'id'));
+                }
 
-            # Mengisi locket id pada antrian dan menandai sudah dipanggil
-            $next->called = true;
-            $next->locket_staff_id = $locketStaff->id;
-            $next->save();
+                // Get next available queue
+                $next = LocketQueue::nextQueue($this->locket_code)->first();
+                if (!$next) {
+                    return Result::failure(Lang::get('messages.next_queue_is_empty', [], 'id'));
+                }
 
-            if ($locketStaff) {
+                // Update next queue & staff
+                $next->update([
+                    'called' => true,
+                    'locket_staff_id' => $locketStaff->id,
+                ]);
+
+                $locketStaff->update(['last_called_queue_id' => $next->id]);
+
+                // Create queue caller record
                 QueueCaller::create([
                     'owner_id' => $locketStaff->id,
-                    'number_code' =>  $this->locket_code,
+                    'number_code' => $this->locket_code,
                     'called' => false,
                     'type' => 'locket',
                     'lantai' => $locketStaff->lantai,
                     'number_queue' => $next->number_queue,
                     'called_to' => $this->createCalledTo($locketStaff),
-                    'initiator_name' => $locketStaff->staff_name
+                    'initiator_name' => $locketStaff->staff_name,
                 ]);
 
+                // Record to history
                 if ($lastCall = LocketQueue::lastCallByLocketCode($this->locket_code, $locketStaff->id)->first()) {
                     LocketHistoryCall::create([
                         'locket_code' => $this->locket_code,
-                        'locket_number' =>  $locketStaff->locket_number,
-                        'locket_staff_id' =>  $locketStaff->id,
+                        'locket_number' => $locketStaff->locket_number,
+                        'locket_staff_id' => $locketStaff->id,
                         'locket_staff_name' => $locketStaff->staff_name,
                         'number_queue' => $lastCall->formatAsQueueNumber(),
-                        'process_time_queue_locket' => now()->diffInSeconds($lastCall->created_at)
+                        'process_time_queue_locket' => now()->diffInSeconds($lastCall->created_at),
                     ]);
                 }
-            }
 
-            DB::commit();
-            return Result::success([
-                'locket_code' => $this->locket_code,
-                'number_queue' => $next->formatAsQueueNumber(false),
-                'locket_number' => $this->locket_number,
-                'poli' => LocketList::from($this->locket_code)->name
-            ], Lang::get('messages.success_call', [], 'id'));
-        } catch (\Exception $e) {
-            DB::rollBack();
+                // ✅ Transaction auto-commits if we reach here
+                return Result::success([
+                    'locket_code' => $this->locket_code,
+                    'number_queue' => $next->formatAsQueueNumber(false),
+                    'locket_number' => $this->locket_number,
+                    'poli' => LocketList::from($this->locket_code)->name,
+                ], Lang::get('messages.success_call', [], 'id'));
+            });
+        } catch (\Throwable $e) {
+            // Transaction automatically rolled back
             return Result::failure('Terjadi kesalahan: ' . $e->getMessage(), null);
         }
     }
 
     private function createCalledTo($locketStaff)
     {
-        if (LocketList::from($this->locket_code)->hasLocketCode()) {
-            $name =  "Loket {$locketStaff->locket_number}";
-        } else {
-            $name =  LocketList::from($this->locket_code)->name;
-        }
-
-        return $name;
+        return LocketList::from($this->locket_code)->hasLocketCode()
+            ? "Loket {$locketStaff->locket_number}"
+            : LocketList::from($this->locket_code)->name;
     }
 }

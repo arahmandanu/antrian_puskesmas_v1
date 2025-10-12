@@ -26,7 +26,7 @@ return new class extends Migration
 
             // composite index
             $table->index(['locket_code', 'called', 'created_at']);
-            $table->index(['created_at', 'locket_code', 'called']);
+            $table->index(['locket_code', 'created_at', 'id']);
             $table->index(['locket_code', 'created_at', 'id'], 'idx_locket_code_created_id');
             // unique index
             $table->unique(['locket_code', 'number_queue', 'called'], 'uq_locket_queue_code_number_called');

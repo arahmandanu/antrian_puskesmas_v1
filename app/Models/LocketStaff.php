@@ -16,6 +16,7 @@ class LocketStaff extends Model
         'locket_number',
         'lantai',
         'allowed_codes',
+        'last_called_queue_id',
         'created_at',
         'updated_at'
     ];
@@ -23,6 +24,11 @@ class LocketStaff extends Model
     protected $casts = [
         'allowed_codes' => 'array', // otomatis ubah JSON <-> array
     ];
+
+    public function lastCalledQueue()
+    {
+        return $this->belongsTo(LocketQueue::class, 'last_called_queue_id');
+    }
 
     public function canCreateLocket()
     {

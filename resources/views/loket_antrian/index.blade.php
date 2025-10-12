@@ -136,7 +136,7 @@
                     setTimeout(() => {
                         overlay.classList.add('hidden');
                         buttons.forEach(btn => btn.disabled = false);
-                    }, 1000);
+                    }, 100);
                 });
         }
     </script>

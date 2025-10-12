@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('locket_number')->nullable(true);
             $table->json('allowed_codes')->nullable();
             $table->integer('lantai')->default(1)->nullable(false);
+            $table->unsignedBigInteger('last_called_queue_id')->nullable();
             $table->timestamps();
         });
     }
