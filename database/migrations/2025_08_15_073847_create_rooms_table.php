@@ -22,6 +22,10 @@ return new class extends Migration
             $table->integer('lantai')->default(1)->nullable(false);
             $table->string('last_call_queue')->nullable();
             $table->dateTime('last_call_time')->nullable();
+
+            // For last Queue relation
+            $table->unsignedBigInteger('last_room_queue_id')->nullable()->index();
+
             $table->timestamps();
         });
     }

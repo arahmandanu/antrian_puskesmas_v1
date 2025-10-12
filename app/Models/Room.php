@@ -45,6 +45,7 @@ class Room extends Model
         'lantai',
         'last_call_queue',
         'last_call_time',
+        'last_room_queue_id',
     ];
 
     /**
@@ -55,6 +56,11 @@ class Room extends Model
     protected $casts = [
         'show' => 'boolean',
     ];
+
+    public function lastQueue()
+    {
+        return $this->belongsTo(RoomQueue::class, 'last_room_queue_id');
+    }
 
     public function queues()
     {
