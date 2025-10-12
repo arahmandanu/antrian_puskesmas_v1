@@ -52,15 +52,18 @@ class MasterController extends Controller
         $allRoomLantai = Room::with('lastQueue')
             ->where('lantai', $lantai)
             ->where('show', true)
-            ->get()
-            ->map(fn($room) => (new RoomResource($room))->toArray(request()));
+            ->get();
 
         $allLocketLantai = LocketStaff::with('lastCalledQueue')
             ->where('lantai', $lantai)
-            ->get()
-            ->map(fn($locket) => (new LocketStaffResource($locket))->toArray(request()));
+            ->get();
 
-        $combined = $allLocketLantai->merge($allRoomLantai);
-        return $combined->values()->all();
+        // Convert each model collection to array via resource
+        $roomArray = RoomResource::collection($allRoomLantai)->map->toArray(request());
+        $locketArray = LocketStaffResource::collection($allLocketLantai)->map->toArray(request());
+
+        $combined = collect($locketArray)->merge($roomArray)->values()->all();
+
+        return $combined;
     }
 }
