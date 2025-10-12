@@ -47,7 +47,7 @@ class CreateQueue extends \App\Services\AbstractService
     public function generateNumberQueue()
     {
         $current = RoomQueue::where('room_code', $this->room->code)
-            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow(0))
             ->orderBy('id', 'desc')
             ->first();
 

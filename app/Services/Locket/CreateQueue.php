@@ -57,7 +57,7 @@ class CreateQueue extends \App\Services\AbstractService
     public function generateQueueNumber()
     {
         $current = LocketQueue::where('locket_code', $this->code)
-            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow(0))
             ->orderBy('id', 'desc')
             ->first();
 
