@@ -21,4 +21,9 @@ class LocketHistoryCall extends Model
         'created_at',
         'updated_at'
     ];
+
+    public function staff()
+    {
+        return $this->belongsTo(LocketStaff::class, 'locket_staff_id');
+    }
 }

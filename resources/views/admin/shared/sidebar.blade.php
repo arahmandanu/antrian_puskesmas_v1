@@ -7,17 +7,17 @@
                         class="fa fa-dashboard fa-fw"></i> Dashboard</a>
             </li>
 
-            {{-- <li>
-                <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level">
-                    <li>
-                        <a href="flot.html">Flot Charts</a>
-                    </li>
-                    <li>
-                        <a href="morris.html">Morris.js Charts</a>
-                    </li>
-                </ul>
-            </li> --}}
+            <li>
+                <a href="{{ route('admin.loket.report.index') }}"
+                    class="{{ request()->is('admin_dashboard/report/loket*') ? 'active' : '' }}"><i
+                        class="fa fa-bar-chart fa-fw"></i> Report Loket</a>
+            </li>
+
+            <li>
+                <a href="{{ route('admin.loket.report.index') }}"
+                    class="{{ request()->is('admin_dashboard/report/loket*') ? 'active' : '' }}"><i
+                        class="fa fa-bar-chart fa-fw"></i> Report Poli</a>
+            </li>
 
             <li>
                 <a href="{{ route('admin.users.index') }}"
@@ -36,6 +36,7 @@
                     class="{{ request()->is('admin_dashboard/loket*') ? 'active' : '' }}"><i
                         class="fa fa-users fa-fw"></i> Loket</a>
             </li>
+
             <li>
                 <a href="#"><i class="fa fa-wrench fa-fw"></i> Setting<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">

@@ -119,5 +119,11 @@ Route::middleware(['ValidApps'])->group(function () {
             Route::get('/', [App\Http\Controllers\Admin\CompanyController::class, 'index'])->name('admin.company.index');
             Route::put('/{company}', [App\Http\Controllers\Admin\CompanyController::class, 'update'])->name('admin.company.update');
         });
+
+        Route::group(['prefix' => 'report'], function () {
+            Route::group(['prefix' => 'loket'], function () {
+                Route::get('/', [App\Http\Controllers\Admin\LocketReportQueueController::class, 'index'])->name('admin.loket.report.index');
+            });
+        });
     });
 });

@@ -1104,6 +1104,9 @@
   .pt-8 {
     padding-top: calc(var(--spacing) * 8);
   }
+  .pb-3 {
+    padding-bottom: calc(var(--spacing) * 3);
+  }
   .pl-44 {
     padding-left: calc(var(--spacing) * 44);
   }

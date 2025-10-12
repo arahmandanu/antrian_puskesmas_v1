@@ -1,6 +1,7 @@
 {
     "/js/app.js": "/js/app.js",
     "/sound_cache.js": "/sound_cache.js",
+    "/chart.js": "/chart.js",
     "/css/locket.css": "/css/locket.css",
     "/css/app.css": "/css/app.css"
 }
