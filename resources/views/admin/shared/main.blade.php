@@ -57,6 +57,18 @@
             /* agar main menempati sisa tinggi layar */
         }
 
+        #wrapper {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            /* Make wrapper take remaining height */
+        }
+
+        #page-wrapper {
+            flex: 1;
+            /* Make page content grow to push footer down */
+        }
+
         footer {
             background-color: #333;
             color: #fff;
@@ -68,8 +80,7 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    <div id="wrapper">
-
+    <div id="wrapper" class="flex-grow-1 d-flex flex-column">
         @include('admin.shared.header')
 
         @include('admin.shared.sidebar')

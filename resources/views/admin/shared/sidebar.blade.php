@@ -3,21 +3,20 @@
         <ul class="nav in" id="side-menu">
 
             <li>
-                <a href="{{ route('admin.dashboard') }}" class="{{ request()->is('admin_dashboard') ? 'active' : '' }}"><i
-                        class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                <a href="{{ route('admin.dashboard') }}"
+                    class="{{ request()->is('admin_dashboard*') ? 'active' : '' }}"><i class="fa fa-dashboard fa-fw"></i>
+                    Dashboard</a>
             </li>
 
             <li>
-                <a href="{{ route('admin.loket.report.index') }}"
-                    class="{{ request()->is('admin_dashboard/report/loket*') ? 'active' : '' }}"><i
-                        class="fa fa-bar-chart fa-fw"></i> Report Loket</a>
+                <a href="#"><i class="fa fa-bar-chart fa-fw"></i> Report<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="{{ route('admin.loket.report.index') }}"
+                            class="{{ request()->is('admin_dashboard/report/loket*') ? 'active' : '' }}">Loket</a>
+                    </li>
+                </ul>
             </li>
-
-            {{-- <li>
-                <a href="{{ route('admin.loket.report.index') }}"
-                    class="{{ request()->is('admin_dashboard/report/loket*') ? 'active' : '' }}"><i
-                        class="fa fa-bar-chart fa-fw"></i> Report Poli</a>
-            </li> --}}
 
             <li>
                 <a href="{{ route('admin.users.index') }}"
@@ -45,9 +44,8 @@
                             class="{{ request()->is('admin_dashboard/loket*') ? 'active' : '' }}">Company</a>
                     </li>
                 </ul>
-                <!-- /.nav-second-level -->
             </li>
+
         </ul>
     </div>
 </aside>
-<!-- /.sidebar -->

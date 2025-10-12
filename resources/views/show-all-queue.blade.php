@@ -75,11 +75,7 @@
                         if (response.data !== null) {
                             if (!response) return;
 
-                            // Cek jika ada panggilan baru
                             data = response.data;
-                            // lastCallId = data.id;
-
-                            // Update current call
                             let box;
                             if (data.type == 'locket') {
                                 box = document.querySelector(
@@ -89,20 +85,16 @@
                             }
 
                             if (!box) return;
-                            // if (box.textContent == data.number_code + data.number_queue) return;
 
                             box.textContent = data.number_code + data.number_queue ?? "-";
-                            // animasi
+
                             box.classList.add("animate-pulse");
                             box.classList.remove("animate-pulse");
-
                             showCallOverlay(data.number_code, String(data.number_queue).padStart(3, '0'), data
                                 .called_to);
 
-                            // if (soundEnabled) {
                             isSpeaking = true;
                             soundCallerLocal(data);
-                            // }
                         }
                     }
                 },
@@ -135,21 +127,9 @@
                 `{{ asset('/sound/silahkan_menuju.mp3') }}`
             ]
             let allSound = [...front, ...middle, ...end, ...data.sound];
-            // NEW
             playSequential(allSound, () => {
                 closeCallOverlay();
             });
-
-            // const utter = new SpeechSynthesisUtterance(
-            //     `Nomor antrian ${data.number_code}${String(data.number_queue).padStart(3,'0')}, silakan menuju  ${data.called_to}.`
-            // );
-
-            // utter.lang = "id-ID";
-            // utter.rate = 0.9;
-            // utter.onend = () => {
-            //     closeCallOverlay();
-            // };
-            // speechSynthesis.speak(utter);
         }
 
         function preloadSounds(sounds) {
@@ -163,7 +143,7 @@
         }
 
         function playSequential(sounds, onFinish) {
-            preloadSounds(sounds); // pastikan semua sudah ada di cache
+            preloadSounds(sounds);
             let index = 0;
 
             function playNext() {
@@ -176,15 +156,14 @@
                 index++;
 
                 if (!audio) {
-                    playNext(); // skip kalau tidak ada
+                    playNext();
                     return;
                 }
 
-                // reset agar bisa diputar ulang
                 audio.currentTime = 0;
 
                 audio.onended = playNext;
-                audio.onerror = playNext; // kalau error, lanjut aja
+                audio.onerror = playNext;
                 audio.play().catch(err => {
                     console.warn("Audio play error:", err);
                     playNext();
@@ -234,14 +213,12 @@
         function showCallOverlay(code, number, destination) {
             const overlay = document.getElementById("call-overlay");
             const popup = document.getElementById("call-popup");
-            // const numberEl = document.getElementById("call-number");
             const numberElCode = document.getElementById("call-number-code");
             const numberElNumber = document.getElementById("call-number-queue");
 
             const destEl = document.getElementById("call-destination");
             numberElCode.innerText = code;
             numberElNumber.innerText = number;
-            // numberEl.textContent = numberText;
             destEl.textContent = destination;
 
             overlay.classList.remove("hidden");
@@ -262,7 +239,7 @@
             setTimeout(() => {
                 isSpeaking = false;
                 overlay.classList.add("hidden");
-            }, 500); // tunggu animasi keluar
+            }, 500);
         }
     </script>
 @endsection
