@@ -49,22 +49,22 @@
                 <!-- Right: Loket utama -->
                 <div class="grid grid-cols-1 gap-4 content-start">
                     @foreach ($calledListright as $queue)
-                        <div id="{{ $queue['type'] }}-{{ $queue['staff']['id'] }}"
+                        <div id="{{ $queue['type'] }}-{{ $queue['id'] }}"
                             class="bg-green-900 text-center text-white rounded-2xl p-4 flex flex-col justify-center"
                             style="width:330px; height:160px;">
 
                             <h3
                                 class="bg-white text-green-700 rounded px-1 mx-auto mb-1 text-[clamp(1rem,1.4vw,2.2rem)] font-black">
-                                {{ $queue['name'] }}
+                                {{ $queue['display_name'] }}
                             </h3>
 
                             <p class="text-[clamp(3rem,4vw,5rem)] font-extrabold">
-                                @if (isset($queue['queue']))
+                                @if (isset($queue['last_queue']))
                                     <input type="hidden" id="nomor-antrian"
-                                        value="{{ $queue['queue']['number_code'] }}{{ $queue['queue']['number_queue'] }}">
+                                        value="{{ $queue['last_queue']['code_queue'] }}{{ $queue['last_queue']['number_queue'] }}">
                                     <span id="current-call">
                                         <span
-                                            class="text-yellow-500">{{ $queue['queue']['number_code'] }}</span><span>{{ App\Helpers\MyHelper::formatNumberQueue($queue['queue']['number_queue']) }}</span>
+                                            class="text-yellow-500">{{ $queue['last_queue']['code_queue'] }}</span><span>{{ App\Helpers\MyHelper::formatNumberQueue($queue['last_queue']['number_queue']) }}</span>
                                     </span>
                                 @else
                                     <input type="hidden" id="nomor-antrian" value="">
@@ -81,22 +81,22 @@
             <!-- Baris 2: Loket tambahan -->
             <div class="flex flex-wrap gap-4">
                 @foreach ($calledListbottom as $queue)
-                    <div id="{{ $queue['type'] }}-{{ $queue['staff']['id'] }}"
+                    <div id="{{ $queue['type'] }}-{{ $queue['id'] }}"
                         class="bg-green-900 text-center text-white rounded-2xl p-4 flex flex-col justify-center"
                         style="width:330px; height:160px;">
 
                         <h3
                             class="bg-white text-green-700 rounded px-1 mx-auto mb-1 text-[clamp(1rem,1.4vw,2.2rem)] font-black">
-                            {{ $queue['name'] }}
+                            {{ $queue['display_name'] }}
                         </h3>
                         <p class="text-[clamp(3rem,4vw,5rem)] font-extrabold">
-                            @if (isset($queue['queue']))
+                            @if (isset($queue['last_queue']))
                                 <input type="hidden" id="nomor-antrian"
-                                    value="{{ $queue['queue']['number_code'] }}{{ $queue['queue']['number_queue'] }}">
+                                    value="{{ $queue['last_queue']['code_queue'] }}{{ $queue['last_queue']['number_queue'] }}">
 
                                 <span id="current-call">
                                     <span
-                                        class="text-yellow-500">{{ $queue['queue']['number_code'] }}</span><span>{{ App\Helpers\MyHelper::formatNumberQueue($queue['queue']['number_queue']) }}</span>
+                                        class="text-yellow-500">{{ $queue['last_queue']['code_queue'] }}</span><span>{{ App\Helpers\MyHelper::formatNumberQueue($queue['last_queue']['number_queue']) }}</span>
                                 </span>
                             @else
                                 <input type="hidden" id="nomor-antrian" value="">
