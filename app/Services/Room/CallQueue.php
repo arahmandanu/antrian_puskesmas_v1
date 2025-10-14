@@ -64,6 +64,7 @@ class CallQueue extends \App\Services\AbstractService
                 // 3️⃣ Find target queue
                 $queue = (new RoomQueue)->isExistByCode($this->roomCode, $this->numberQueue);
                 if (!$queue) {
+                    $this->updateLastHistory();
                     return Result::failure(
                         Lang::get('messages.queue_not_found', [], 'id'),
                         null
@@ -94,15 +95,19 @@ class CallQueue extends \App\Services\AbstractService
                     'initiator_name' => $this->room->name,
                 ]);
 
+                RoomQueueHistoryCall::create([
+                    'room_code'               => $this->room->code,
+                    'number_queue'            => $queue->number_queue,
+                    'number_code'          => $queue->room_code,
+                    'process_time_queue_room' => null,
+                    'room_id' => $this->room->id,
+                    'room_queue_id' => $queue->id,
+                    'called_at' => now(),
+                    'awaiting_called_duration' => $this->currentTime->diffInSeconds($queue->created_at)
+                ]);
+
                 // 7️⃣ Save call history
-                if ($this->room->last_call_time && $this->room->lastQueue) {
-                    RoomQueueHistoryCall::create([
-                        'room_code'               => $this->room->code,
-                        'number_queue'            => $this->room->lastQueue->number_queue,
-                        'number_code'          => $this->room->lastQueue->room_code,
-                        'process_time_queue_room' => $this->currentTime->diffInSeconds($this->room->last_call_time),
-                    ]);
-                }
+                $this->updateLastHistory();
 
                 // 8️⃣ Update room
                 $this->room->update([
@@ -120,6 +125,23 @@ class CallQueue extends \App\Services\AbstractService
             return $result;
         } catch (\Throwable $th) {
             return Result::failure($th->getMessage(), null);
+        }
+    }
+
+    private function updateLastHistory()
+    {
+        if ($history = RoomQueueHistoryCall::where('room_queue_id', $this->room->last_room_queue_id)
+            ->whereNull('process_time_queue_room')
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow(0))
+            ->first()
+        ) {
+            $updated = $history->update([
+                'process_time_queue_room' => $this->currentTime->diffInSeconds($history->created_at)
+            ]);
+
+            if (!$updated) {
+                throw new \RuntimeException("Failed to update process_time_queue_room for history ID: {$history->id}");
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ use App\Models\LocketHistoryCall;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
 
 class LocketReportQueueController extends Controller
 {
@@ -26,10 +27,17 @@ class LocketReportQueueController extends Controller
             ? Carbon::parse($request->input('end_date'))->endOfDay()
             : Carbon::now()->endOfDay();
 
-        $report = LocketHistoryCall::with('staff')
+        if ($startDate->diffInDays($endDate) > 7) {
+            throw ValidationException::withMessages([
+                'date_range' => 'Rentang tanggal maksimal hanya 7 hari.',
+            ]);
+        }
+
+        $datas = LocketHistoryCall::with('staff')
             ->whereBetween('created_at', [$startDate, $endDate])
-            ->get()
-            ->groupBy('locket_staff_id')
+            ->get();
+
+        $report = $datas->groupBy('locket_staff_id')
             ->map(function ($group) {
                 return (object)[
                     'locket_staff' => $group->first()->staff, // related LocketStaff model

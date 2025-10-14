@@ -89,8 +89,11 @@ enum LocketList: string
 
     public function soundCategory(): string
     {
+        # DIPISAH untuk kebutuhan kedepan sound jika ada penambahan kategori loket
         return match ($this) {
-            self::PENDAFTARAN, self::LANSIA, self::LABORATE => 'loket',
+            self::PENDAFTARAN => 'loket',
+            self::LANSIA => 'loket',
+            self::LABORATE => 'loket',
             self::FARMASI => 'ruang_farmasi',
         };
     }

@@ -15,17 +15,22 @@ return new class extends Migration
     {
         Schema::create('locket_history_call', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('locket_queue_id')->nullable();
             $table->string('locket_code')->nullable(false);
             $table->integer('locket_number')->nullable();
             $table->integer('locket_staff_id')->nullable();
             $table->text('locket_staff_name')->nullable();
             $table->string('number_queue')->nullable();
+
             $table->integer('process_time_queue_locket')->nullable();
+            $table->timestamp('called_at')->nullable();    // when they are called
+            $table->integer('awaiting_called_duration')->nullable();
             $table->timestamps();
 
 
             // ✅ 1. Main lookup — find by locket_code + date (used in dashboard)
             $table->index(['locket_code', 'created_at'], 'idx_locket_code_created');
+            $table->index(['locket_queue_id', 'created_at'], 'idx_locket_queue_id_created');
 
             // ✅ 2. Find by staff + date
             $table->index(['locket_staff_id', 'created_at'], 'idx_staff_created');

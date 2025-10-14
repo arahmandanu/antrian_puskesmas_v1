@@ -6,6 +6,9 @@
             <div class="col-lg-12">
                 <h1 class="page-header">Loket Report</h1>
             </div>
+            <div class="col-lg-12">
+                @include('flash::message')
+            </div>
         </div>
 
         <!-- Locket Report Section -->
@@ -19,13 +22,13 @@
                     <div class="panel-body">
                         <form method="GET" action="{{ route('admin.loket.report.index') }}" class="form-inline mb-3 pb-3">
                             <div class="form-group mr-2">
-                                <label for="start_date" class="mr-2">Start Date</label>
+                                <label for="start_date" class="mr-2">Dari</label>
                                 <input type="date" name="start_date" id="start_date" class="form-control"
                                     value="{{ request('start_date') }}">
                             </div>
 
                             <div class="form-group mr-2">
-                                <label for="end_date" class="mr-2">End Date</label>
+                                <label for="end_date" class="mr-2">Sampai</label>
                                 <input type="date" name="end_date" id="end_date" class="form-control"
                                     value="{{ request('end_date') }}">
                             </div>
@@ -33,20 +36,20 @@
                             <button type="submit" class="btn btn-primary">Filter</button>
                         </form>
 
+                        <hr>
+
                         @if (isset($report) && $report->count())
                             <table class="table table-bordered table-striped" id="report-table">
                                 <thead>
                                     <tr>
-                                        <th>Staff ID</th>
                                         <th>Nama Staff</th>
                                         <th>Total Antrian Terpanggil</th>
-                                        <th>Rata-Rata Antrian Terpanggil</th>
+                                        <th>Rata-Rata Menyelesaikan Antrian</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($report as $row)
                                         <tr>
-                                            <td>{{ $row->locket_staff->id ?? '-' }}</td>
                                             <td>{{ $row->locket_staff->staff_name ?? '-' }}
                                                 {{ $row->locket_staff->locket_number ?? '' }}</td>
                                             <td>{{ $row->total_calls }}</td>
@@ -59,26 +62,28 @@
                             <p>No report data found for the selected period.</p>
                         @endif
                     </div>
-
-                    <div class="row mt-4 mb-4">
-                        <div class="col-lg-3">
-                            <div class="panel panel-info">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">Antrian Populer</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <canvas id="queueDoughnutChart" style="height: 250px;"></canvas>
+                    <hr>
+                    <div class="panel-body">
+                        <div class="row mt-4 mb-4">
+                            <div class="col-lg-3">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Total Antrian Terpanggil</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <canvas id="queueDoughnutChart"></canvas>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-lg-9">
-                            <div class="panel panel-info">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">Total Antrian Per Hari</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <canvas id="stackedChart" style="height: 350px;"></canvas>
+                            <div class="col-lg-6">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Total Antrian Terpanggil (Hari)</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <canvas id="stackedChart"></canvas>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -88,6 +93,7 @@
             </div>
         </div>
     </div>
+
     <script>
         $(document).ready(function() {
             $('#report-table').DataTable({

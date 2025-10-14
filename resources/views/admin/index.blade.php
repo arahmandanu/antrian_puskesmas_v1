@@ -114,6 +114,9 @@
                 <div class="card text-center">
                     <div class="card-header">
                         <h1>Selamat datang di Halaman Admin</h1>
+
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo Puskesmas" class="img-thumbnail"
+                            style="max-width: 300px;">
                     </div>
                 </div>
             </div>

@@ -3,6 +3,7 @@
 namespace App\Services\Locket;
 
 use App\Enum\LocketList;
+use App\Helpers\DateRangeHelper;
 use App\Models\LocketHistoryCall;
 use App\Models\LocketQueue;
 use App\Models\LocketStaff;
@@ -15,11 +16,13 @@ class GetNextQueue extends \App\Services\AbstractService
 {
     protected $locket_code;
     protected $locket_number;
+    protected $timeNow;
 
     public function __construct($locket_code, $locket_number)
     {
         $this->locket_code = $locket_code;
         $this->locket_number = $locket_number;
+        $this->timeNow = now();
     }
 
     public function handle()
@@ -39,6 +42,7 @@ class GetNextQueue extends \App\Services\AbstractService
                 // Get next available queue
                 $next = LocketQueue::nextQueue($this->locket_code)->first();
                 if (!$next) {
+                    $this->updateLastHistory($locketStaff);
                     return Result::failure(Lang::get('messages.next_queue_is_empty', [], 'id'));
                 }
 
@@ -47,8 +51,6 @@ class GetNextQueue extends \App\Services\AbstractService
                     'called' => true,
                     'locket_staff_id' => $locketStaff->id,
                 ]);
-
-                $locketStaff->update(['last_called_queue_id' => $next->id]);
 
                 // Create queue caller record
                 QueueCaller::create([
@@ -62,17 +64,23 @@ class GetNextQueue extends \App\Services\AbstractService
                     'initiator_name' => $locketStaff->staff_name,
                 ]);
 
-                // Record to history
-                if ($lastCall = LocketQueue::lastCallByLocketCode($this->locket_code, $locketStaff->id)->first()) {
-                    LocketHistoryCall::create([
-                        'locket_code' => $this->locket_code,
-                        'locket_number' => $locketStaff->locket_number,
-                        'locket_staff_id' => $locketStaff->id,
-                        'locket_staff_name' => $locketStaff->staff_name,
-                        'number_queue' => $lastCall->formatAsQueueNumber(),
-                        'process_time_queue_locket' => now()->diffInSeconds($lastCall->created_at),
-                    ]);
-                }
+                // Create locket history call
+                // initiate first call
+                LocketHistoryCall::create([
+                    'locket_queue_id' => $next->id,
+                    'locket_code' => $this->locket_code,
+                    'locket_number' => $locketStaff->locket_number,
+                    'locket_staff_id' => $locketStaff->id,
+                    'locket_staff_name' => $locketStaff->staff_name,
+                    'number_queue' => $next->formatAsQueueNumber(),
+                    'process_time_queue_locket' => null,
+                    'called_at' => $this->timeNow,
+                    'awaiting_called_duration' => $this->timeNow->diffInSeconds($next->created_at),
+                ]);
+
+                // Record to history (It shound update all detail history)
+                $this->updateLastHistory($locketStaff);
+                $locketStaff->update(['last_called_queue_id' => $next->id]);
 
                 // ✅ Transaction auto-commits if we reach here
                 return Result::success([
@@ -85,6 +93,24 @@ class GetNextQueue extends \App\Services\AbstractService
         } catch (\Throwable $e) {
             // Transaction automatically rolled back
             return Result::failure('Terjadi kesalahan: ' . $e->getMessage(), null);
+        }
+    }
+
+    private function updateLastHistory($locketStaff)
+    {
+        if ($history = LocketHistoryCall::where('locket_queue_id', $locketStaff->last_called_queue_id)
+            ->whereNull('process_time_queue_locket')
+            ->whereBetween('created_at', DateRangeHelper::daysAgoToNow(0))
+            ->first()
+        ) {
+            # update after next call
+            $updated = $history->update([
+                'process_time_queue_locket' => $this->timeNow->diffInSeconds($history->created_at)
+            ]);
+
+            if (!$updated) {
+                throw new \RuntimeException("Failed to update process_time_queue_room for history ID: {$history->id}");
+            }
         }
     }
 
