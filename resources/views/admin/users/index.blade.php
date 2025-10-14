@@ -6,15 +6,17 @@
             <div class="col-lg-12">
                 <h1 class="page-header">Users</h1>
             </div>
-            <!-- /.col-lg-12 -->
+            <div class="col-lg-12">
+                @include('flash::message')
+            </div>
         </div>
         <!-- /.row -->
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        List <button type="button" class="btn btn-primary btn-circle"><i
-                                class="fa fa-user-plus"></i></button>
+                        List <a href="{{ route('admin.users.create') }}" type="button" class="btn btn-primary btn-circle"><i
+                                class="fa fa-user-plus"></i></a>
                     </div>
                     <!-- /.panel-heading -->
                     <div class="panel-body">
@@ -35,12 +37,20 @@
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->getModifiedRoleName() }}</td>
                                             <td class="center">
-                                                <button type="button" class="btn btn-success btn-circle"><i
-                                                        class="fa fa-pencil"></i>
+                                                <button type="button" class="btn btn-success btn-circle">
+                                                    <i class="fa fa-pencil"></i>
                                                 </button>
-                                                @if (Auth()->user()->hasRole('admin'))
-                                                    <button type="button" class="btn btn-danger btn-circle"><i
-                                                            class="fa fa-trash"></i></button>
+
+                                                @if (Auth()->user()->hasRole('super admin') && $user->id !== auth()->user()->id)
+                                                    <form action="{{ route('admin.users.destroy', $user->id) }}"
+                                                        method="post" style="display:inline;">
+                                                        @method('delete')
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-danger btn-circle"
+                                                            onclick="return confirm('Yakin ingin menghapus user ini?')">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </form>
                                                 @endif
                                             </td>
                                         </tr>

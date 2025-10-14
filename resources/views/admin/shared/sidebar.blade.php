@@ -18,11 +18,13 @@
                 </ul>
             </li>
 
-            <li>
-                <a href="{{ route('admin.users.index') }}"
-                    class="{{ request()->is('admin_dashboard/users*') ? 'active' : '' }}"><i
-                        class="fa fa-user fa-fw"></i> Users</a>
-            </li>
+            @if (auth()->user()->hasRole(['super admin']))
+                <li>
+                    <a href="{{ route('admin.users.index') }}"
+                        class="{{ request()->is('admin_dashboard/users*') ? 'active' : '' }}"><i
+                            class="fa fa-user fa-fw"></i> Users</a>
+                </li>
+            @endif
 
             <li>
                 <a href="{{ route('admin.poli.index') }}"
