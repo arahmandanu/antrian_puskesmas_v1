@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateRoomRequest;
 use App\Models\Room;
+use App\Models\RoomQueue;
 use Illuminate\Http\Request;
 
 class RoomController extends Controller
@@ -100,6 +101,13 @@ class RoomController extends Controller
             if (isset($validatedData['dependencies'])) {
                 $poli->dependencies()->sync($validatedData['dependencies']);
             } else {
+                RoomQueue::where('room_code', $poli->code)
+                    ->where('called', false)
+                    ->where('status', \App\Enum\RoomQueueStatus::WAITING->value)
+                    ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+                    ->update([
+                        'status' => \App\Enum\RoomQueueStatus::COMPLETED->value,
+                    ]);
                 $poli->dependencies()->detach();
             }
             flash()->success('Poli berhasil diperbarui.');

@@ -30,7 +30,11 @@ class GetLastCallByCode extends \App\Services\AbstractService
         try {
             $data = null;
             if ($this->isLocket) {
-                $locket = LocketStaff::where('locket_number', $this->letterToNumber($this->locketCode))->first();
+                if ($this->locketCode === 'F') {
+                    $locket = LocketStaff::whereJsonContains('allowed_codes', LocketList::FARMASI->value)->first();
+                } else {
+                    $locket = LocketStaff::where('locket_number', $this->letterToNumber($this->locketCode))->first();
+                }
                 if (!$locket) {
                     return Result::failure(Lang::get('messages.locket_not_found', [], 'id'), null);
                 }

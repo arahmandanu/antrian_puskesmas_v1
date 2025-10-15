@@ -104,8 +104,7 @@ class Room extends Model
             ->where(function ($q) use ($currentRoomId) {
                 $q->where(function ($sub) {
                     // Room yang bebas (tidak punya dependency, dan tidak dibutuhkan)
-                    $sub->whereDoesntHave('dependencies')
-                        ->whereDoesntHave('requiredBy');
+                    $sub->whereDoesntHave('dependencies');
                 })
                     ->orWhereHas('requiredBy', function ($sub) use ($currentRoomId) {
                         // Room yang sudah jadi dependency dari room yang sedang diedit
