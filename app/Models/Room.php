@@ -90,7 +90,7 @@ class Room extends Model
 
     public function queuesNotCalled()
     {
-        return $this->hasMany(RoomQueue::class, 'room_code', 'code')->where('status', RoomQueueStatus::COMPLETED)->where('called', false);
+        return $this->hasMany(RoomQueue::class, 'room_code', 'code')->where('called', false)->where('status', RoomQueueStatus::COMPLETED);
     }
 
     public function scopeShow($query)

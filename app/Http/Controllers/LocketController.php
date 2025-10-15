@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Enum\LocketList;
+use App\Helpers\DateRangeHelper;
 use App\Models\LocketQueue;
 use App\Models\LocketStaff;
 use App\Models\Room;
@@ -66,11 +67,17 @@ class LocketController extends Controller
 
     public function loketGetPoli(Request $request, LocketStaff $locket_number)
     {
-        $allRoom = Room::show()->doesntHave('requiredBy')->get();
+        $allRoom = Room::withCount(['queues as queues_count' => function ($query) {
+            $query->whereBetween('created_at', DateRangeHelper::daysAgoToNow(2));
+        }])
+            ->show()
+            ->doesntHave('requiredBy')
+            ->get();
+
         $list = $allRoom->map(function ($room) {
             return [
                 'nama' => Str::upper($room['name']),
-                'nomor' => $room->queues()->count(),
+                'nomor' => $room->queues_count,
                 'code' => $room->code
             ];
         });

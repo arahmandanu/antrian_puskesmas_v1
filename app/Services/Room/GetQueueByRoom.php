@@ -24,7 +24,7 @@ class GetQueueByRoom extends \App\Services\AbstractService
             $resultsNotCalled =  RoomQueue::whereIn('room_code', $roomIds)
                 ->where('called', false)
                 ->where('status', \App\Enum\RoomQueueStatus::WAITING->value)
-                ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
+                ->whereBetween('created_at', DateRangeHelper::daysAgoToNow(0))
                 ->orderBy('id', 'asc')
                 ->take(5)
                 ->get()
@@ -39,14 +39,14 @@ class GetQueueByRoom extends \App\Services\AbstractService
                 ->count();
         } else {
             $resultsNotCalled =  $this->room->queuesNotCalled()
-                ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
+                ->whereBetween('created_at', DateRangeHelper::daysAgoToNow(0))
                 ->take(5)
                 ->get()->map(function ($queue) {
                     return $queue->room_code . $queue->number_queue;
                 });
 
             $totalNotCalled =  $this->room->queuesNotCalled()
-                ->whereBetween('created_at', DateRangeHelper::daysAgoToNow())
+                ->whereBetween('created_at', DateRangeHelper::daysAgoToNow(0))
                 ->count();
         }
 

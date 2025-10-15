@@ -24,7 +24,7 @@ return new class extends Migration
             // composite index
             $table->index(['called', 'created_at']);
             $table->index(['room_code', 'created_at'], 'idx_room_code_created');
-            $table->index(['room_code', 'called', 'status', 'created_at'], 'idx_room_code_called_status_created');
+            $table->index(['room_code', 'status', 'called', 'created_at'], 'idx_room_code_status_called_created');
 
             // unique index
             $table->unique(['room_code', 'created_at']);
