@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Oct 14, 2025 at 07:10 PM
+-- Generation Time: Oct 15, 2025 at 03:37 PM
 -- Server version: 8.2.0
 -- PHP Version: 8.2.13
 
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `company` (
 --
 
 INSERT INTO `company` (`id`, `name`, `address`, `active`, `logo`, `printer`, `created_at`, `updated_at`) VALUES
-(1, 'Puskesmas Kramat Jati', 'Kramat Jati', 1, NULL, NULL, '2025-10-14 19:10:47', '2025-10-14 19:10:47');
+(1, 'Puskesmas Kramat Jati', 'Kramat Jati', 1, NULL, NULL, '2025-10-15 15:36:31', '2025-10-15 15:37:19');
 
 -- --------------------------------------------------------
 
@@ -331,8 +331,8 @@ CREATE TABLE IF NOT EXISTS `roles` (
 --
 
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'admin', 'web', '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(2, 'super admin', 'web', '2025-10-14 19:10:23', '2025-10-14 19:10:23');
+(1, 'admin', 'web', '2025-10-15 15:36:29', '2025-10-15 15:36:29'),
+(2, 'super admin', 'web', '2025-10-15 15:36:29', '2025-10-15 15:36:29');
 
 -- --------------------------------------------------------
 
@@ -377,26 +377,26 @@ CREATE TABLE IF NOT EXISTS `rooms` (
 --
 
 INSERT INTO `rooms` (`id`, `code`, `name`, `current_queue`, `show`, `lantai`, `last_call_queue`, `last_call_time`, `last_room_queue_id`, `created_at`, `updated_at`) VALUES
-(1, 'E', '24 JAM', NULL, 1, 1, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(2, 'F', 'RB', NULL, 1, 1, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(3, 'G', 'IMS', NULL, 1, 1, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(4, 'H', 'PDP', NULL, 1, 1, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(5, 'I', 'TB', NULL, 1, 1, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(6, 'J', 'UMUM', NULL, 1, 2, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(7, 'K', 'Gigi', NULL, 1, 2, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(8, 'L', 'Laborate', NULL, 1, 2, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(9, 'M', 'Lansia', NULL, 1, 2, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(10, 'N', 'UBM', NULL, 1, 2, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(11, 'O', 'CATIN', NULL, 1, 2, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(12, 'P', 'Psikologi', NULL, 1, 2, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(13, 'Q', 'Haji', NULL, 1, 2, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(14, 'R', 'PTM', NULL, 1, 2, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(15, 'S', 'MTBS', NULL, 1, 2, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(16, 'T', 'PKPR', NULL, 1, 2, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(17, 'U', 'Jiwa', NULL, 1, 2, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(18, 'V', 'Gizi', NULL, 1, 2, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(19, 'W', 'CKG', NULL, 1, 2, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23'),
-(20, 'X', 'Nurse Station', NULL, 1, 2, NULL, NULL, NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23');
+(1, 'E', '24 JAM', NULL, 1, 1, NULL, NULL, NULL, '2025-10-15 15:36:29', '2025-10-15 15:36:29'),
+(2, 'F', 'RB', NULL, 1, 1, NULL, NULL, NULL, '2025-10-15 15:36:29', '2025-10-15 15:36:29'),
+(3, 'G', 'IMS', NULL, 1, 1, NULL, NULL, NULL, '2025-10-15 15:36:29', '2025-10-15 15:36:29'),
+(4, 'H', 'PDP', NULL, 1, 1, NULL, NULL, NULL, '2025-10-15 15:36:29', '2025-10-15 15:36:29'),
+(5, 'I', 'TB', NULL, 1, 1, NULL, NULL, NULL, '2025-10-15 15:36:29', '2025-10-15 15:36:29'),
+(6, 'J', 'UMUM', NULL, 1, 2, NULL, NULL, NULL, '2025-10-15 15:36:29', '2025-10-15 15:36:29'),
+(7, 'K', 'Gigi', NULL, 1, 2, NULL, NULL, NULL, '2025-10-15 15:36:29', '2025-10-15 15:36:29'),
+(8, 'L', 'Laborate', NULL, 1, 2, NULL, NULL, NULL, '2025-10-15 15:36:29', '2025-10-15 15:36:29'),
+(9, 'M', 'Lansia', NULL, 1, 2, NULL, NULL, NULL, '2025-10-15 15:36:29', '2025-10-15 15:36:29'),
+(10, 'N', 'UBM', NULL, 1, 2, NULL, NULL, NULL, '2025-10-15 15:36:29', '2025-10-15 15:36:29'),
+(11, 'O', 'CATIN', NULL, 1, 2, NULL, NULL, NULL, '2025-10-15 15:36:30', '2025-10-15 15:36:30'),
+(12, 'P', 'Psikologi', NULL, 1, 2, NULL, NULL, NULL, '2025-10-15 15:36:30', '2025-10-15 15:36:30'),
+(13, 'Q', 'Haji', NULL, 1, 2, NULL, NULL, NULL, '2025-10-15 15:36:30', '2025-10-15 15:36:30'),
+(14, 'R', 'PTM', NULL, 1, 2, NULL, NULL, NULL, '2025-10-15 15:36:30', '2025-10-15 15:36:30'),
+(15, 'S', 'MTBS', NULL, 1, 2, NULL, NULL, NULL, '2025-10-15 15:36:30', '2025-10-15 15:36:30'),
+(16, 'T', 'PKPR', NULL, 1, 2, NULL, NULL, NULL, '2025-10-15 15:36:30', '2025-10-15 15:36:30'),
+(17, 'U', 'Jiwa', NULL, 1, 2, NULL, NULL, NULL, '2025-10-15 15:36:30', '2025-10-15 15:36:30'),
+(18, 'V', 'Gizi', NULL, 1, 2, NULL, NULL, NULL, '2025-10-15 15:36:30', '2025-10-15 15:36:30'),
+(19, 'W', 'CKG', NULL, 1, 2, NULL, NULL, NULL, '2025-10-15 15:36:30', '2025-10-15 15:36:30'),
+(20, 'X', 'Nurse Station', NULL, 1, 2, NULL, NULL, NULL, '2025-10-15 15:36:30', '2025-10-15 15:36:30');
 
 -- --------------------------------------------------------
 
@@ -435,7 +435,7 @@ CREATE TABLE IF NOT EXISTS `room_queues` (
   UNIQUE KEY `room_queues_room_code_created_at_unique` (`room_code`,`created_at`),
   KEY `room_queues_called_created_at_index` (`called`,`created_at`),
   KEY `idx_room_code_created` (`room_code`,`created_at`),
-  KEY `idx_room_code_called_status_created` (`room_code`,`called`,`status`,`created_at`)
+  KEY `idx_room_code_status_called_created` (`room_code`,`status`,`called`,`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -498,17 +498,14 @@ CREATE TABLE IF NOT EXISTS `stat_consoles` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `stat_consoles`
 --
 
 INSERT INTO `stat_consoles` (`id`, `tanggal`, `Status`, `ActiveDate`, `created_at`, `updated_at`) VALUES
-(1, '20251015', 'active', '20251015', '2025-10-14 19:10:47', '2025-10-14 19:10:47'),
-(2, '20251015', 'active', '20251015', '2025-10-14 19:10:47', '2025-10-14 19:10:47'),
-(3, '20251015', 'active', '20251015', '2025-10-14 19:10:47', '2025-10-14 19:10:47'),
-(4, '20251015', 'active', '20251015', '2025-10-14 19:10:47', '2025-10-14 19:10:47');
+(1, '20251015', 'active', '20251015', '2025-10-15 15:36:31', '2025-10-15 15:36:31');
 
 -- --------------------------------------------------------
 
@@ -535,7 +532,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Admin', 'admin@admin.com', NULL, '$2y$10$S6spwhzc.AOqPhZKqwG0D.yOJBvL1IaNkU5FWHU8rJSoHrGjR/fuS', NULL, '2025-10-14 19:10:23', '2025-10-14 19:10:23');
+(1, 'Admin', 'admin@admin.com', NULL, '$2y$10$uoFYYW1Od.kpcuETN2ZzYetV3Akp4Y3ay5dZY7cfHN24E/xkETcOy', NULL, '2025-10-15 15:36:29', '2025-10-15 15:36:29');
 
 --
 -- Constraints for dumped tables
