@@ -6,8 +6,10 @@ use App\Enum\LocketList;
 use App\Models\Company;
 use App\Models\LocketQueue;
 use App\Utils\Result;
+use Illuminate\Support\Facades\Config;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\Printer;
+use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 
 
@@ -30,12 +32,22 @@ class LocketPrint extends \App\Services\AbstractService
                 $printer = new Printer($connector);
 
                 // Format struk antrian
+                // Header
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $logo = EscposImage::load(public_path('images/logo.png'), false);
+                $printer->bitImage($logo);
+                $printer->feed(1);
+                $printer->setTextSize(1, 1);
+                $printer->text(Config::get('mysite.company_name', 'KOSONG'));
+                $printer->feed(1);
+
+                // MIddle
                 $printer->setTextSize(2, 2);
                 $printer->text("ANTRIAN\n\n");
                 $printer->setTextSize(4, 4);
                 $printer->text($this->queue->locket_code . $this->queue->number_queue . "\n\n");
 
+                // Footer
                 $printer->setTextSize(1, 1);
                 $printer->text(LocketList::from($this->queue->locket_code)->name . "\n\n");
                 $printer->text(date("d-m-Y H:i") . "\n\n");
