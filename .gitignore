@@ -21,3 +21,5 @@ yarn-error.log
 
 cipher.txt
 key.txt
+/public/*ds_store
+.DS_Store
