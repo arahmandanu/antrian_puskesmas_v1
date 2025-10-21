@@ -208,6 +208,9 @@
                     document.getElementById("app-content").classList.remove("hidden");
                 }
             });
+        } else {
+            document.getElementById("loading-screen").style.display = "none";
+            document.getElementById("app-content").classList.remove("hidden");
         }
 
         function showCallOverlay(code, number, destination) {

@@ -423,6 +423,9 @@
                     document.getElementById("app-content").classList.remove("hidden");
                 }
             });
+        } else {
+            document.getElementById("loading-screen").style.display = "none";
+            document.getElementById("app-content").classList.remove("hidden");
         }
     </script>
 @endsection
