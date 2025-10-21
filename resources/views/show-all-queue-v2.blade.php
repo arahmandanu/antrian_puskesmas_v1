@@ -28,14 +28,14 @@
                                 @if ($loop->first)
                                     <div class="swiper-slide w-full h-full flex items-center justify-center">
                                         <video class="object-contain" autoplay playsinline muted controls>
-                                            <source src="{{ asset('asset_loket/' . $video->getFilename()) }}"
+                                            <source src="{{ asset('iklan_videos/' . $video->getFilename()) }}"
                                                 type="video/mp4">
                                         </video>
                                     </div>
                                 @else
                                     <div class="swiper-slide w-full h-full flex items-center justify-center">
                                         <video class="object-contain" playsinline muted controls>
-                                            <source src="{{ asset('asset_loket/' . $video->getFilename()) }}"
+                                            <source src="{{ asset('iklan_videos/' . $video->getFilename()) }}"
                                                 type="video/mp4">
                                         </video>
                                     </div>
