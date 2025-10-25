@@ -34,7 +34,7 @@ class LocketPrint extends \App\Services\AbstractService
                 // Format struk antrian
                 // Header
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
-                $logo = EscposImage::load(public_path('images/logo.png'), false);
+                $logo = EscposImage::load(public_path('images/logo2.png'), false);
                 $printer->bitImage($logo);
                 $printer->feed(1);
                 $printer->setTextSize(1, 1);

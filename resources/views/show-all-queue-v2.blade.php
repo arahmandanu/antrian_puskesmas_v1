@@ -15,101 +15,69 @@
         <p class="text-sm text-gray-400 mt-2">Memuat asset...</p>
     </div>
 
-    <div id="app-content" class="flex flex-col h-full">
-        <div class="flex-grow grid grid-rows-[75%_20%] gap-4 p-6">
+    <div id="app-content" class="flex flex-col h-full w-full">
+        {{-- <div class="flex-grow grid grid-rows-[50%_50%] gap-4 p-6"> --}}
 
-            <!-- Baris 1: Video (70%) + Loket kanan -->
-            <div class="grid grid-cols-[80%_20%] gap-4">
-                <!-- Left: Video -->
-                <div id="container_adds" class="rounded-2xl overflow-hidden">
-                    <div class="swiper swiper absolute inset-0 w-full h-full">
-                        <div class="swiper-wrapper">
-                            @forelse ($iklanVideos as $video)
-                                @if ($loop->first)
-                                    <div class="swiper-slide w-full h-full flex items-center justify-center">
-                                        <video class="object-contain" autoplay playsinline muted controls>
-                                            <source src="{{ asset('iklan_videos/' . $video->getFilename()) }}"
-                                                type="video/mp4">
-                                        </video>
-                                    </div>
-                                @else
-                                    <div class="swiper-slide w-full h-full flex items-center justify-center">
-                                        <video class="object-contain" playsinline muted controls>
-                                            <source src="{{ asset('iklan_videos/' . $video->getFilename()) }}"
-                                                type="video/mp4">
-                                        </video>
-                                    </div>
-                                @endif
-                            @empty
-                            @endforelse
-                        </div>
+        <!-- Baris 1: Video (70%) + Loket kanan -->
+        <div class="grid gap-2" style="grid-template-columns: 63% 37%;">
+            <!-- Left: Video -->
+            <div id="container_adds" class="rounded-2xl overflow-hidden">
+                <div class="swiper swiper w-full h-full">
+                    <div class="swiper-wrapper">
+                        @forelse ($iklanVideos as $video)
+                            @if ($loop->first)
+                                <div class="swiper-slide w-full h-full flex items-center justify-center">
+                                    <video class="object-contain" autoplay playsinline muted controls>
+                                        <source src="{{ asset('iklan_videos/' . $video->getFilename()) }}" type="video/mp4">
+                                    </video>
+                                </div>
+                            @else
+                                <div class="swiper-slide w-full h-full flex items-center justify-center">
+                                    <video class="object-contain" playsinline muted controls>
+                                        <source src="{{ asset('iklan_videos/' . $video->getFilename()) }}" type="video/mp4">
+                                    </video>
+                                </div>
+                            @endif
+                        @empty
+                        @endforelse
                     </div>
-                </div>
-
-                <!-- Right: Loket utama -->
-                <div class="grid grid-cols-1 gap-4 content-start">
-                    @foreach ($calledListright as $queue)
-                        <div id="{{ $queue['type'] }}-{{ $queue['id'] }}"
-                            class="bg-green-900 text-center text-white rounded-2xl p-4 flex flex-col justify-center"
-                            style="width:330px; height:160px;">
-
-                            <h3
-                                class="bg-white text-green-700 rounded px-1 mx-auto mb-1 text-[clamp(1rem,1.4vw,2.2rem)] font-black">
-                                {{ $queue['display_name'] }}
-                            </h3>
-
-                            <p class="text-[clamp(3rem,4vw,5rem)] font-extrabold">
-                                @if (isset($queue['last_queue']))
-                                    <input type="hidden" id="nomor-antrian"
-                                        value="{{ $queue['last_queue']['code_queue'] }}{{ $queue['last_queue']['number_queue'] }}">
-                                    <span id="current-call">
-                                        <span
-                                            class="text-yellow-500">{{ $queue['last_queue']['code_queue'] }}</span><span>{{ App\Helpers\MyHelper::formatNumberQueue($queue['last_queue']['number_queue']) }}</span>
-                                    </span>
-                                @else
-                                    <input type="hidden" id="nomor-antrian" value="">
-                                    <span id="current-call">
-                                        --
-                                    </span>
-                                @endif
-                            </p>
-                        </div>
-                    @endforeach
                 </div>
             </div>
 
-            <!-- Baris 2: Loket tambahan -->
-            <div class="flex flex-wrap gap-4">
-                @foreach ($calledListbottom as $queue)
+            <!-- Right: Loket utama -->
+            <div class="grid gap-2 content-start"
+                style="display: grid; grid-auto-flow: column; grid-template-rows: repeat(6, auto);">
+                @foreach ($calledListright as $queue)
                     <div id="{{ $queue['type'] }}-{{ $queue['id'] }}"
-                        class="bg-green-900 text-center text-white rounded-2xl p-4 flex flex-col justify-center"
-                        style="width:330px; height:160px;">
+                        class="bg-green-900 text-center text-white rounded-2xl flex flex-col justify-start"
+                        style="width:330px; height:130px;">
 
-                        <h3
-                            class="bg-white text-green-700 rounded px-1 mx-auto mb-1 text-[clamp(1rem,1.4vw,2.2rem)] font-black">
+                        <h3 class="bg-white text-green-700 rounded mx-auto text-[clamp(1rem,1.4vw,2.2rem)] font-black">
                             {{ $queue['display_name'] }}
                         </h3>
-                        <p class="text-[clamp(3rem,4vw,5rem)] font-extrabold">
+
+                        <p class="text-[clamp(3rem,4vw,5rem)] font-extrabold leading-none m-0 p-0">
                             @if (isset($queue['last_queue']))
                                 <input type="hidden" id="nomor-antrian"
                                     value="{{ $queue['last_queue']['code_queue'] }}{{ $queue['last_queue']['number_queue'] }}">
-
-                                <span id="current-call">
-                                    <span
-                                        class="text-yellow-500">{{ $queue['last_queue']['code_queue'] }}</span><span>{{ App\Helpers\MyHelper::formatNumberQueue($queue['last_queue']['number_queue']) }}</span>
+                                <span id="current-call" class="flex justify-center items-center gap-0 leading-none">
+                                    <span class="text-yellow-500">
+                                        {{ $queue['last_queue']['code_queue'] }}
+                                    </span>
+                                    <span class="text-white">
+                                        {{ App\Helpers\MyHelper::formatNumberQueue($queue['last_queue']['number_queue']) }}
+                                    </span>
                                 </span>
                             @else
                                 <input type="hidden" id="nomor-antrian" value="">
-                                <span id="current-call">
-                                    --
-                                </span>
+                                <span id="current-call" class="block mt-0">--</span>
                             @endif
                         </p>
                     </div>
                 @endforeach
             </div>
-
         </div>
+
     </div>
 
     <script>

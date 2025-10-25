@@ -31,19 +31,12 @@ class MasterController extends Controller
         $mp4Files = array_filter($videos, function ($file) {
             return $file->getExtension() === 'mp4';
         });
-        $filesImage = File::files(public_path('iklan_images'));
-        $images = array_filter($filesImage, function ($file) {
-            $ext = strtolower($file->getExtension());
-            return in_array($ext, ['jpg', 'jpeg', 'webp']);
-        });
 
         $allList = $this->listQueue($lantai);
         return view('show-all-queue-v2', [
-            'calledListright' => array_slice($allList, 0, 4),
-            'calledListbottom' => array_slice($allList, 4, 5),
+            'calledListright' => $allList,
             'lantai' => $lantai,
-            'iklanVideos' => $mp4Files,
-            'iklanImages' => $images
+            'iklanVideos' => $mp4Files
         ]);
     }
 
