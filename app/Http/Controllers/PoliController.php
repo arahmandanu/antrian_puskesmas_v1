@@ -23,7 +23,7 @@ class PoliController extends Controller
     public function index()
     {
         return view('loket_staff.list_poli', [
-            'polis' => Room::show()->orderBy('code', 'asc')->get(),
+            'polis' => Room::show()->orderBy('code', 'asc')->get()->groupBy('lantai'),
         ]);
     }
 

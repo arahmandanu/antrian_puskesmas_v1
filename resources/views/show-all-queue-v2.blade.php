@@ -21,7 +21,7 @@
         <!-- Baris 1: Video (70%) + Loket kanan -->
         <div class="grid gap-2" style="grid-template-columns: 63% 37%;">
             <!-- Left: Video -->
-            <div id="container_adds" class="rounded-2xl overflow-hidden">
+            <div id="container_adds" class="rounded-2xl overflow-hidden text-center">
                 <div class="swiper swiper w-full h-full">
                     <div class="swiper-wrapper">
                         @forelse ($iklanVideos as $video)
@@ -45,9 +45,9 @@
             </div>
 
             <!-- Right: Loket utama -->
-            <div class="grid gap-2 content-start"
+            <div class="grid gap-2 content-start pt-10"
                 style="display: grid; grid-auto-flow: column; grid-template-rows: repeat(6, auto);">
-                @foreach ($calledListright as $queue)
+                @forelse ($calledListright as $queue)
                     <div id="{{ $queue['type'] }}-{{ $queue['id'] }}"
                         class="bg-green-900 text-center text-white rounded-2xl flex flex-col justify-start"
                         style="width:330px; height:130px;">
@@ -74,7 +74,9 @@
                             @endif
                         </p>
                     </div>
-                @endforeach
+                @empty
+                    <div class="col-span-full text-center text-gray-400 py-8">Tidak ada antrian yang sedang dipanggil.</div>
+                @endforelse
             </div>
         </div>
 
